@@ -1,3 +1,17 @@
 # Godot 4+ specific ignores
 .godot/
-/android/
+.import/
+.android/
+.ios/
+.export/
+.exported/
+
+# Auto-generated import and temporary files
+*.import
+*.tmp
+*.log
+*.translation
+
+# Editor or system-specific
+*.DS_Store
+Thumbs.db
