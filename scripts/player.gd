@@ -8,8 +8,9 @@ const JUMP_VELOCITY = -175.0
 const GRAVITY_RISING = 330.0
 const GRAVITY_FALLING = 500.0
 const JUMP_CUT_MULTIPLIER = 0.2
-const DASH_SPEED = 280.0
-const DASH_DECAY = 1500.0
+const DASH_SPEED = 190.0
+const DASH_DECAY = 200.0
+const MAX_VELOCITY = 250
 
 var DAMAGE = 10
 var HEALTH = 100
@@ -21,6 +22,8 @@ var dash_cooldown_active = false
 var is_knocked_back = false
 var is_invincible = false
 var has_air_dash = true
+var dash_jump_buffer_active = false
+
 # ======================
 # === NODE REFERENCES ==
 # ======================
@@ -37,6 +40,7 @@ var has_air_dash = true
 @onready var knockback_time: Timer = $Position/KnockbackTime
 @onready var invincibility: Timer = $Position/Invincibility
 @onready var player_body: CollisionShape2D = $PlayerBody
+@onready var dash_jump_buffer: Timer = $Position/DashJumpBuffer
 
 # ======================
 # ===== MAIN LOOP ======
@@ -105,6 +109,11 @@ func start_dash() -> void:
 		
 func _on_dash_timeout() -> void:
 	is_dashing = false
+	if dash_jump_buffer_active:
+		if Input.is_action_pressed("jump"):
+			velocity.y = JUMP_VELOCITY
+		dash_jump_buffer_active = false
+		dash_jump_buffer.stop()
 
 func _on_dash_cooldown_timeout() -> void:
 	dash_cooldown_active = false
@@ -114,11 +123,16 @@ func _on_knockback_time_timeout() -> void:
 
 func _on_invincibility_timeout() -> void:
 	is_invincible = false
+	
+func _on_dash_jump_buffer_timeout() -> void:
+	dash_jump_buffer_active = false
 
 # ======================
 # === JUMP & GRAVITY ===
 # ======================
 func handle_jump_and_gravity(delta: float) -> void:
+	if velocity.y >= MAX_VELOCITY:
+		velocity.y = MAX_VELOCITY
 	# Reset air dash AND dash cooldown when landing
 	if is_on_floor():
 		if not has_air_dash:
@@ -134,7 +148,12 @@ func handle_jump_and_gravity(delta: float) -> void:
 
 	# Jump pressed
 	if Input.is_action_just_pressed("jump"):
-		if is_knocked_back or is_dashing:
+		if is_knocked_back:
+			return
+		# If pressing jump during dash, set jump buffer
+		if is_dashing and is_on_floor():
+			dash_jump_buffer_active = true
+			dash_jump_buffer.start()
 			return
 		if is_on_floor() or not coyote_time.is_stopped():
 			dash_cooldown_timer.stop()

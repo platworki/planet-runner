@@ -345,8 +345,12 @@ one_shot = true
 wait_time = 0.08
 one_shot = true
 
+[node name="DashJumpBuffer" type="Timer" parent="Position"]
+wait_time = 0.14
+one_shot = true
+
 [node name="DashTimer" type="Timer" parent="Position"]
-wait_time = 0.16
+wait_time = 0.2
 one_shot = true
 
 [node name="DashCooldown" type="Timer" parent="Position"]
@@ -360,5 +364,6 @@ shape = SubResource("RectangleShape2D_dqkch")
 [connection signal="area_entered" from="Position/PlayerAttack" to="Position/PlayerAttack" method="_on_area_entered"]
 [connection signal="timeout" from="Position/KnockbackTime" to="." method="_on_knockback_time_timeout"]
 [connection signal="timeout" from="Position/Invincibility" to="." method="_on_invincibility_timeout"]
+[connection signal="timeout" from="Position/DashJumpBuffer" to="." method="_on_dash_jump_buffer_timeout"]
 [connection signal="timeout" from="Position/DashTimer" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="Position/DashCooldown" to="." method="_on_dash_cooldown_timeout"]

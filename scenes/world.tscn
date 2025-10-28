@@ -263,7 +263,7 @@ platform_on_leave = 1
 [node name="Camera2D" type="Camera2D" parent="Player"]
 physics_interpolation_mode = 1
 ignore_rotation = false
-zoom = Vector2(4.5, 4.5)
+zoom = Vector2(4.8, 4.8)
 process_callback = 0
 limit_left = -105
 limit_top = -350
