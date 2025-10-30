@@ -26,7 +26,7 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Position/PlayerAttack/AttackDelay")
+tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -308,9 +308,8 @@ scale = Vector2(0.88327086, 2.9370105)
 shape = SubResource("SegmentShape2D_3vyb7")
 disabled = true
 
-[node name="AttackDelay" type="Timer" parent="Position/PlayerAttack"]
-process_callback = 0
-wait_time = 0.3
+[node name="AttackCooldown" type="Timer" parent="Position/PlayerAttack"]
+wait_time = 0.35
 one_shot = true
 
 [node name="AttackHit" type="AnimationPlayer" parent="Position/PlayerAttack"]
@@ -328,7 +327,7 @@ texture = ExtResource("2_g2els")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Damage"
+animation = &"Idle"
 
 [node name="CoyoteTime" type="Timer" parent="Position"]
 wait_time = 0.12
