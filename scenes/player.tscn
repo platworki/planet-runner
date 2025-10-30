@@ -353,7 +353,7 @@ wait_time = 0.2
 one_shot = true
 
 [node name="DashCooldown" type="Timer" parent="Position"]
-wait_time = 0.4
+wait_time = 0.5
 one_shot = true
 
 [node name="PlayerBody" type="CollisionShape2D" parent="."]

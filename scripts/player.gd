@@ -78,8 +78,6 @@ func _physics_process(delta: float) -> void:
 			handle_horizontal_movement()
 			gravity(delta)
 		State.DASHING:
-			if is_knocked_back:
-				current_state = State.KNOCKED_BACK
 			# INFO If the player is dashing right now, don't start a dash again
 			if not is_dashing:
 				dash()
@@ -206,7 +204,8 @@ func _on_dash_timeout() -> void:
 			velocity.y = JUMP_VELOCITY
 		dash_jump_buffer.stop()
 	# INFO When dash ends, return back to the normal state
-	current_state = State.NORMAL
+	if not is_knocked_back:
+		current_state = State.NORMAL
 
 func _on_dash_cooldown_timeout() -> void:
 	dash_cooldown_active = false
@@ -231,6 +230,7 @@ func _on_dash_jump_buffer_timeout() -> void:
 		#attack()
 
 func attack() -> void:
+	# INFO If you attack during invincibility, turn invincibility off to prevent enemy tanking
 	if is_invincible:
 		is_invincible = false
 	attack_cooldown.start()
@@ -247,7 +247,9 @@ func cancel_attack() -> void:
 # ======================
 
 func handle_knockback(delta: float) -> void:
+	# INFO Smooth out the knockback easing in on 0
 	velocity.x = move_toward(velocity.x, 0, 400 * delta)
+	# INFO Go up smoothly instead of a fixed elevator up
 	velocity.y += GRAVITY_FALLING * delta
 	
 # DEPRECATED
@@ -266,7 +268,7 @@ func handle_knockback(delta: float) -> void:
 func take_damage(enemy_damage: int, enemy_position: Vector2):
 	if is_invincible:
 		return
-	current_state = State.KNOCKED_BACK
+		
 	HEALTH -= enemy_damage
 	if HEALTH <= 0:
 		die()
@@ -274,15 +276,18 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 
 	print("You have ", HEALTH, " left!")
 	animated_sprite.play("Damage")
-
+	# INFO Pass the knockback smoothing to the State methods
+	current_state = State.KNOCKED_BACK
+	# INFO Calculate the hit direction, then add the non-smoothed value for knockback distance
 	var knock_dir = sign(global_position.x - enemy_position.x)
 	velocity.x = knock_dir * knockback_force
 	velocity.y = up_knockback_velocity
-
+	
 	is_dashing = false
 	is_knocked_back = true
 	is_invincible = true
 	has_air_dash = true
+	
 	invincibility.start()
 	knockback_time.start()
 	
