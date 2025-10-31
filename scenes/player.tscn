@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=39 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
@@ -40,7 +40,7 @@ tracks/1/keys = {
 tracks/2/type = "method"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Position/PlayerAttack/AttackSprite")
+tracks/2/path = NodePath("Position/PlayerAttack/SideAttackSprite")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -69,12 +69,94 @@ tracks/0/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = false
+tracks/2/path = NodePath("Position/PlayerAttack/SideAttackSprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = false
+tracks/3/path = NodePath("Position/PlayerAttack/PogoSprite:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_dqkch"]
+resource_name = "Pogo"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [-1],
+"method": &"start"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Position/PlayerAttack/PogoSprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_g2els"]
 _data = {
 &"Attack": SubResource("Animation_3vyb7"),
+&"Pogo": SubResource("Animation_dqkch"),
 &"RESET": SubResource("Animation_g2els")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
+size = Vector2(12, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ujl30"]
 atlas = ExtResource("1_3vyb7")
@@ -318,10 +400,21 @@ libraries = {
 &"": SubResource("AnimationLibrary_g2els")
 }
 
-[node name="AttackSprite" type="Sprite2D" parent="Position/PlayerAttack"]
+[node name="SideAttackSprite" type="Sprite2D" parent="Position/PlayerAttack"]
 visible = false
 position = Vector2(10.625, -7)
 scale = Vector2(0.099609375, 0.06640626)
+texture = ExtResource("2_g2els")
+
+[node name="PogoHitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
+position = Vector2(-1, 5)
+shape = SubResource("RectangleShape2D_qlg0r")
+disabled = true
+
+[node name="PogoSprite" type="Sprite2D" parent="Position/PlayerAttack"]
+visible = false
+position = Vector2(-0.99999964, 5.0000005)
+scale = Vector2(0.09374999, 0.078125)
 texture = ExtResource("2_g2els")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Position"]
@@ -344,8 +437,12 @@ one_shot = true
 wait_time = 0.08
 one_shot = true
 
+[node name="DoubleJumpBuffer" type="Timer" parent="Position"]
+wait_time = 0.1
+one_shot = true
+
 [node name="DashJumpBuffer" type="Timer" parent="Position"]
-wait_time = 0.14
+wait_time = 0.1
 one_shot = true
 
 [node name="DashTimer" type="Timer" parent="Position"]
@@ -361,8 +458,8 @@ position = Vector2(0, -7)
 shape = SubResource("RectangleShape2D_dqkch")
 
 [connection signal="area_entered" from="Position/PlayerAttack" to="Position/PlayerAttack" method="_on_area_entered"]
+[connection signal="hit_enemy" from="Position/PlayerAttack" to="." method="_on_player_attack_hit_enemy"]
 [connection signal="timeout" from="Position/KnockbackTime" to="." method="_on_knockback_time_timeout"]
 [connection signal="timeout" from="Position/Invincibility" to="." method="_on_invincibility_timeout"]
-[connection signal="timeout" from="Position/DashJumpBuffer" to="." method="_on_dash_jump_buffer_timeout"]
 [connection signal="timeout" from="Position/DashTimer" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="Position/DashCooldown" to="." method="_on_dash_cooldown_timeout"]

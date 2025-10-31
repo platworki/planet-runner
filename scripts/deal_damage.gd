@@ -1,5 +1,7 @@
 extends Area2D
 
+signal hit_enemy(enemy)
+
 func _on_area_entered(area: Area2D) -> void:
 	# Check if we hit an enemy hitbox
 	var enemy = area.get_parent()  # Get the slime
@@ -8,5 +10,6 @@ func _on_area_entered(area: Area2D) -> void:
 	if enemy.has_method("take_damage"):
 		# Get player's damage value
 		var player = get_parent().get_parent()  # Position -> Player
+		# tell the player (or whoever's connected) that we hit an enemy
+		emit_signal("hit_enemy", enemy)
 		enemy.take_damage(player.DAMAGE, player.global_position)
-		print("Hit enemy!")

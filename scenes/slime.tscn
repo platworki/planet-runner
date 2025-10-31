@@ -107,14 +107,6 @@ autoplay = "default"
 
 [node name="Raycasts" type="Node2D" parent="."]
 
-[node name="RayCastRightGround" type="RayCast2D" parent="Raycasts"]
-position = Vector2(0, -8)
-target_position = Vector2(14, 14)
-
-[node name="RayCastLeftGround" type="RayCast2D" parent="Raycasts"]
-position = Vector2(0, -8)
-target_position = Vector2(-14, 14)
-
 [node name="RayCastRightWall" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -8)
 target_position = Vector2(10, 0)
