@@ -39,11 +39,11 @@ var has_double_jump = true
 # ======================
 
 @onready var flip: Node2D = $Position
-@onready var animated_sprite: AnimatedSprite2D = $Position/AnimatedSprite2D
+@onready var torso_animation: AnimatedSprite2D = $Position/Torso
+@onready var legs_animation: AnimatedSprite2D = $Position/Legs
 @onready var attack_cooldown: Timer = $Position/PlayerAttack/AttackCooldown
 @onready var attack_hit_animation: AnimationPlayer = $Position/PlayerAttack/AttackHit
 @onready var side_attack_hitbox: CollisionShape2D = $Position/PlayerAttack/SideAttackHitbox
-@onready var attack_sprite: Sprite2D = $Position/PlayerAttack/SideAttackSprite
 @onready var coyote_time: Timer = $Position/CoyoteTime
 @onready var jump_buffer: Timer = $Position/JumpBuffer
 @onready var dash_timer: Timer = $Position/DashTimer
@@ -151,13 +151,18 @@ func handle_horizontal_movement() -> void:
 	elif direction < 0:
 		flip.scale.x = -1
 	# INFO If the player is on floor, play idle or running, if the player is jumping or falling play jump
-	if is_on_floor():
-		if direction == 0:
-			animated_sprite.play("Idle")
+	if not attack_hit_animation.is_playing():
+		if is_on_floor():
+			if direction == 0:
+				torso_animation.play("Idle")
+				legs_animation.play("Idle")
+			else:
+				torso_animation.play("Walk")
+				legs_animation.play("Walk")
 		else:
-			animated_sprite.play("Run")
-	else:
-		animated_sprite.play("Jumping")
+			# WARNING TEMPORARY		
+			torso_animation.play("Walk")
+			legs_animation.play("Walk")
 	# INFO If the input is either A or D, move, otherwise stop smoothly
 	if direction:
 		velocity.x = direction * SPEED
@@ -189,7 +194,9 @@ func gravity(delta: float) -> void:
 
 func dash() -> void:
 	is_dashing = true
-	animated_sprite.play("Jumping")
+	# WARNING TEMPORARY
+	torso_animation.play("Walk")
+	legs_animation.play("Walk")
 	# INFO Stop any ongoing attack
 	cancel_attack()
 	# INFO Actually dash
@@ -251,8 +258,11 @@ func attack() -> void:
 		is_invincible = false
 	if Input.is_action_pressed("down") and not is_on_floor():
 		attack_hit_animation.play("Pogo")
+		# WARNING TEMPORARY
+		torso_animation.play("Attack 2")
 	else:
 		attack_hit_animation.play("Attack")
+		torso_animation.play("Attack 1")
 
 func cancel_attack() -> void:
 	attack_hit_animation.stop()
@@ -260,7 +270,6 @@ func cancel_attack() -> void:
 	pogo_sprite.visible = false
 	pogo_hitbox.disabled = true
 	side_attack_hitbox.disabled = true
-	attack_sprite.visible = false
 
 # ======================
 # ===== KNOCKBACK ======
@@ -286,7 +295,9 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		return
 
 	print("You have ", HEALTH, " left!")
-	animated_sprite.play("Damage")
+	# WARNING TEMPORARY
+	torso_animation.play("Walk")
+	legs_animation.play("Walk")
 	# INFO Pass the knockback smoothing to the State methods
 	current_state = State.KNOCKED_BACK
 	# INFO Calculate the hit direction, then add the non-smoothed value for knockback distance
@@ -307,7 +318,7 @@ func die():
 	print("You died!")
 	Engine.time_scale = 0.5
 	set_physics_process(false)
-	animated_sprite.play("Death")
+	torso_animation.play("Death")
 	player_body.set_deferred("disabled", true)
 	await get_tree().create_timer(1.0).timeout
 	Engine.time_scale = 1
