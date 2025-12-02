@@ -3,6 +3,7 @@ extends CharacterBody2D
 # ======================
 # === CONFIGURATION ====
 # ======================
+
 const SPEED = 100.0
 const JUMP_VELOCITY = -175.0
 const GRAVITY_RISING = 330.0
@@ -36,6 +37,7 @@ var has_double_jump = true
 # ======================
 # === NODE REFERENCES ==
 # ======================
+
 @onready var flip: Node2D = $Position
 @onready var animated_sprite: AnimatedSprite2D = $Position/AnimatedSprite2D
 @onready var attack_cooldown: Timer = $Position/PlayerAttack/AttackCooldown
@@ -50,7 +52,6 @@ var has_double_jump = true
 @onready var invincibility: Timer = $Position/Invincibility
 @onready var player_body: CollisionShape2D = $PlayerBody
 @onready var dash_jump_buffer: Timer = $Position/DashJumpBuffer
-@onready var double_jump_buffer: Timer = $Position/DoubleJumpBuffer
 @onready var pogo_sprite: Sprite2D = $Position/PlayerAttack/PogoSprite
 @onready var pogo_hitbox: CollisionShape2D = $Position/PlayerAttack/PogoHitbox
 
@@ -76,7 +77,6 @@ func _physics_process(delta: float) -> void:
 			# INFO If you press jump during a dash, start the dash jump buffer
 			if Input.is_action_just_pressed("jump"):
 				dash_jump_buffer.start()
-				double_jump_buffer.start()
 			# INFO Smoothly move towards a stop for a DASH_DECAY * delta amount of time
 			velocity.x = move_toward(velocity.x, 0, DASH_DECAY * delta)
 		State.ATTACKING:
@@ -135,6 +135,8 @@ func jump() -> void:
 	
 func double_jump() -> void:
 	has_double_jump = false
+	dash_cooldown_timer.stop()
+	dash_cooldown_active = false
 	velocity.y = JUMP_VELOCITY*0.95
 
 # ======================
@@ -204,20 +206,17 @@ func dash() -> void:
 # ====== TIMEOUTS ======
 # ======================	
 	
-func _on_dash_timeout() -> void:
+func _on_dash_timeout():
 	is_dashing = false
-	# INFO If the player has pressed jump during a dash beforehand and is still holding it, jump
+	# INFO If the dash jump buffer is active and the player is holding jump
 	if not dash_jump_buffer.is_stopped() and Input.is_action_pressed("jump"):
 		if is_on_floor():
-			jump()
+			jump() # INFO Do a normal jump
+		elif has_double_jump:
+			double_jump() # INFO Do a double jump
+
 		dash_jump_buffer.stop()
-	# INFO If the player has pressed jump during an air dash beforehand, is still holding it
-	# and is able to double jump, double jump
-	if not double_jump_buffer.is_stopped() and Input.is_action_pressed("jump"):
-		if not is_on_floor() and has_double_jump:
-			double_jump()
-		double_jump_buffer.stop()
-	# INFO When dash ends, return back to the normal state
+
 	if not is_knocked_back:
 		current_state = State.NORMAL
 
@@ -235,8 +234,10 @@ func _on_invincibility_timeout() -> void:
 func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 	# INFO Only add a different behaviour if we are pogoing
 	if attack_hit_animation.current_animation == "Pogo":
-		velocity.y = JUMP_VELOCITY * 0.75
+		velocity.y = JUMP_VELOCITY * 0.65
 		has_double_jump = true
+		has_air_dash = true
+		dash_cooldown_active = false
 		dash_cooldown_timer.stop()
 		dash_cooldown_active = false
 

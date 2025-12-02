@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
 const SPEED = 30
-var HEALTH = 40
+var HEALTH = 60
 var DAMAGE = 10
 var direction = 1
-var knockback_force = 100.0
+var knockback_force = 60.0
 var is_knocked_back = false
 var is_invincible = false
 

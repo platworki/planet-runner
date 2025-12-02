@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=40 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
@@ -10,7 +10,7 @@ b = Vector2(13.585123, 0.042785406)
 
 [sub_resource type="Animation" id="Animation_3vyb7"]
 resource_name = "Attack"
-length = 0.25
+length = 0.12
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -18,7 +18,7 @@ tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25),
+"times": PackedFloat32Array(0, 0.12),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
@@ -44,7 +44,7 @@ tracks/2/path = NodePath("Position/PlayerAttack/SideAttackSprite")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.25),
+"times": PackedFloat32Array(0, 0.12),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -53,6 +53,48 @@ tracks/2/keys = {
 "args": [],
 "method": &"hide"
 }]
+}
+
+[sub_resource type="Animation" id="Animation_dqkch"]
+resource_name = "Pogo"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [-1],
+"method": &"start"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Position/PlayerAttack/PogoSprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_g2els"]
@@ -104,48 +146,6 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
-}
-
-[sub_resource type="Animation" id="Animation_dqkch"]
-resource_name = "Pogo"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [-1],
-"method": &"start"
-}]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Position/PlayerAttack/PogoSprite:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_g2els"]
@@ -368,6 +368,8 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_dqkch"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
 size = Vector2(8, 14)
 
@@ -420,7 +422,9 @@ texture = ExtResource("2_g2els")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Idle"
+animation = &"Damage"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Position/AnimatedSprite2D"]
 
 [node name="CoyoteTime" type="Timer" parent="Position"]
 wait_time = 0.12
@@ -437,10 +441,6 @@ one_shot = true
 wait_time = 0.08
 one_shot = true
 
-[node name="DoubleJumpBuffer" type="Timer" parent="Position"]
-wait_time = 0.1
-one_shot = true
-
 [node name="DashJumpBuffer" type="Timer" parent="Position"]
 wait_time = 0.1
 one_shot = true
@@ -452,6 +452,9 @@ one_shot = true
 [node name="DashCooldown" type="Timer" parent="Position"]
 wait_time = 0.5
 one_shot = true
+
+[node name="AnimationTree" type="AnimationTree" parent="Position"]
+tree_root = SubResource("AnimationNodeStateMachine_dqkch")
 
 [node name="PlayerBody" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)
