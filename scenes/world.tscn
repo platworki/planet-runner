@@ -259,6 +259,7 @@ unique_name_in_owner = true
 physics_interpolation_mode = 1
 position = Vector2(152, 0)
 platform_on_leave = 1
+safe_margin = 0.01
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 physics_interpolation_mode = 1

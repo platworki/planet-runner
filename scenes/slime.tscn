@@ -100,6 +100,9 @@ script = ExtResource("4_pjw23")
 position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_0l8pv")
 
+[node name="DamageIfInside" type="Timer" parent="SlimeHitbox"]
+wait_time = 0.3
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_v5wyi")
@@ -125,4 +128,6 @@ wait_time = 0.3
 one_shot = true
 
 [connection signal="body_entered" from="SlimeHitbox" to="SlimeHitbox" method="_on_body_entered"]
+[connection signal="body_exited" from="SlimeHitbox" to="SlimeHitbox" method="_on_body_exited"]
+[connection signal="timeout" from="SlimeHitbox/DamageIfInside" to="SlimeHitbox" method="_on_damage_timer_timeout"]
 [connection signal="timeout" from="Invincibility" to="." method="_on_invincibility_timeout"]

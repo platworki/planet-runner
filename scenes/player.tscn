@@ -481,15 +481,15 @@ texture = ExtResource("2_g2els")
 position = Vector2(7.5, -12.5)
 scale = Vector2(0.6458334, 0.6458334)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Attack 2"
+animation = &"Walk"
 autoplay = "Idle"
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
 z_index = -1
-position = Vector2(6, -13)
+position = Vector2(6, -12.95)
 scale = Vector2(0.5625, 0.5625)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
-animation = &"Walk"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="CoyoteTime" type="Timer" parent="Position"]

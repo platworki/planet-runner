@@ -148,12 +148,19 @@ func handle_horizontal_movement() -> void:
 	var direction = Input.get_axis("move_left", "move_right")
 
 	if direction > 0:
+		# INFO If the player is facing the other direction and changes it, cancel the attack
+		if flip.scale == Vector2(-1,1) and torso_animation.animation == "Attack 1":
+			cancel_attack()
 		flip.scale.x = 1
 	elif direction < 0:
+		if flip.scale == Vector2(1,1) and torso_animation.animation == "Attack 1":
+			cancel_attack()
 		flip.scale.x = -1
+		
 	# INFO If the player is on floor, play idle or running, if the player is jumping or falling play jump
 	if is_on_floor():
 		if direction == 0:
+			# INFO If the attack anim is playing don't replace it with idle or walk to not stop abruptly
 			if not is_attacking:
 				torso_animation.play("Idle")
 			legs_animation.play("Idle")
@@ -162,7 +169,7 @@ func handle_horizontal_movement() -> void:
 				torso_animation.play("Walk")
 			legs_animation.play("Walk")
 	else:
-		# WARNING TEMPORARY		
+		# TODO TEMPORARY WAITING FOR JUMP ANIMS
 		if not is_attacking:
 			torso_animation.play("Walk")
 		legs_animation.play("Walk")
@@ -197,7 +204,7 @@ func gravity(delta: float) -> void:
 
 func dash() -> void:
 	is_dashing = true
-	# WARNING TEMPORARY
+	# TODO TEMPORARY WAITING FOR DASH ANIMS
 	torso_animation.play("Walk")
 	legs_animation.play("Walk")
 	# INFO Stop any ongoing attack
@@ -224,7 +231,6 @@ func _on_dash_timeout():
 			jump() # INFO Do a normal jump
 		elif has_double_jump:
 			double_jump() # INFO Do a double jump
-
 		dash_jump_buffer.stop()
 
 	if not is_knocked_back:
@@ -252,6 +258,7 @@ func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 		dash_cooldown_active = false
 
 func _on_torso_animation_finished() -> void:
+	# INFO change the is_attacking var only when the attack animation finishes
 	if torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2":
 		is_attacking = false
 
@@ -266,13 +273,14 @@ func attack() -> void:
 		is_invincible = false
 	if Input.is_action_pressed("down") and not is_on_floor():
 		attack_hit_animation.play("Pogo")
-		# WARNING TEMPORARY
+		# TODO TEMPORARY WAITING FOR POGO ANIMATION
 		torso_animation.play("Attack 2")
 	else:
 		attack_hit_animation.play("Attack")
 		torso_animation.play("Attack 1")
 
 func cancel_attack() -> void:
+	is_attacking = false
 	attack_hit_animation.stop()
 	attack_cooldown.stop()
 	pogo_sprite.visible = false
@@ -303,7 +311,7 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		return
 
 	print("You have ", HEALTH, " left!")
-	# WARNING TEMPORARY
+	# TODO TEMPORARY WAITING FOR DAMAGE ANIMS
 	torso_animation.play("Walk")
 	legs_animation.play("Walk")
 	# INFO Pass the knockback smoothing to the State methods
@@ -326,6 +334,7 @@ func die():
 	print("You died!")
 	Engine.time_scale = 0.5
 	set_physics_process(false)
+	# TODO TEMPORARY, WAITING FOR DEATH ANIMS
 	torso_animation.play("Death")
 	player_body.set_deferred("disabled", true)
 	await get_tree().create_timer(1.0).timeout

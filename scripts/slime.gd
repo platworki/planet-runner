@@ -34,6 +34,7 @@ func _physics_process(delta: float) -> void:
 		velocity.x = direction * SPEED
 
 	move_and_slide()
+	
 func _on_invincibility_timeout() -> void:
 	is_invincible = false
 
