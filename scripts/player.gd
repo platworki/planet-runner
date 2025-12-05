@@ -33,6 +33,7 @@ var is_knocked_back = false
 var is_invincible = false
 var has_air_dash = true
 var has_double_jump = true
+var is_attacking = false
 
 # ======================
 # === NODE REFERENCES ==
@@ -151,18 +152,20 @@ func handle_horizontal_movement() -> void:
 	elif direction < 0:
 		flip.scale.x = -1
 	# INFO If the player is on floor, play idle or running, if the player is jumping or falling play jump
-	if not attack_hit_animation.is_playing():
-		if is_on_floor():
-			if direction == 0:
+	if is_on_floor():
+		if direction == 0:
+			if not is_attacking:
 				torso_animation.play("Idle")
-				legs_animation.play("Idle")
-			else:
-				torso_animation.play("Walk")
-				legs_animation.play("Walk")
+			legs_animation.play("Idle")
 		else:
-			# WARNING TEMPORARY		
-			torso_animation.play("Walk")
+			if not is_attacking:
+				torso_animation.play("Walk")
 			legs_animation.play("Walk")
+	else:
+		# WARNING TEMPORARY		
+		if not is_attacking:
+			torso_animation.play("Walk")
+		legs_animation.play("Walk")
 	# INFO If the input is either A or D, move, otherwise stop smoothly
 	if direction:
 		velocity.x = direction * SPEED
@@ -248,11 +251,16 @@ func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 		dash_cooldown_timer.stop()
 		dash_cooldown_active = false
 
+func _on_torso_animation_finished() -> void:
+	if torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2":
+		is_attacking = false
+
 # ======================
 # ====== ATTACKS =======
 # ======================
 
 func attack() -> void:
+	is_attacking = true
 	# INFO If you attack during invincibility, turn invincibility off to prevent enemy tanking
 	if is_invincible:
 		is_invincible = false
