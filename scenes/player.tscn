@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://d2h5hp1k8nav4" path="res://assets/sprites/idle_legs.png" id="7_ur7pv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
-size = Vector2(14.71802, 5.851205)
+size = Vector2(20.3788, 9.735249)
 
 [sub_resource type="Animation" id="Animation_3vyb7"]
 resource_name = "Attack"
@@ -133,7 +133,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
-size = Vector2(15, 10)
+size = Vector2(28, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wnwbv"]
 atlas = ExtResource("4_ur7pv")
@@ -434,7 +434,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
-size = Vector2(6.5, 22)
+size = Vector2(11.5, 26.5)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 1
@@ -449,7 +449,7 @@ collision_mask = 4
 script = ExtResource("2_dqkch")
 
 [node name="SideAttackHitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
-position = Vector2(11.4074745, -11.499999)
+position = Vector2(19.70374, -17.999998)
 rotation = 1.5707964
 scale = Vector2(0.88327086, 2.9370105)
 shape = SubResource("RectangleShape2D_tuyoq")
@@ -467,27 +467,27 @@ libraries = {
 autoplay = "RESET"
 
 [node name="PogoHitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
-position = Vector2(0.5, 5)
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_qlg0r")
 disabled = true
 
 [node name="PogoSprite" type="Sprite2D" parent="Position/PlayerAttack"]
 visible = false
-position = Vector2(0.49999976, 5)
-scale = Vector2(0.11718749, 0.078125)
+position = Vector2(-4.7683716e-07, 8)
+scale = Vector2(0.21875, 0.125)
 texture = ExtResource("2_g2els")
 
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
-position = Vector2(7.5, -12.5)
-scale = Vector2(0.6458334, 0.6458334)
+position = Vector2(12, -23)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Walk"
+animation = &"Attack 1"
 autoplay = "Idle"
+frame = 6
+frame_progress = 1.0
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
 z_index = -1
-position = Vector2(6, -12.95)
-scale = Vector2(0.5625, 0.5625)
+position = Vector2(12, -23)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
 animation = &"Idle"
 autoplay = "Idle"
@@ -520,7 +520,7 @@ wait_time = 0.5
 one_shot = true
 
 [node name="PlayerBody" type="CollisionShape2D" parent="."]
-position = Vector2(0.25, -11)
+position = Vector2(1.25, -13.75)
 shape = SubResource("RectangleShape2D_dqkch")
 
 [connection signal="area_entered" from="Position/PlayerAttack" to="Position/PlayerAttack" method="_on_area_entered"]

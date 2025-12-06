@@ -88,6 +88,7 @@ animations = [{
 size = Vector2(10, 13)
 
 [node name="Slime" type="CharacterBody2D"]
+scale = Vector2(1.7, 1.7)
 collision_layer = 8
 script = ExtResource("1_n6pvg")
 
@@ -111,13 +112,21 @@ autoplay = "default"
 
 [node name="Raycasts" type="Node2D" parent="."]
 
-[node name="RayCastRightWall" type="RayCast2D" parent="Raycasts"]
+[node name="RaycastRightWall" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -8)
 target_position = Vector2(10, 0)
 
-[node name="RayCastLeftWall" type="RayCast2D" parent="Raycasts"]
+[node name="RaycastLeftWall" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -8)
 target_position = Vector2(-10, 0)
+
+[node name="RaycastLeftAir" type="RayCast2D" parent="Raycasts"]
+position = Vector2(0, -8)
+target_position = Vector2(-13, 10)
+
+[node name="RaycastRightAir" type="RayCast2D" parent="Raycasts"]
+position = Vector2(0, -8)
+target_position = Vector2(13, 10)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -6.5)

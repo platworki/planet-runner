@@ -4,8 +4,8 @@ extends CharacterBody2D
 # === CONFIGURATION ====
 # ======================
 
-const SPEED = 100.0
-const JUMP_VELOCITY = -175.0
+const SPEED = 120.0
+const JUMP_VELOCITY = -190.0
 const GRAVITY_RISING = 330.0
 const GRAVITY_FALLING = 500.0
 const JUMP_CUT_MULTIPLIER = 0.2

@@ -8,11 +8,13 @@ var knockback_force = 60.0
 var is_knocked_back = false
 var is_invincible = false
 
-@onready var ray_cast_right_wall: RayCast2D = $Raycasts/RayCastRightWall
-@onready var ray_cast_left_wall: RayCast2D = $Raycasts/RayCastLeftWall
+@onready var raycast_right_wall: RayCast2D = $Raycasts/RaycastRightWall
+@onready var raycast_left_wall: RayCast2D = $Raycasts/RaycastLeftWall
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var slime_hitbox: CollisionShape2D = $SlimeHitbox/CollisionShape2D
 @onready var invincibility: Timer = $Invincibility
+@onready var raycast_left_air: RayCast2D = $Raycasts/RaycastLeftAir
+@onready var raycast_right_air: RayCast2D = $Raycasts/RaycastRightAir
 
 func _physics_process(delta: float) -> void:
 	if HEALTH <= 0:
@@ -25,10 +27,10 @@ func _physics_process(delta: float) -> void:
 			is_knocked_back = false
 	else:
 		# Normal patrol logic
-		if ray_cast_right_wall.is_colliding():
+		if raycast_right_wall.is_colliding() or (not raycast_right_air.is_colliding() and raycast_left_air.is_colliding()):
 			direction = -1
 			animated_sprite.flip_h = true
-		elif ray_cast_left_wall.is_colliding():
+		elif raycast_left_wall.is_colliding() or (not raycast_left_air.is_colliding() and raycast_right_air.is_colliding()):
 			direction = 1
 			animated_sprite.flip_h = false
 		velocity.x = direction * SPEED
@@ -57,7 +59,7 @@ func take_damage(damage: int, attacker_position: Vector2):
 	if HEALTH <= 0:
 		die()
 	else:
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.3).timeout
 		animated_sprite.play("default")
 
 func die():
