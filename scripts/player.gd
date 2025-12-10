@@ -4,13 +4,13 @@ extends CharacterBody2D
 # === CONFIGURATION ====
 # ======================
 
-const SPEED = 120.0
-const JUMP_VELOCITY = -190.0
-const GRAVITY_RISING = 330.0
-const GRAVITY_FALLING = 500.0
+const SPEED = 140.0
+const JUMP_VELOCITY = -230.0
+const GRAVITY_RISING = 365.0
+const GRAVITY_FALLING = 600.0
 const JUMP_CUT_MULTIPLIER = 0.2
-const DASH_SPEED = 250.0
-const DASH_DECAY = 800.0
+const DASH_SPEED = 300.0
+const DASH_DECAY = 900.0
 const MAX_VELOCITY = 250.0
 
 enum State {

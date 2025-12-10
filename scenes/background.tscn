@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://clyyaxiy3hji8"]
+
+[ext_resource type="Texture2D" uid="uid://dn0d0pld6dgyo" path="res://assets/sprites/backgroundback.png" id="1_y0upk"]
+[ext_resource type="Texture2D" uid="uid://b1w64py2wx5j5" path="res://assets/sprites/backgroundclouds.png" id="2_jougr"]
+
+[node name="Background" type="Node2D"]
+texture_filter = 1
+
+[node name="Back" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.01, 0.02)
+scroll_offset = Vector2(0, 190)
+repeat_size = Vector2(960, 0)
+repeat_times = 4
+screen_offset = Vector2(216, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Back"]
+scale = Vector2(2, 2)
+texture = ExtResource("1_y0upk")
+
+[node name="Clouds" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.03, 0.05)
+scroll_offset = Vector2(0, 90)
+repeat_size = Vector2(480, 0)
+autoscroll = Vector2(1.3, 0)
+repeat_times = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="Clouds"]
+texture = ExtResource("2_jougr")
