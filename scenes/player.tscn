@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=57 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
@@ -13,36 +13,6 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
 size = Vector2(20.3788, 9.735249)
-
-[sub_resource type="Animation" id="Animation_3vyb7"]
-resource_name = "Attack"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.25),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [-1],
-"method": &"start"
-}]
-}
 
 [sub_resource type="Animation" id="Animation_dqkch"]
 resource_name = "Pogo"
@@ -125,9 +95,42 @@ tracks/2/keys = {
 "values": [false]
 }
 
+[sub_resource type="Animation" id="Animation_3vyb7"]
+resource_name = "Attack1"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_y4r1p"]
+resource_name = "Attack2"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.35),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_g2els"]
 _data = {
-&"Attack": SubResource("Animation_3vyb7"),
+&"Attack1": SubResource("Animation_3vyb7"),
+&"Attack2": SubResource("Animation_y4r1p"),
 &"Pogo": SubResource("Animation_dqkch"),
 &"RESET": SubResource("Animation_g2els")
 }
@@ -292,7 +295,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"Attack 2",
-"speed": 19.0
+"speed": 13.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -456,7 +459,10 @@ shape = SubResource("RectangleShape2D_tuyoq")
 disabled = true
 
 [node name="AttackCooldown" type="Timer" parent="Position/PlayerAttack"]
-wait_time = 0.1
+one_shot = true
+
+[node name="Attack2Window" type="Timer" parent="Position/PlayerAttack"]
+wait_time = 0.8
 one_shot = true
 
 [node name="AttackHit" type="AnimationPlayer" parent="Position/PlayerAttack"]
@@ -480,10 +486,8 @@ texture = ExtResource("2_g2els")
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(12, -23)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Attack 1"
+animation = &"Attack 2"
 autoplay = "Idle"
-frame = 6
-frame_progress = 1.0
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
 z_index = -1
@@ -525,6 +529,8 @@ shape = SubResource("RectangleShape2D_dqkch")
 
 [connection signal="area_entered" from="Position/PlayerAttack" to="Position/PlayerAttack" method="_on_area_entered"]
 [connection signal="hit_enemy" from="Position/PlayerAttack" to="." method="_on_player_attack_hit_enemy"]
+[connection signal="timeout" from="Position/PlayerAttack/AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="Position/PlayerAttack/Attack2Window" to="." method="_on_attack_2_window_timeout"]
 [connection signal="animation_finished" from="Position/Torso" to="." method="_on_torso_animation_finished"]
 [connection signal="timeout" from="Position/KnockbackTime" to="." method="_on_knockback_time_timeout"]
 [connection signal="timeout" from="Position/Invincibility" to="." method="_on_invincibility_timeout"]

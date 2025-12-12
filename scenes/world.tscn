@@ -229,7 +229,6 @@ physics_interpolation_mode = 1
 z_index = 1
 offset = Vector2(0, -40)
 ignore_rotation = false
-zoom = Vector2(0.9, 0.9)
 process_callback = 0
 limit_left = -105
 limit_top = -400
