@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=58 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
@@ -13,6 +13,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
 size = Vector2(20.3788, 9.735249)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4r1p"]
+size = Vector2(43.02191, 10.554952)
 
 [sub_resource type="Animation" id="Animation_dqkch"]
 resource_name = "Pogo"
@@ -61,7 +64,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
+tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -94,30 +97,26 @@ tracks/2/keys = {
 "update": 1,
 "values": [false]
 }
-
-[sub_resource type="Animation" id="Animation_3vyb7"]
-resource_name = "Attack1"
-length = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false, true]
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_y4r1p"]
-resource_name = "Attack2"
+resource_name = "Attack 2"
 length = 0.35
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/SideAttackHitbox:disabled")
+tracks/0/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -127,10 +126,26 @@ tracks/0/keys = {
 "values": [false, true]
 }
 
+[sub_resource type="Animation" id="Animation_3vyb7"]
+resource_name = "Attack 1"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_g2els"]
 _data = {
-&"Attack1": SubResource("Animation_3vyb7"),
-&"Attack2": SubResource("Animation_y4r1p"),
+&"Attack 1": SubResource("Animation_3vyb7"),
+&"Attack 2": SubResource("Animation_y4r1p"),
 &"Pogo": SubResource("Animation_dqkch"),
 &"RESET": SubResource("Animation_g2els")
 }
@@ -451,18 +466,24 @@ collision_layer = 2
 collision_mask = 4
 script = ExtResource("2_dqkch")
 
-[node name="SideAttackHitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
+[node name="Attack1Hitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
 position = Vector2(19.70374, -17.999998)
 rotation = 1.5707964
 scale = Vector2(0.88327086, 2.9370105)
 shape = SubResource("RectangleShape2D_tuyoq")
 disabled = true
 
+[node name="Attack2Hitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
+position = Vector2(21.5, -23)
+rotation = 1.5707964
+scale = Vector2(0.88327086, 2.9370105)
+shape = SubResource("RectangleShape2D_y4r1p")
+
 [node name="AttackCooldown" type="Timer" parent="Position/PlayerAttack"]
+wait_time = 0.8
 one_shot = true
 
 [node name="Attack2Window" type="Timer" parent="Position/PlayerAttack"]
-wait_time = 0.8
 one_shot = true
 
 [node name="AttackHit" type="AnimationPlayer" parent="Position/PlayerAttack"]
@@ -486,7 +507,7 @@ texture = ExtResource("2_g2els")
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(12, -23)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Attack 2"
+animation = &"Idle"
 autoplay = "Idle"
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
@@ -531,7 +552,6 @@ shape = SubResource("RectangleShape2D_dqkch")
 [connection signal="hit_enemy" from="Position/PlayerAttack" to="." method="_on_player_attack_hit_enemy"]
 [connection signal="timeout" from="Position/PlayerAttack/AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
 [connection signal="timeout" from="Position/PlayerAttack/Attack2Window" to="." method="_on_attack_2_window_timeout"]
-[connection signal="animation_finished" from="Position/Torso" to="." method="_on_torso_animation_finished"]
 [connection signal="timeout" from="Position/KnockbackTime" to="." method="_on_knockback_time_timeout"]
 [connection signal="timeout" from="Position/Invincibility" to="." method="_on_invincibility_timeout"]
 [connection signal="timeout" from="Position/DashTimer" to="." method="_on_dash_timeout"]

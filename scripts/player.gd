@@ -24,8 +24,8 @@ var current_state = State.NORMAL
 
 var DAMAGE = 10
 var HEALTH = 100
-var knockback_force = 150
-var up_knockback_velocity = -120
+var knockback_force = 200
+var up_knockback_velocity = -160
 var attack_combo_count = 0  # Tracks which attack in combo
 
 var is_dashing = false
@@ -34,8 +34,6 @@ var is_knocked_back = false
 var is_invincible = false
 var has_air_dash = true
 var has_double_jump = true
-var is_attacking = false
-var is_playing_attack_anim = false
 
 # ======================
 # === NODE REFERENCES ==
@@ -46,7 +44,8 @@ var is_playing_attack_anim = false
 @onready var legs_animation: AnimatedSprite2D = $Position/Legs
 @onready var attack_cooldown: Timer = $Position/PlayerAttack/AttackCooldown
 @onready var attack_hit_animation: AnimationPlayer = $Position/PlayerAttack/AttackHit
-@onready var side_attack_hitbox: CollisionShape2D = $Position/PlayerAttack/SideAttackHitbox
+@onready var attack1_hitbox: CollisionShape2D = $Position/PlayerAttack/Attack1Hitbox
+@onready var attack2_hitbox: CollisionShape2D = $Position/PlayerAttack/Attack2Hitbox
 @onready var coyote_time: Timer = $Position/CoyoteTime
 @onready var jump_buffer: Timer = $Position/JumpBuffer
 @onready var dash_timer: Timer = $Position/DashTimer
@@ -147,35 +146,42 @@ func double_jump() -> void:
 # ===== HORIZONTAL =====
 # ======================
 
+func is_torso_locked_by_attacking() -> bool:
+	var current_anim = torso_animation.animation
+	return current_anim == "Attack 1" or current_anim == "Attack 2" or current_anim == "Pogo"
+
 func handle_horizontal_movement() -> void:
 	var direction = Input.get_axis("move_left", "move_right")
 
 	if direction > 0:
 		# INFO If the player is facing the other direction and changes it, cancel the attack
-		if flip.scale == Vector2(-1,1) and (torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2"):
+		if flip.scale.x == -1 and (torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2"):
 			cancel_attack()
 		flip.scale.x = 1
 	elif direction < 0:
-		if flip.scale == Vector2(1,1) and (torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2"):
+		if flip.scale.x == 1 and (torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2"):
 			cancel_attack()
 		flip.scale.x = -1
 		
 	# INFO If the player is on floor, play idle or running, if the player is jumping or falling play jump
+	if not is_torso_locked_by_attacking():
+		if is_on_floor():
+			if direction == 0:
+				torso_animation.play("Idle")
+			else:
+				torso_animation.play("Walk")
+		else:
+			# TODO CHANGE WHEN JUMP ANIMATION
+			torso_animation.play("Walk")
+	
 	if is_on_floor():
 		if direction == 0:
-			# INFO If the attack anim is playing don't replace it with idle or walk to not stop abruptly
-			if not is_playing_attack_anim:
-				torso_animation.play("Idle")
 			legs_animation.play("Idle")
 		else:
-			if not is_playing_attack_anim:
-				torso_animation.play("Walk")
 			legs_animation.play("Walk")
 	else:
-		# TODO TEMPORARY WAITING FOR JUMP ANIMS
-		if not is_playing_attack_anim:
-			torso_animation.play("Walk")
 		legs_animation.play("Walk")
+		
 	# INFO If the input is either A or D, move, otherwise stop smoothly
 	if direction:
 		velocity.x = direction * SPEED
@@ -212,6 +218,7 @@ func dash() -> void:
 	legs_animation.play("Walk")
 	# INFO Stop any ongoing attack
 	cancel_attack()
+	attack_cooldown.stop()
 	# INFO Actually dash
 	velocity.x = DASH_SPEED * flip.scale.x * 1.2
 	velocity.y = 0
@@ -268,11 +275,6 @@ func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 		dash_cooldown_active = false
 		dash_cooldown_timer.stop()
 		dash_cooldown_active = false
-
-func _on_torso_animation_finished() -> void:
-	if torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2":
-		is_attacking = false
-		is_playing_attack_anim = false
 		
 # ======================
 # ====== ATTACKS =======
@@ -283,7 +285,6 @@ func attack() -> void:
 		is_invincible = false
 			
 	if Input.is_action_pressed("down") and not is_on_floor():
-		is_attacking = true
 		attack_combo_count = 0  # Reset combo
 		attack_hit_animation.play("Pogo")
 		# TODO: Make pogo animation
@@ -294,33 +295,40 @@ func attack() -> void:
 	# Ground attacks - combo system
 	if attack_combo_count == 0:
 		# First attack
-		is_attacking = true
-		is_playing_attack_anim = true
 		attack_combo_count = 1
-		attack_hit_animation.play("Attack1")
+		attack_hit_animation.play("Attack 1")
 		torso_animation.play("Attack 1")
 		attack_2_window.start()  # Window to do second attack
+		attack_cooldown.start(0.2)
 		
 	elif attack_combo_count == 1 and not attack_2_window.is_stopped():
 		attack_combo_count = 2
-		is_playing_attack_anim = true
 		attack_2_window.stop()  # Close window
-		attack_hit_animation.play("Attack2")
+		attack_hit_animation.play("Attack 2")
 		torso_animation.play("Attack 2")
-		attack_cooldown.start()  # Long cooldown after combo finishes
+		attack_cooldown.start(0.8)  # Long cooldown after combo finishes
 
 func cancel_attack() -> void:
-	is_attacking = false
-	
 	if attack_combo_count == 1:
 		attack_2_window.stop()
-	
 	attack_combo_count = 0  # Reset combo
 	attack_hit_animation.stop()
+	torso_animation.play("Idle")
+	torso_animation.stop()
 	pogo_sprite.visible = false
 	pogo_hitbox.disabled = true
-	side_attack_hitbox.disabled = true
+	attack1_hitbox.disabled = true
+	attack2_hitbox.disabled = true
+
+func get_current_attack_damage() -> int:
+	var base_damage = DAMAGE
+	var current_anim = attack_hit_animation.current_animation
 	
+	if current_anim == "Attack 2":
+		return base_damage*1.5
+	else:
+		return base_damage
+
 # ======================
 # ===== KNOCKBACK ======
 # ======================

@@ -59,7 +59,7 @@ func take_damage(damage: int, attacker_position: Vector2):
 	if HEALTH <= 0:
 		die()
 	else:
-		await get_tree().create_timer(0.3).timeout
+		await get_tree().create_timer(invincibility.wait_time).timeout
 		animated_sprite.play("default")
 
 func die():

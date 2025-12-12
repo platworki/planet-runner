@@ -12,4 +12,6 @@ func _on_area_entered(area: Area2D) -> void:
 		var player = get_parent().get_parent()  # Position -> Player
 		# tell the player (or whoever's connected) that we hit an enemy
 		emit_signal("hit_enemy", enemy)
-		enemy.take_damage(player.DAMAGE, player.global_position)
+		
+		var damage = player.get_current_attack_damage()
+		enemy.take_damage(damage, player.global_position)
