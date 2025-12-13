@@ -9,9 +9,11 @@ const JUMP_VELOCITY = -230.0
 const GRAVITY_RISING = 365.0
 const GRAVITY_FALLING = 600.0
 const JUMP_CUT_MULTIPLIER = 0.2
-const DASH_SPEED = 300.0
-const DASH_DECAY = 900.0
+const DASH_SPEED = 330.0
+const DASH_DECAY = 1200.0
 const MAX_VELOCITY = 250.0
+# Determines how slow vertical movement must be to trigger "RiseToFall"
+const JUMP_PEAK_THRESHOLD = 60.0
 
 enum State {
 	NORMAL,
@@ -27,13 +29,9 @@ var HEALTH = 100
 var knockback_force = 200
 var up_knockback_velocity = -160
 var attack_combo_count = 0  # Tracks which attack in combo
-
-var is_dashing = false
-var dash_cooldown_active = false
-var is_knocked_back = false
-var is_invincible = false
 var has_air_dash = true
 var has_double_jump = true
+var was_on_floor = true # Added to track landing frames
 
 # ======================
 # === NODE REFERENCES ==
@@ -63,10 +61,11 @@ var has_double_jump = true
 # ======================
 
 func _physics_process(delta: float) -> void:
+	was_on_floor = is_on_floor()
+	
 	match current_state:
 		State.NORMAL:
-			# INFO If the player presses dash and can dash, go into dashing
-			if Input.is_action_just_pressed("dash") and has_air_dash and not dash_cooldown_active:
+			if Input.is_action_just_pressed("dash") and has_air_dash and dash_cooldown_timer.is_stopped():
 				current_state = State.DASHING
 			if Input.is_action_just_pressed("attack") and attack_cooldown.is_stopped():
 				current_state = State.ATTACKING
@@ -74,8 +73,7 @@ func _physics_process(delta: float) -> void:
 			handle_horizontal_movement()
 			gravity(delta)
 		State.DASHING:
-			# INFO If the player is dashing right now, don't start a dash again
-			if not is_dashing:
+			if dash_timer.is_stopped():
 				dash()
 			# INFO If you press jump during a dash, start the dash jump buffer
 			if Input.is_action_just_pressed("jump"):
@@ -83,7 +81,6 @@ func _physics_process(delta: float) -> void:
 			# INFO Smoothly move towards a stop for a DASH_DECAY * delta amount of time
 			velocity.x = move_toward(velocity.x, 0, DASH_DECAY * delta)
 		State.ATTACKING:
-			# INFO Turn on the hitboxes and sprite
 			attack()
 			# INFO Return back to normal immediately which allows for movement
 			current_state = State.NORMAL
@@ -91,6 +88,24 @@ func _physics_process(delta: float) -> void:
 			handle_knockback(delta)
 	move_and_slide()
 	
+		# In _physics_process, after move_and_slide():
+	if not was_on_floor and is_on_floor() and current_state == State.NORMAL:
+		var direction = Input.get_axis("move_left", "move_right")
+		
+		# TORSO landing
+		if not is_torso_attacking():
+			if direction == 0:
+				torso_animation.play("Landing")
+			else:
+				torso_animation.play("Walk")
+				legs_animation.frame = 5
+		
+		# LEGS landing (always independent)
+		if direction == 0:
+			legs_animation.play("Landing")
+		else:
+			legs_animation.play("Walk")
+			legs_animation.frame = 5
 # ======================
 # ====== JUMPING =======
 # ======================
@@ -99,7 +114,6 @@ func handle_jump() -> void:
 	# INFO If the player is falling at max velocity, keep it like that
 	if velocity.y >= MAX_VELOCITY:
 		velocity.y = MAX_VELOCITY
-	# INFO Reset air dash when the player is on the floor
 	if is_on_floor():
 		if not has_air_dash:
 			has_air_dash = true
@@ -127,62 +141,94 @@ func handle_jump() -> void:
 	if Input.is_action_just_released("jump") and velocity.y < 0:
 		velocity.y *= JUMP_CUT_MULTIPLIER
 
-# INFO Reset all the booleans that depend on hitting the floor and then jump
 func jump() -> void:
 	coyote_time.stop()
 	velocity.y = JUMP_VELOCITY
 	has_double_jump = true
 	dash_cooldown_timer.stop()
-	dash_cooldown_active = false
 	jump_buffer.stop()
+	
+	# ALWAYS play jump start (even during attacks)
+	if not is_torso_attacking():
+		torso_animation.play("StartJump")
+	legs_animation.play("StartJump")  # Legs always update
 	
 func double_jump() -> void:
 	has_double_jump = false
 	dash_cooldown_timer.stop()
-	dash_cooldown_active = false
 	velocity.y = JUMP_VELOCITY*0.95
+	
+	if not is_torso_attacking():
+		torso_animation.play("StartJump")
+	legs_animation.play("StartJump")  # Legs always update
 
 # ======================
 # ===== HORIZONTAL =====
 # ======================
 
-func is_torso_locked_by_attacking() -> bool:
+func is_torso_attacking() -> bool:
 	var current_anim = torso_animation.animation
-	return current_anim == "Attack 1" or current_anim == "Attack 2" or current_anim == "Pogo"
+	return current_anim in ["Attack 1", "Attack 2", "Pogo"]
+
+func is_torso_transitioning() -> bool:
+	var current_anim = torso_animation.animation
+	return current_anim in ["StartJump", "Landing"]
+
+func handle_air_animations() -> void:
+	# Only update if torso is not attacking
+	if not is_torso_attacking():
+		if velocity.y < -JUMP_PEAK_THRESHOLD:
+			torso_animation.play("Rising")
+		elif velocity.y < JUMP_PEAK_THRESHOLD:
+			torso_animation.play("RiseToFall")
+		else:
+			torso_animation.play("Falling")
+	
+	# LEGS ALWAYS UPDATE (independent of torso)
+	if velocity.y < -JUMP_PEAK_THRESHOLD:
+		legs_animation.play("Rising")
+	elif velocity.y < JUMP_PEAK_THRESHOLD:
+		legs_animation.play("RiseToFall")
+	else:
+		legs_animation.play("Falling")
 
 func handle_horizontal_movement() -> void:
 	var direction = Input.get_axis("move_left", "move_right")
 
 	if direction > 0:
-		# INFO If the player is facing the other direction and changes it, cancel the attack
-		if flip.scale.x == -1 and (torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2"):
+		if flip.scale.x == -1 and is_torso_attacking():
 			cancel_attack()
 		flip.scale.x = 1
 	elif direction < 0:
-		if flip.scale.x == 1 and (torso_animation.animation == "Attack 1" or torso_animation.animation == "Attack 2"):
+		if flip.scale.x == 1 and is_torso_attacking():
 			cancel_attack()
 		flip.scale.x = -1
-		
-	# INFO If the player is on floor, play idle or running, if the player is jumping or falling play jump
-	if not is_torso_locked_by_attacking():
-		if is_on_floor():
+	
+	# ON GROUND
+	if is_on_floor():
+		# TORSO animations (respect attacks and transitions)
+		if not is_torso_attacking() and not is_torso_transitioning():
 			if direction == 0:
 				torso_animation.play("Idle")
 			else:
 				torso_animation.play("Walk")
-		else:
-			# TODO CHANGE WHEN JUMP ANIMATION
+		elif torso_animation.animation == "Landing" and direction != 0:
 			torso_animation.play("Walk")
-	
-	if is_on_floor():
-		if direction == 0:
-			legs_animation.play("Idle")
-		else:
-			legs_animation.play("Walk")
-	else:
-		legs_animation.play("Walk")
 		
-	# INFO If the input is either A or D, move, otherwise stop smoothly
+		# LEGS animations (ALWAYS update, ignore attacks)
+		if legs_animation.animation not in ["StartJump", "Landing"]:
+			if direction == 0:
+				legs_animation.play("Idle")
+			else:
+				legs_animation.play("Walk")
+		elif legs_animation.animation == "Landing" and direction != 0:
+			legs_animation.play("Walk")
+	
+	# IN AIR
+	else:
+		handle_air_animations()
+	
+	# Movement
 	if direction:
 		velocity.x = direction * SPEED
 	else:
@@ -193,7 +239,6 @@ func handle_horizontal_movement() -> void:
 # ======================
 
 func gravity(delta: float) -> void:
-	# INFO If the player is not on the floor, add gravity
 	if not is_on_floor():
 		# INFO If player is going up, slowly decrease the players velocity
 		if velocity.y < 0:
@@ -212,29 +257,80 @@ func gravity(delta: float) -> void:
 # ======================	
 
 func dash() -> void:
-	is_dashing = true
 	# TODO TEMPORARY WAITING FOR DASH ANIMS
 	torso_animation.play("Walk")
 	legs_animation.play("Walk")
 	# INFO Stop any ongoing attack
 	cancel_attack()
 	attack_cooldown.stop()
-	# INFO Actually dash
 	velocity.x = DASH_SPEED * flip.scale.x * 1.2
 	velocity.y = 0
-	dash_cooldown_active = true
 	dash_timer.start()
 	dash_cooldown_timer.start()
-	# INFO Consume air dash if used in air
 	if not is_on_floor():
 		has_air_dash = false
 
 # ======================
 # ====== TIMEOUTS ======
-# ======================	
+# ======================
+
+func _on_torso_animation_finished() -> void:
+	var current_anim = torso_animation.animation
 	
+	# Handle attack animations finishing
+	if current_anim in ["Attack 1", "Attack 2", "Pogo"]:
+		# Attack finished - resume appropriate animation based on state
+		if is_on_floor():
+			var direction = Input.get_axis("move_left", "move_right")
+			if direction == 0:
+				torso_animation.play("Idle")
+			else:
+				torso_animation.play("Walk")
+		else:
+			# In air - directly set animation (don't call handle_air_animations because it checks is_torso_attacking)
+			if velocity.y < -JUMP_PEAK_THRESHOLD:
+				torso_animation.play("Rising")
+			elif velocity.y < JUMP_PEAK_THRESHOLD:
+				torso_animation.play("RiseToFall")
+			else:
+				torso_animation.play("Falling")
+		return
+	
+	# Handle transition animations finishing
+	if current_anim == "Landing" or current_anim == "StartJump":
+		if is_on_floor():
+			torso_animation.play("Idle")
+			legs_animation.play("Idle")
+		else:
+			# Same fix here - directly set animation
+			if velocity.y < -JUMP_PEAK_THRESHOLD:
+				torso_animation.play("Rising")
+			elif velocity.y < JUMP_PEAK_THRESHOLD:
+				torso_animation.play("RiseToFall")
+			else:
+				torso_animation.play("Falling")
+
+func _on_legs_animation_finished() -> void:
+	var current_anim = legs_animation.animation
+	
+	# Handle transition animations finishing
+	if current_anim == "Landing" or current_anim == "StartJump":
+		if is_on_floor():
+			var direction = Input.get_axis("move_left", "move_right")
+			if direction == 0:
+				legs_animation.play("Idle")
+			else:
+				legs_animation.play("Walk")
+		else:
+			# In air - resume air animations
+			if velocity.y < -JUMP_PEAK_THRESHOLD:
+				legs_animation.play("Rising")
+			elif velocity.y < JUMP_PEAK_THRESHOLD:
+				legs_animation.play("RiseToFall")
+			else:
+				legs_animation.play("Falling")
+				
 func _on_dash_timeout():
-	is_dashing = false
 	# INFO If the dash jump buffer is active and the player is holding jump
 	if not dash_jump_buffer.is_stopped() and Input.is_action_pressed("jump"):
 		if is_on_floor():
@@ -243,23 +339,16 @@ func _on_dash_timeout():
 			double_jump() # INFO Do a double jump
 		dash_jump_buffer.stop()
 
-	if not is_knocked_back:
+	if current_state != State.KNOCKED_BACK:
 		current_state = State.NORMAL
-
-func _on_dash_cooldown_timeout() -> void:
-	dash_cooldown_active = false
 
 func _on_attack_cooldown_timeout() -> void:
 	if attack_combo_count == 2:
 		attack_combo_count = 0
 
 func _on_knockback_time_timeout() -> void:
-	is_knocked_back = false
 	current_state = State.NORMAL
 
-func _on_invincibility_timeout() -> void:
-	is_invincible = false
-	
 func _on_attack_2_window_timeout() -> void:
 	# Player didn't attack again in time
 	if attack_combo_count == 1:
@@ -272,17 +361,15 @@ func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 		velocity.y = JUMP_VELOCITY * 0.65
 		has_double_jump = true
 		has_air_dash = true
-		dash_cooldown_active = false
 		dash_cooldown_timer.stop()
-		dash_cooldown_active = false
 		
 # ======================
 # ====== ATTACKS =======
 # ======================
 
 func attack() -> void:
-	if is_invincible:
-		is_invincible = false
+	if not invincibility.is_stopped():
+		invincibility.stop()
 			
 	if Input.is_action_pressed("down") and not is_on_floor():
 		attack_combo_count = 0  # Reset combo
@@ -314,7 +401,6 @@ func cancel_attack() -> void:
 	attack_combo_count = 0  # Reset combo
 	attack_hit_animation.stop()
 	torso_animation.play("Idle")
-	torso_animation.stop()
 	pogo_sprite.visible = false
 	pogo_hitbox.disabled = true
 	attack1_hitbox.disabled = true
@@ -344,7 +430,7 @@ func handle_knockback(delta: float) -> void:
 # ======================
 
 func take_damage(enemy_damage: int, enemy_position: Vector2):
-	if is_invincible:
+	if not invincibility.is_stopped():
 		return
 		
 	HEALTH -= enemy_damage
@@ -363,9 +449,7 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 	velocity.x = knock_dir * knockback_force
 	velocity.y = up_knockback_velocity
 	
-	is_dashing = false
-	is_knocked_back = true
-	is_invincible = true
+	invincibility.start()
 	has_air_dash = true
 	has_double_jump = true
 	
@@ -382,3 +466,4 @@ func die():
 	await get_tree().create_timer(1.0).timeout
 	Engine.time_scale = 1
 	get_tree().reload_current_scene()
+	
