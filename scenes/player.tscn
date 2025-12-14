@@ -1,4 +1,4 @@
-[gd_scene load_steps=104 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=103 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
@@ -63,7 +63,7 @@ tracks/0/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.0667, 0.25),
+"times": PackedFloat32Array(0.05, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
@@ -301,10 +301,6 @@ region = Rect2(144, 0, 48, 48)
 atlas = ExtResource("7_d2wvv")
 region = Rect2(192, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_74r1k"]
-atlas = ExtResource("7_d2wvv")
-region = Rect2(240, 0, 48, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_smehm"]
 atlas = ExtResource("5_tuyoq")
 region = Rect2(0, 0, 48, 48)
@@ -520,13 +516,10 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_apa73")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_74r1k")
 }],
 "loop": false,
 "name": &"StartJump",
-"speed": 14.0
+"speed": 30.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -730,7 +723,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"RiseToFall",
-"speed": 8.0
+"speed": 9.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -758,7 +751,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"StartJump",
-"speed": 14.0
+"speed": 30.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -822,6 +815,10 @@ disabled = true
 [node name="AttackCooldown" type="Timer" parent="Position/PlayerAttack"]
 one_shot = true
 
+[node name="PogoCooldown" type="Timer" parent="Position/PlayerAttack"]
+wait_time = 0.2
+one_shot = true
+
 [node name="Attack2Window" type="Timer" parent="Position/PlayerAttack"]
 one_shot = true
 
@@ -838,7 +835,7 @@ shape = SubResource("RectangleShape2D_qlg0r")
 disabled = true
 
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
-position = Vector2(12, -23)
+position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"Idle"
 autoplay = "Idle"

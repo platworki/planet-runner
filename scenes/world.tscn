@@ -248,6 +248,6 @@ editor_draw_drag_margin = true
 
 [node name="Background" parent="." instance=ExtResource("7_4mrxx")]
 z_index = -10
-position = Vector2(0, 16)
+position = Vector2(0, 18)
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]

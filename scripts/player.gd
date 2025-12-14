@@ -28,10 +28,10 @@ var DAMAGE = 10
 var HEALTH = 100
 var knockback_force = 200
 var up_knockback_velocity = -160
-var attack_combo_count = 0  # Tracks which attack in combo
+var attack_combo_count = 0  # INFO Tracks which attack in combo
 var has_air_dash = true
 var has_double_jump = true
-var was_on_floor = true # Added to track landing frames
+var was_on_floor = true
 
 # ======================
 # === NODE REFERENCES ==
@@ -54,24 +54,33 @@ var was_on_floor = true # Added to track landing frames
 @onready var dash_jump_buffer: Timer = $Position/DashJumpBuffer
 @onready var pogo_hitbox: CollisionShape2D = $Position/PlayerAttack/PogoHitbox
 @onready var attack_2_window: Timer = $Position/PlayerAttack/Attack2Window
+@onready var pogo_cooldown: Timer = $Position/PlayerAttack/PogoCooldown
 
 # ======================
 # ===== MAIN LOOP ======
 # ======================
 
 #func _ready() -> void:
-	#Engine.time_scale = 0.2
+	#Engine.time_scale = 0.1
 
 func _physics_process(delta: float) -> void:
 	# INFO Check if at the beginning of the frame the players on the floor
 	was_on_floor = is_on_floor()
 	
+	if current_state != State.KNOCKED_BACK:
+		# INFO If player stops holding space during a jump and going up, cut their jump velocity
+		if Input.is_action_just_released("jump") and velocity.y < 0:
+			velocity.y *= JUMP_CUT_MULTIPLIER
+	
 	match current_state:
 		State.NORMAL:
 			if Input.is_action_just_pressed("dash") and has_air_dash and dash_cooldown_timer.is_stopped():
 				current_state = State.DASHING
-			if Input.is_action_just_pressed("attack") and attack_cooldown.is_stopped():
-				current_state = State.ATTACKING
+			if Input.is_action_just_pressed("attack"):
+				if attack_cooldown.is_stopped() and (is_on_floor() or not Input.is_action_pressed("down")):
+					current_state = State.ATTACKING
+				elif pogo_cooldown.is_stopped() and Input.is_action_pressed("down") and not is_on_floor():
+					current_state = State.ATTACKING
 			handle_jump()
 			handle_horizontal_movement()
 			gravity(delta)
@@ -85,6 +94,7 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, DASH_DECAY * delta)
 		State.ATTACKING:
 			attack()
+			handle_jump()
 			# INFO Return back to normal immediately which allows for movement
 			current_state = State.NORMAL
 		State.KNOCKED_BACK:
@@ -138,9 +148,6 @@ func handle_jump() -> void:
 	# INFO If the jump buffer is running and you reach the floor, jump
 	if not jump_buffer.is_stopped() and is_on_floor():
 		jump()
-	# INFO If player stops holding space during a jump and going up, cut their jump velocity
-	if Input.is_action_just_released("jump") and velocity.y < 0:
-		velocity.y *= JUMP_CUT_MULTIPLIER
 
 func jump() -> void:
 	coyote_time.stop()
@@ -179,6 +186,8 @@ func is_torso_transitioning() -> bool:
 	return current_anim in ["StartJump", "Landing"]
 
 func handle_air_animations() -> void:
+	if is_torso_transitioning():
+		return
 	# INFO TORSO UPDATE - Only if player is not attacking
 	if not is_torso_attacking():
 		if velocity.y < -JUMP_PEAK_THRESHOLD:
@@ -187,7 +196,8 @@ func handle_air_animations() -> void:
 			torso_animation.play("RiseToFall")
 		else:
 			torso_animation.play("Falling")
-	
+	if legs_animation.animation in ["StartJump", "Landing"]:
+		return
 	# INFO LEGS UPDATE - ALWAYS UPDATE
 	if velocity.y < -JUMP_PEAK_THRESHOLD:
 		legs_animation.play("Rising")
@@ -370,7 +380,7 @@ func _on_attack_2_window_timeout() -> void:
 func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 	# INFO Only add a different behaviour if we are pogoing
 	if attack_hit_animation.current_animation == "Pogo":
-		velocity.y = JUMP_VELOCITY * 0.7
+		velocity.y = JUMP_VELOCITY * 0.65
 		has_double_jump = true
 		has_air_dash = true
 		dash_cooldown_timer.stop()
@@ -390,6 +400,7 @@ func attack() -> void:
 		# INFO Pogo animation is too high, using offset to lower it
 		torso_animation.offset = Vector2(0,8.0)
 		attack_cooldown.start(0.25)  # INFO Short cooldown after pogo
+		pogo_cooldown.start(0.3)
 		return
 	
 	# INFO Main attacks - combo system
@@ -406,7 +417,7 @@ func attack() -> void:
 		attack_2_window.stop()
 		attack_hit_animation.play("Attack 2")
 		torso_animation.play("Attack 2")
-		attack_cooldown.start(0.8)  # INFO Long cooldown after combo finishes
+		attack_cooldown.start(0.6)  # INFO Long cooldown after combo finishes
 
 func cancel_attack() -> void:
 	if attack_combo_count == 1:
