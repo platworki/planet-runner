@@ -1,17 +1,19 @@
-[gd_scene load_steps=85 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=104 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
 [ext_resource type="Script" uid="uid://csoy286hyp5i3" path="res://scripts/deal_damage.gd" id="2_dqkch"]
-[ext_resource type="Texture2D" uid="uid://co8k6nwb3oga7" path="res://icon.svg" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://0hn1sjsvuqus" path="res://assets/sprites/body-attack-1-Sheet.png" id="4_ur7pv"]
 [ext_resource type="Texture2D" uid="uid://prhvcq51yccv" path="res://assets/sprites/idle_body.png" id="5_smehm"]
 [ext_resource type="Texture2D" uid="uid://b0t0o2kxyyt4n" path="res://assets/sprites/body-walk-spritesheet.png" id="5_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://bvhrffl30viek" path="res://assets/sprites/body-attack-2-Sheet.png" id="5_y4r1p"]
+[ext_resource type="Texture2D" uid="uid://cgoi0tbxd66pe" path="res://assets/sprites/dash_animation_body-Sheet.png" id="6_f1ej7"]
 [ext_resource type="Texture2D" uid="uid://bw6e0f88buu5j" path="res://assets/sprites/legs-walk-spritesheet.png" id="6_fjrip"]
 [ext_resource type="Texture2D" uid="uid://xridl48gaox7" path="res://assets/sprites/body_jump_sheet.png" id="7_d2wvv"]
 [ext_resource type="Texture2D" uid="uid://d2h5hp1k8nav4" path="res://assets/sprites/idle_legs.png" id="7_ur7pv"]
+[ext_resource type="Texture2D" uid="uid://dogtt2315p6a8" path="res://assets/sprites/pogo-Sheet.png" id="9_jej6c"]
 [ext_resource type="Texture2D" uid="uid://ds4dcer7weh6o" path="res://assets/sprites/legs_jump_sheet.png" id="10_3v2ag"]
+[ext_resource type="Texture2D" uid="uid://cout8iadvsa1r" path="res://assets/sprites/dash_animation_legs-Sheet.png" id="11_oprun"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
 size = Vector2(20.3788, 9.735249)
@@ -21,7 +23,7 @@ size = Vector2(43.02191, 10.554952)
 
 [sub_resource type="Animation" id="Animation_3vyb7"]
 resource_name = "Attack 1"
-length = 0.12
+length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -29,7 +31,7 @@ tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.12),
+"times": PackedFloat32Array(0, 0.2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
@@ -37,7 +39,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_y4r1p"]
 resource_name = "Attack 2"
-length = 0.12
+length = 0.25
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -45,7 +47,7 @@ tracks/0/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.12),
+"times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
@@ -53,7 +55,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_dqkch"]
 resource_name = "Pogo"
-length = 0.12
+length = 0.25
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -61,7 +63,7 @@ tracks/0/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.12),
+"times": PackedFloat32Array(0.0667, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
@@ -73,24 +75,12 @@ tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.12),
+"times": PackedFloat32Array(0.25),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [-1],
 "method": &"start"
 }]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Position/PlayerAttack/PogoSprite:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.12),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_g2els"]
@@ -122,22 +112,10 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Position/PlayerAttack/PogoSprite:visible")
+tracks/2/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [false]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -153,7 +131,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
-size = Vector2(28, 16)
+size = Vector2(33, 17)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wnwbv"]
 atlas = ExtResource("4_ur7pv")
@@ -211,6 +189,30 @@ region = Rect2(288, 0, 48, 48)
 atlas = ExtResource("1_3vyb7")
 region = Rect2(64, 192, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_qjsmb"]
+atlas = ExtResource("6_f1ej7")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mwp2n"]
+atlas = ExtResource("6_f1ej7")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0yhus"]
+atlas = ExtResource("6_f1ej7")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jlll7"]
+atlas = ExtResource("6_f1ej7")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qk6i7"]
+atlas = ExtResource("6_f1ej7")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6c3st"]
+atlas = ExtResource("6_f1ej7")
+region = Rect2(240, 0, 48, 48)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_a38lo"]
 atlas = ExtResource("1_3vyb7")
 region = Rect2(0, 224, 32, 32)
@@ -242,6 +244,26 @@ region = Rect2(0, 192, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_holxr"]
 atlas = ExtResource("7_d2wvv")
 region = Rect2(48, 192, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_51ujp"]
+atlas = ExtResource("9_jej6c")
+region = Rect2(0, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8f1cb"]
+atlas = ExtResource("9_jej6c")
+region = Rect2(48, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdulj"]
+atlas = ExtResource("9_jej6c")
+region = Rect2(96, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vau08"]
+atlas = ExtResource("9_jej6c")
+region = Rect2(144, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qsb7e"]
+atlas = ExtResource("9_jej6c")
+region = Rect2(192, 0, 48, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mx1m4"]
 atlas = ExtResource("7_d2wvv")
@@ -376,6 +398,29 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_qjsmb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mwp2n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0yhus")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jlll7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qk6i7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6c3st")
+}],
+"loop": true,
+"name": &"Dash",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_a38lo")
 }, {
 "duration": 1.0,
@@ -420,6 +465,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_51ujp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8f1cb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdulj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vau08")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qsb7e")
+}],
+"loop": false,
+"name": &"Pogo",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_mx1m4")
 }, {
 "duration": 1.0,
@@ -430,7 +495,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"RiseToFall",
-"speed": 8.0
+"speed": 7.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -492,6 +557,30 @@ animations = [{
 "name": &"Walk",
 "speed": 10.0
 }]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1da1t"]
+atlas = ExtResource("11_oprun")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p21yu"]
+atlas = ExtResource("11_oprun")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_irpag"]
+atlas = ExtResource("11_oprun")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bpsgo"]
+atlas = ExtResource("11_oprun")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jx8is"]
+atlas = ExtResource("11_oprun")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vx63k"]
+atlas = ExtResource("11_oprun")
+region = Rect2(240, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8svfe"]
 atlas = ExtResource("10_3v2ag")
@@ -579,6 +668,29 @@ region = Rect2(336, 0, 48, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dt7fs"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1da1t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p21yu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_irpag")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bpsgo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jx8is")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vx63k")
+}],
+"loop": true,
+"name": &"Dash",
+"speed": 10.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8svfe")
@@ -721,15 +833,9 @@ libraries = {
 autoplay = "RESET"
 
 [node name="PogoHitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
-position = Vector2(0, 8)
+position = Vector2(5.5, 5.5)
 shape = SubResource("RectangleShape2D_qlg0r")
 disabled = true
-
-[node name="PogoSprite" type="Sprite2D" parent="Position/PlayerAttack"]
-visible = false
-position = Vector2(-4.7683716e-07, 8)
-scale = Vector2(0.21875, 0.125)
-texture = ExtResource("2_g2els")
 
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(12, -23)
@@ -753,6 +859,7 @@ wait_time = 0.35
 one_shot = true
 
 [node name="Invincibility" type="Timer" parent="Position"]
+wait_time = 0.9
 one_shot = true
 
 [node name="JumpBuffer" type="Timer" parent="Position"]

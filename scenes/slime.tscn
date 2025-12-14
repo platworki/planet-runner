@@ -133,7 +133,7 @@ position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_pjw23")
 
 [node name="Invincibility" type="Timer" parent="."]
-wait_time = 0.25
+wait_time = 0.2
 one_shot = true
 
 [connection signal="body_entered" from="SlimeHitbox" to="SlimeHitbox" method="_on_body_entered"]
