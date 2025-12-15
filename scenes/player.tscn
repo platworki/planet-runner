@@ -1,4 +1,4 @@
-[gd_scene load_steps=103 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=101 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Texture2D" uid="uid://thhvrcyhf7mo" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
@@ -281,10 +281,6 @@ region = Rect2(96, 96, 48, 48)
 atlas = ExtResource("7_d2wvv")
 region = Rect2(0, 48, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_2gdjj"]
-atlas = ExtResource("7_d2wvv")
-region = Rect2(0, 0, 48, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_sc3ue"]
 atlas = ExtResource("7_d2wvv")
 region = Rect2(48, 0, 48, 48)
@@ -503,9 +499,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_2gdjj")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_sc3ue")
 }, {
 "duration": 1.0,
@@ -519,7 +512,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"StartJump",
-"speed": 30.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -622,10 +615,6 @@ region = Rect2(144, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_2w11d"]
 atlas = ExtResource("10_3v2ag")
 region = Rect2(192, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_770dr"]
-atlas = ExtResource("10_3v2ag")
-region = Rect2(240, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a8ls1"]
 atlas = ExtResource("6_fjrip")
@@ -745,13 +734,10 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2w11d")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_770dr")
 }],
 "loop": false,
 "name": &"StartJump",
-"speed": 30.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -820,6 +806,7 @@ wait_time = 0.2
 one_shot = true
 
 [node name="Attack2Window" type="Timer" parent="Position/PlayerAttack"]
+wait_time = 0.6
 one_shot = true
 
 [node name="AttackHit" type="AnimationPlayer" parent="Position/PlayerAttack"]
