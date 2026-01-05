@@ -1,8 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://m5lnnpajrh2h"]
 
-[ext_resource type="AudioStream" uid="uid://djouo0soyvxac" path="res://assets/music/time_for_adventure.mp3" id="1_05ggv"]
+[ext_resource type="AudioStream" uid="uid://bf2o87gftb7tn" path="res://assets/music/Sandopolis.mp3" id="1_05ggv"]
 
-[node name="Music" type="AudioStreamPlayer2D"]
+[node name="DesertBackgroundOST" type="AudioStreamPlayer"]
 stream = ExtResource("1_05ggv")
+volume_db = -25.0
 autoplay = true
 bus = &"Music"

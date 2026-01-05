@@ -169,6 +169,7 @@ texture_region_size = Vector2i(32, 32)
 0:6/size_in_atlas = Vector2i(1, 2)
 0:6/0 = 0
 0:6/0/texture_origin = Vector2i(0, 16)
+0:6/0/z_index = 2
 
 [sub_resource type="TileSet" id="TileSet_4mrxx"]
 tile_size = Vector2i(32, 32)
@@ -233,6 +234,7 @@ position = Vector2(1696, -64)
 [node name="Player" parent="." instance=ExtResource("1_nnsk1")]
 unique_name_in_owner = true
 physics_interpolation_mode = 1
+z_index = 2
 position = Vector2(544, -256)
 platform_on_leave = 1
 safe_margin = 0.01

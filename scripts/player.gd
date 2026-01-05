@@ -9,7 +9,7 @@ const JUMP_VELOCITY = -230.0
 const GRAVITY_RISING = 365.0
 const GRAVITY_FALLING = 600.0
 const JUMP_CUT_MULTIPLIER = 0.2
-const DASH_SPEED = 350.0
+const DASH_SPEED = 330.0
 const DASH_DECAY = 900.0
 const MAX_VELOCITY = 250.0
 # INFO Determines how slow vertical movement must be to trigger "RiseToFall"
@@ -71,6 +71,11 @@ func _physics_process(delta: float) -> void:
 		# INFO If player stops holding space during a jump and going up, cut their jump velocity
 		if Input.is_action_just_released("jump") and velocity.y < 0:
 			velocity.y *= JUMP_CUT_MULTIPLIER
+			if not is_torso_attacking() and not is_torso_transitioning():
+				torso_animation.play("RiseToFall")
+				torso_animation.offset = Vector2(0,0)
+			if legs_animation.animation not in ["StartJump", "Landing", "DoubleJump"]:
+				legs_animation.play("RiseToFall")
 	
 	match current_state:
 		State.NORMAL:
@@ -168,8 +173,8 @@ func double_jump() -> void:
 	
 	# INFO If not currently attack animation, play start jump on torso
 	if not is_torso_attacking():
-		torso_animation.play("StartJump")
-	legs_animation.play("StartJump")  # INFO Legs always update
+		torso_animation.play("DoubleJump")
+	legs_animation.play("DoubleJump")  # INFO Legs always update
 
 # ======================
 # ===== HORIZONTAL =====
@@ -183,7 +188,7 @@ func is_torso_attacking() -> bool:
 # INFO Is player currently starting jump or landing
 func is_torso_transitioning() -> bool:
 	var current_anim = torso_animation.animation
-	return current_anim in ["StartJump", "Landing"]
+	return current_anim in ["StartJump", "Landing", "DoubleJump"]
 
 func handle_air_animations() -> void:
 	if is_torso_transitioning():
@@ -196,7 +201,7 @@ func handle_air_animations() -> void:
 			torso_animation.play("RiseToFall")
 		else:
 			torso_animation.play("Falling")
-	if legs_animation.animation in ["StartJump", "Landing"]:
+	if legs_animation.animation in ["StartJump", "Landing", "DoubleJump"]:
 		return
 	# INFO LEGS UPDATE - ALWAYS UPDATE
 	if velocity.y < -JUMP_PEAK_THRESHOLD:
@@ -210,13 +215,8 @@ func handle_horizontal_movement() -> void:
 	var direction = Input.get_axis("move_left", "move_right")
 	
 	if direction > 0:
-		# INFO If normal attack anim is playing and you flip, cancel it
-		if flip.scale.x == -1 and torso_animation.animation in ["Attack 1", "Attack 2"]:
-			cancel_attack()
 		flip.scale.x = 1
 	elif direction < 0:
-		if flip.scale.x == 1 and torso_animation.animation in ["Attack 1", "Attack 2"]:
-			cancel_attack()
 		flip.scale.x = -1
 	
 	# INFO GENERAL MOVEMENT ANIMATIONS
@@ -333,7 +333,7 @@ func _on_torso_animation_finished() -> void:
 		return
 	
 	# INFO Handle transition animations finishing
-	if current_anim == "Landing" or current_anim == "StartJump":
+	if current_anim == "Landing" or current_anim == "StartJump" or current_anim == "DoubleJump":
 		if is_on_floor():
 			torso_animation.play("Idle")
 			legs_animation.play("Idle")
@@ -349,7 +349,7 @@ func _on_legs_animation_finished() -> void:
 	var current_anim = legs_animation.animation
 	
 	# INFO Handle transition animations finishing
-	if current_anim == "Landing" or current_anim == "StartJump":
+	if current_anim == "Landing" or current_anim == "StartJump" or current_anim == "DoubleJump":
 		if is_on_floor():
 			var direction = Input.get_axis("move_left", "move_right")
 			if direction == 0:
@@ -398,9 +398,9 @@ func attack() -> void:
 		attack_hit_animation.play("Pogo")
 		torso_animation.play("Pogo")
 		# INFO Pogo animation is too high, using offset to lower it
-		torso_animation.offset = Vector2(0,8.0)
-		attack_cooldown.start(0.25)  # INFO Short cooldown after pogo
-		pogo_cooldown.start(0.3)
+		torso_animation.offset = Vector2(0,7)
+		attack_cooldown.start(0.4)  # INFO Short cooldown after pogo
+		pogo_cooldown.start(0.4)
 		return
 	
 	# INFO Main attacks - combo system
@@ -417,7 +417,7 @@ func attack() -> void:
 		attack_2_window.stop()
 		attack_hit_animation.play("Attack 2")
 		torso_animation.play("Attack 2")
-		attack_cooldown.start(0.6)  # INFO Long cooldown after combo finishes
+		attack_cooldown.start(0.5)  # INFO Long cooldown after combo finishes
 
 func cancel_attack() -> void:
 	if attack_combo_count == 1:
@@ -425,7 +425,6 @@ func cancel_attack() -> void:
 	attack_combo_count = 0
 	attack_hit_animation.stop()
 	torso_animation.offset = Vector2(0,0)
-	torso_animation.play("Idle")
 	pogo_hitbox.disabled = true
 	attack1_hitbox.disabled = true
 	attack2_hitbox.disabled = true
@@ -463,9 +462,8 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		return
 
 	print("You have ", HEALTH, " left!")
-	# TODO TEMPORARY WAITING FOR DAMAGE ANIMS
-	torso_animation.play("Walk")
-	legs_animation.play("Walk")
+	torso_animation.play("Damage")
+	legs_animation.play("Damage")
 	# INFO Calculate the hit direction, then add the non-smoothed value for knockback distance
 	var knock_dir = sign(global_position.x - enemy_position.x)
 	velocity.x = knock_dir * knockback_force
@@ -483,10 +481,10 @@ func die():
 	print("You died!")
 	Engine.time_scale = 0.5
 	set_physics_process(false)
-	# TODO TEMPORARY, WAITING FOR DEATH ANIMS
 	torso_animation.play("Death")
+	legs_animation.play("Death")
 	player_body.set_deferred("disabled", true)
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(2.0).timeout
 	Engine.time_scale = 1
 	get_tree().reload_current_scene()
 	

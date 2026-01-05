@@ -12,7 +12,7 @@ func spawn_enemies():
 	for marker in spawn_points:
 		# INFO 50% chance to spawn
 		if randf() <= 0.5:
-			var new_enemy = enemy_scene.instantiate()	
+			var new_enemy = enemy_scene.instantiate()
 			# INFO Add the slime as a child of the "Enemies" node
 			enemy_container.add_child(new_enemy)
 			new_enemy.global_position = marker.global_position
