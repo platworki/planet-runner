@@ -4,7 +4,14 @@ extends CharacterBody2D
 # === CONFIGURATION ====
 # ======================
 
-const SPEED = 140.0
+const BASE_SPEED = 140.0
+func get_speed() -> float:
+	var speed_multiplier = 1.0 + (GameManager.player_stats.speed_bonus / 100.0)
+	return BASE_SPEED * speed_multiplier
+	
+const BASE_DAMAGE = 10
+const BASE_HEALTH = 100
+var HEALTH = BASE_HEALTH + GameManager.player_stats.health_bonus
 const JUMP_VELOCITY = -230.0
 const GRAVITY_RISING = 365.0
 const GRAVITY_FALLING = 600.0
@@ -14,6 +21,12 @@ const DASH_DECAY = 900.0
 const MAX_VELOCITY = 250.0
 # INFO Determines how slow vertical movement must be to trigger "RiseToFall"
 const JUMP_PEAK_THRESHOLD = 60.0
+var knockback_force = 200
+var up_knockback_velocity = -160
+var attack_combo_count = 0  # INFO Tracks which attack in combo
+var has_air_dash = true
+var has_double_jump = true
+var was_on_floor = true
 
 enum State {
 	NORMAL,
@@ -23,15 +36,6 @@ enum State {
 }
 
 var current_state = State.NORMAL
-
-var DAMAGE = 10
-var HEALTH = 100
-var knockback_force = 200
-var up_knockback_velocity = -160
-var attack_combo_count = 0  # INFO Tracks which attack in combo
-var has_air_dash = true
-var has_double_jump = true
-var was_on_floor = true
 
 # ======================
 # === NODE REFERENCES ==
@@ -247,9 +251,9 @@ func handle_horizontal_movement() -> void:
 	
 	# INFO If players pressing left or right, move, otherwise smooth-ish stop
 	if direction:
-		velocity.x = direction * SPEED
+		velocity.x = direction * get_speed()
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, get_speed())
 		
 # ======================
 # ====== GRAVITY =======
@@ -430,11 +434,16 @@ func cancel_attack() -> void:
 	attack2_hitbox.disabled = true
 
 func get_current_attack_damage() -> int:
-	var base_damage = DAMAGE
-	var current_anim = attack_hit_animation.current_animation
+	var base_damage = BASE_DAMAGE + GameManager.player_stats.damage_bonus
+	# Check for crit
+	var crit_chance = GameManager.player_stats.crit_chance
+	if randf() * 100 < crit_chance:  # Random 0-100 vs crit chance
+		base_damage *= 2  # Crit = double damage
+		print("CRITICAL HIT!")
 	
+	var current_anim = attack_hit_animation.current_animation
 	if current_anim == "Attack 2":
-		return base_damage*1.5
+		return base_damage * 1.5
 	else:
 		return base_damage
 

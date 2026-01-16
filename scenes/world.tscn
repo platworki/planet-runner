@@ -208,6 +208,8 @@ shape = SubResource("WorldBoundaryShape2D_i7141")
 
 [node name="Enemies" type="Node" parent="."]
 
+[node name="Items" type="Node" parent="."]
+
 [node name="Spawners" type="Node" parent="."]
 
 [node name="SlimeSpawn" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]

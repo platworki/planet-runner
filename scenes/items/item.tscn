@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2q0h00784m7d"]
+
+[ext_resource type="Script" uid="uid://814oxuorf15u" path="res://scenes/items/item.gd" id="1_jgeia"]
+[ext_resource type="Texture2D" uid="uid://d3rrsupto6164" path="res://assets/sprites/speed_boot_sprite.png" id="2_jgeia"]
+[ext_resource type="Texture2D" uid="uid://b54rsqxdhgud1" path="res://assets/sprites/speed_boot-highlight.png" id="3_fat2f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vpy52"]
+radius = 32.0
+
+[node name="Item" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_jgeia")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vpy52")
+
+[node name="SpriteDefault" type="Sprite2D" parent="."]
+texture = ExtResource("2_jgeia")
+
+[node name="SpriteHighlight" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_fat2f")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
