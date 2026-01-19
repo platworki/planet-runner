@@ -35,6 +35,35 @@ func get_item_from_database(item_name: String) -> Dictionary:
 		push_error("Item not found: " + item_name)
 		return {}
 
+func get_random_item_from_database() -> Dictionary:
+	# Roll for rarity
+	var roll = randf() * 100
+	var target_rarity = ""
+	
+	if roll < 60:  # 60% common
+		target_rarity = "common"
+	elif roll < 90:  # 30% rare (60 + 30)
+		target_rarity = "rare"
+	else:  # 10% super rare
+		target_rarity = "super_rare"
+	
+	# Collect all items of target rarity
+	var items_of_rarity = []
+	for item_name in ITEM_DATABASE:
+		if ITEM_DATABASE[item_name].rarity == target_rarity:
+			items_of_rarity.append(item_name)
+	
+	# Safety check - if no items of that rarity exist, fallback to common
+	if items_of_rarity.is_empty():
+		push_warning("No items found for rarity: " + target_rarity + ", defaulting to common")
+		for item_id in ITEM_DATABASE:
+			if ITEM_DATABASE[item_id].rarity == "common":
+				items_of_rarity.append(item_id)
+	
+	# Pick random item from that rarity
+	var random_item_name = items_of_rarity[randi() % items_of_rarity.size()]
+	return ITEM_DATABASE[random_item_name].duplicate()
+	
 # Item database - all possible items
 const ITEM_DATABASE = {
 	"speed_boots": {

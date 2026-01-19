@@ -1366,6 +1366,8 @@ animations = [{
 size = Vector2(11.5, 45.05)
 
 [node name="Player" type="CharacterBody2D"]
+z_index = 4
+y_sort_enabled = true
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_qhqgy")
@@ -1415,13 +1417,13 @@ shape = SubResource("RectangleShape2D_qlg0r")
 disabled = true
 
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
+z_index = 1
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"Idle"
 autoplay = "Idle"
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
-z_index = -1
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
 animation = &"Idle"
