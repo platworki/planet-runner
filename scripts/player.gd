@@ -4,6 +4,7 @@ extends CharacterBody2D
 # === CONFIGURATION ====
 # ======================
 
+# BASE PARAMS
 const BASE_SPEED = 140.0
 func get_speed() -> float:
 	var speed_multiplier = 1.0 + (GameManager.player_stats.speed_bonus / 100.0)
@@ -12,6 +13,8 @@ func get_speed() -> float:
 const BASE_DAMAGE = 10
 const BASE_HEALTH = 100
 var HEALTH = BASE_HEALTH + GameManager.player_stats.health_bonus
+
+# CONSTANT PARAMS
 const JUMP_VELOCITY = -230.0
 const GRAVITY_RISING = 365.0
 const GRAVITY_FALLING = 600.0
@@ -63,7 +66,7 @@ var current_state = State.NORMAL
 # ======================
 # ===== MAIN LOOP ======
 # ======================
-
+#
 #func _ready() -> void:
 	#Engine.time_scale = 0.1
 

@@ -2,6 +2,7 @@ extends Node
 
 # Inventory storage
 var inventory = []
+var currency = 0
 
 # Player stat bonuses (applied from items)
 var player_stats = {
@@ -11,11 +12,25 @@ var player_stats = {
 	"crit_chance": 0 # %
 }
 
+func add_currency(amount: int) -> void:
+	currency += amount
+	print("Currency: ", currency)
+
+func can_spend_currency(amount: int) -> bool:
+	if currency >= amount:
+		currency -= amount
+		return true
+	return false  # Can't afford
+
 func add_item(item_data: Dictionary):
 	inventory.append(item_data)
 	apply_item_effect(item_data)
 	print("Picked up: ", item_data.name)
 	print("Inventory size: ", inventory.size())
+	
+	var ui = get_tree().get_nodes_in_group("UI")
+	if not ui.is_empty():
+		ui[0].update_item_display()
 
 func apply_item_effect(item: Dictionary):
 	match item.effect_type:

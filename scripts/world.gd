@@ -1,27 +1,31 @@
 extends Node
 
+@export var shop_scene: PackedScene
 @export var chest_scene: PackedScene
 @export var enemy_scene: PackedScene
 @onready var enemy_container = $Enemies
 @onready var items_container: Node = $Items
 @onready var chest_container: Node = $Chests
+@onready var shops_container: Node = $Shops
 
 func _ready():
-	spawn_chests()
+	spawn_item_givers()
 	spawn_enemies()
 
-func spawn_chests():
-	var chest_spawn_points = get_tree().get_nodes_in_group("ChestSpawn")
+func spawn_item_givers():
+	var item_giver_spawn_points = get_tree().get_nodes_in_group("ItemGiverSpawn")
 	
-	for marker in chest_spawn_points:
+	for marker in item_giver_spawn_points:
 		var roll = randf() * 100
 		
 		if roll < 50:  # 50% chest
 			var chest = chest_scene.instantiate()
 			chest_container.add_child(chest)
-			chest.global_position = marker.global_position + Vector2(0,-16)
-		# elif roll < 80:  # 30% shop (not implemented yet)
-		#     spawn_shop(marker.global_position)
+			chest.global_position = marker.global_position
+		elif roll < 80:  # 30% shop (not implemented yet)
+			var shop = shop_scene.instantiate()
+			shops_container.add_child(shop)
+			shop.global_position = marker.global_position
 		# elif roll < 90:  # 10% statue (not implemented yet)
 		#     spawn_statue(marker.global_position)
 		# else: 10% nothing

@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4wwtt3b6puos"]
+
+[ext_resource type="Script" uid="uid://cmt1auyogqsqv" path="res://scripts/ui/ui.gd" id="1_d2gw2"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_d2gw2"]
+font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2gw2"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.30748522, 0.30748522, 0.30748522, 0.657)
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_d2gw2")
+
+[node name="UIcontainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeftPanel" type="VBoxContainer" parent="UIcontainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00625
+anchor_top = 0.014814815
+anchor_right = 0.17291667
+anchor_bottom = 0.19259259
+theme_override_constants/separation = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="HPcontainer" type="Control" parent="UIcontainer/LeftPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HPbackground" type="ColorRect" parent="UIcontainer/LeftPanel/HPcontainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.25
+anchor_bottom = 0.88461536
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3665946, 0.3665946, 0.36659458, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="HPfill" type="ColorRect" parent="UIcontainer/LeftPanel/HPcontainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.25
+anchor_bottom = 0.88461536
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0, 0, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="HPlabel" type="Label" parent="UIcontainer/LeftPanel/HPcontainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0625
+anchor_right = 0.9625
+anchor_bottom = 0.37596157
+offset_right = 108.0
+offset_bottom = 14.662499
+scale = Vector2(0.4, 0.4)
+text = "37/100"
+metadata/_edit_use_anchors_ = true
+
+[node name="CurrencyContainer" type="HBoxContainer" parent="UIcontainer/LeftPanel"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="CurrencyIcon" type="ColorRect" parent="UIcontainer/LeftPanel/CurrencyContainer"]
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+color = Color(1, 1, 0, 1)
+
+[node name="CurrencyLabel" type="Label" parent="UIcontainer/LeftPanel/CurrencyContainer"]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_d2gw2")
+
+[node name="ItemBar" type="PanelContainer" parent="UIcontainer"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 3.0
+offset_right = 345.00015
+offset_bottom = 51.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_d2gw2")
+
+[node name="ItemGrid" type="GridContainer" parent="UIcontainer/ItemBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 3
+theme_override_constants/v_separation = 3
+columns = 9
