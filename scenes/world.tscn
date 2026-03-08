@@ -4,15 +4,15 @@
 [ext_resource type="Script" uid="uid://n54h5jcxrw8" path="res://scripts/world.gd" id="1_7r4gi"]
 [ext_resource type="PackedScene" uid="uid://oohkimdeqmb5" path="res://scenes/player.tscn" id="1_nnsk1"]
 [ext_resource type="PackedScene" uid="uid://bbjacj0udy141" path="res://scenes/multi_shop.tscn" id="2_7r4gi"]
-[ext_resource type="Texture2D" uid="uid://dt0tmubktljjg" path="res://assets/sprites/desert_tileset.png" id="5_7r4gi"]
 [ext_resource type="PackedScene" uid="uid://d3m3emstefxwc" path="res://scenes/kill_zone.tscn" id="6_qfnet"]
+[ext_resource type="Texture2D" uid="uid://vhg02018qnjp" path="res://assets/sprites/dry_dry_tileset.png" id="6_w7kh3"]
 [ext_resource type="PackedScene" uid="uid://clyyaxiy3hji8" path="res://scenes/background.tscn" id="7_4mrxx"]
 [ext_resource type="PackedScene" uid="uid://byjpp6ijnt4ie" path="res://scenes/slime.tscn" id="7_i7141"]
 [ext_resource type="PackedScene" uid="uid://c4wwtt3b6puos" path="res://scenes/ui/UI.tscn" id="7_w7kh3"]
 [ext_resource type="PackedScene" uid="uid://c0o1ele2oywt3" path="res://scenes/chest.tscn" id="8_4mrxx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
-texture = ExtResource("5_7r4gi")
+texture = ExtResource("6_w7kh3")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
@@ -172,6 +172,45 @@ texture_region_size = Vector2i(32, 32)
 0:6/size_in_atlas = Vector2i(1, 2)
 0:6/0 = 0
 0:6/0/texture_origin = Vector2i(0, 16)
+11:0/0 = 0
+12:0/0 = 0
+13:0/0 = 0
+14:0/0 = 0
+15:0/0 = 0
+11:1/0 = 0
+12:1/0 = 0
+13:1/0 = 0
+14:1/0 = 0
+15:1/0 = 0
+12:2/0 = 0
+13:2/0 = 0
+14:2/0 = 0
+15:2/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+13:3/0 = 0
+14:3/0 = 0
+15:3/0 = 0
+11:4/0 = 0
+12:4/0 = 0
+13:4/0 = 0
+14:4/0 = 0
+15:4/0 = 0
+11:5/0 = 0
+12:5/0 = 0
+13:5/0 = 0
+14:5/0 = 0
+15:5/0 = 0
+11:6/0 = 0
+12:6/0 = 0
+13:6/0 = 0
+14:6/0 = 0
+15:6/0 = 0
+11:7/0 = 0
+12:7/0 = 0
+13:7/0 = 0
+14:7/0 = 0
+15:7/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_4mrxx"]
 tile_size = Vector2i(32, 32)
@@ -270,7 +309,7 @@ physics_interpolation_mode = 1
 z_index = 1
 offset = Vector2(0, -50)
 ignore_rotation = false
-zoom = Vector2(0.7, 0.7)
+zoom = Vector2(2, 2)
 process_callback = 0
 limit_left = -100
 limit_top = -650
@@ -288,6 +327,6 @@ editor_draw_drag_margin = true
 
 [node name="Background" parent="." instance=ExtResource("7_4mrxx")]
 z_index = -10
-position = Vector2(0, 18)
+position = Vector2(0, 220)
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]

@@ -12,6 +12,7 @@ texture_filter = 1
 scroll_scale = Vector2(0.01, 0.02)
 scroll_offset = Vector2(0, 110)
 repeat_size = Vector2(720, 0)
+autoscroll = Vector2(0.5, 0)
 repeat_times = 4
 
 [node name="Sprite2D" type="Sprite2D" parent="Back"]
@@ -21,7 +22,7 @@ texture = ExtResource("1_y0upk")
 [node name="Clouds" type="Parallax2D" parent="."]
 z_index = 1
 scroll_scale = Vector2(0.03, 0.05)
-scroll_offset = Vector2(0, 90)
+scroll_offset = Vector2(90, 75)
 repeat_size = Vector2(576, 0)
 autoscroll = Vector2(1.3, 0)
 repeat_times = 4
@@ -43,7 +44,7 @@ texture = ExtResource("3_jougr")
 
 [node name="SandFront" type="Parallax2D" parent="."]
 z_index = 3
-scroll_scale = Vector2(0.08, 0.12)
+scroll_scale = Vector2(0.06, 0.08)
 scroll_offset = Vector2(300, 120)
 repeat_size = Vector2(576, 0)
 repeat_times = 4
