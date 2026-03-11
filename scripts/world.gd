@@ -7,6 +7,7 @@ extends Node
 @onready var items_container: Node = $Items
 @onready var chest_container: Node = $Chests
 @onready var shops_container: Node = $Shops
+@onready var ui: CanvasLayer = $UI
 
 func _ready():
 	spawn_item_givers()

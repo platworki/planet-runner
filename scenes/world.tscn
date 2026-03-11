@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://dc4m88yus5so8"]
+[gd_scene load_steps=15 format=4 uid="uid://dc4m88yus5so8"]
 
 [ext_resource type="Script" uid="uid://mwkayw7kjxhj" path="res://scripts/game_manager.gd" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://n54h5jcxrw8" path="res://scripts/world.gd" id="1_7r4gi"]
@@ -7,9 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://d3m3emstefxwc" path="res://scenes/kill_zone.tscn" id="6_qfnet"]
 [ext_resource type="Texture2D" uid="uid://vhg02018qnjp" path="res://assets/sprites/dry_dry_tileset.png" id="6_w7kh3"]
 [ext_resource type="PackedScene" uid="uid://clyyaxiy3hji8" path="res://scenes/background.tscn" id="7_4mrxx"]
-[ext_resource type="PackedScene" uid="uid://byjpp6ijnt4ie" path="res://scenes/slime.tscn" id="7_i7141"]
+[ext_resource type="PackedScene" uid="uid://byjpp6ijnt4ie" path="res://scenes/enemies/slime.tscn" id="7_i7141"]
 [ext_resource type="PackedScene" uid="uid://c4wwtt3b6puos" path="res://scenes/ui/UI.tscn" id="7_w7kh3"]
 [ext_resource type="PackedScene" uid="uid://c0o1ele2oywt3" path="res://scenes/chest.tscn" id="8_4mrxx"]
+[ext_resource type="PackedScene" uid="uid://m5lnnpajrh2h" path="res://scenes/music.tscn" id="11_e3hyu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
 texture = ExtResource("6_w7kh3")
@@ -328,5 +329,7 @@ editor_draw_drag_margin = true
 [node name="Background" parent="." instance=ExtResource("7_4mrxx")]
 z_index = -10
 position = Vector2(0, 220)
+
+[node name="Music" parent="." instance=ExtResource("11_e3hyu")]
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]

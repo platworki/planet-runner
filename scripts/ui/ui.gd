@@ -8,16 +8,18 @@ const ITEM_SLOT_SIZE = 32  # Pixel size of each item slot
 @onready var hp_label: Label = $UIcontainer/HPcontainer/HPlabel
 @onready var item_grid: GridContainer = $UIcontainer/ItemBar/TextureRect/ItemGrid
 
-
 var player_node = null
 
 func _ready() -> void:
 	await get_tree().process_frame
 	MAX_BAR_WIDTH = health_bar.max_value
-	var player = get_tree().get_nodes_in_group("Player")
-	player_node = player[0]
 
 func _process(_delta: float) -> void:
+	if player_node == null:
+		var players = get_tree().get_nodes_in_group("Player")
+		if not players.is_empty():
+			player_node = players[0]
+		return
 	update_health_bar()
 	update_currency()
 
