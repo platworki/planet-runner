@@ -2,6 +2,7 @@ extends Area2D
 
 var player_in_range = false
 var is_opened = false
+const CHEST_COST = 10
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var item_spawn_point: Marker2D = $ItemSpawnPoint
@@ -20,12 +21,16 @@ func _process(_delta):
 		open_chest()
 
 func open_chest():
-	is_opened = true
-	animated_sprite.play("opening")
-	# Wait for animation to play long enough
-	await get_tree().create_timer(0.7).timeout
-	# Spawn item
-	spawn_item()
+	if GameManager.currency >= CHEST_COST:
+		GameManager.currency -= CHEST_COST
+		is_opened = true
+		animated_sprite.play("opening")
+		# Wait for animation to play long enough
+		await get_tree().create_timer(0.7).timeout
+		# Spawn item
+		spawn_item()
+	else:
+		print("Not enough currency!")
 
 func spawn_item():
 	# Load item scene

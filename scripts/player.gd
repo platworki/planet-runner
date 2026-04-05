@@ -63,6 +63,9 @@ var current_state = State.NORMAL
 @onready var attack_2_window: Timer = $Position/PlayerAttack/Attack2Window
 @onready var pogo_cooldown: Timer = $Position/PlayerAttack/PogoCooldown
 
+@onready var swing_sfx: AudioStreamPlayer = $"../Audio/Swing SFX"
+@onready var double_jump_sfx: AudioStreamPlayer = $"../Audio/Double Jump"
+
 # ======================
 # ===== MAIN LOOP ======
 # ======================
@@ -174,6 +177,9 @@ func jump() -> void:
 	legs_animation.play("StartJump") # INFO Legs always update
 	
 func double_jump() -> void:
+	#double_jump_sfx.pitch_scale = randf_range(0.8, 1.0)
+	#double_jump_sfx.play()
+	
 	has_double_jump = false
 	dash_cooldown_timer.stop()
 	velocity.y = JUMP_VELOCITY*0.95
@@ -399,7 +405,10 @@ func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 func attack() -> void:
 	if not invincibility.is_stopped():
 		invincibility.stop()
-			
+	
+	swing_sfx.pitch_scale = randf_range(0.6,1.1)
+	swing_sfx.play()
+	
 	if Input.is_action_pressed("down") and not is_on_floor():
 		attack_combo_count = 0  # INFO Reset combo
 		attack_hit_animation.play("Pogo")

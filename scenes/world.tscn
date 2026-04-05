@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://dc4m88yus5so8"]
+[gd_scene load_steps=17 format=4 uid="uid://dc4m88yus5so8"]
 
 [ext_resource type="Script" uid="uid://mwkayw7kjxhj" path="res://scripts/game_manager.gd" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://n54h5jcxrw8" path="res://scripts/world.gd" id="1_7r4gi"]
@@ -11,6 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://c4wwtt3b6puos" path="res://scenes/ui/UI.tscn" id="7_w7kh3"]
 [ext_resource type="PackedScene" uid="uid://c0o1ele2oywt3" path="res://scenes/chest.tscn" id="8_4mrxx"]
 [ext_resource type="PackedScene" uid="uid://m5lnnpajrh2h" path="res://scenes/music.tscn" id="11_e3hyu"]
+[ext_resource type="AudioStream" uid="uid://lrfq7hknym5d" path="res://assets/music/DA_DESSERT.mp3" id="12_q5onr"]
+[ext_resource type="AudioStream" uid="uid://ubsu5vexfa7k" path="res://assets/sounds/swing-whoosh-11-198503.mp3" id="13_jhx03"]
+[ext_resource type="AudioStream" uid="uid://cbwsm3cul5xef" path="res://assets/sounds/wind-blowing-sfx-01-423673.mp3" id="14_o8fc1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
 texture = ExtResource("6_w7kh3")
@@ -198,18 +201,27 @@ texture_region_size = Vector2i(32, 32)
 14:4/0 = 0
 15:4/0 = 0
 11:5/0 = 0
+11:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 12:5/0 = 0
+12:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 13:5/0 = 0
+13:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 14:5/0 = 0
 15:5/0 = 0
 11:6/0 = 0
+11:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 12:6/0 = 0
+12:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 13:6/0 = 0
+13:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 14:6/0 = 0
 15:6/0 = 0
 11:7/0 = 0
+11:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 12:7/0 = 0
+12:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 13:7/0 = 0
+13:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 14:7/0 = 0
 15:7/0 = 0
 
@@ -219,13 +231,11 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
 sources/1 = SubResource("TileSetAtlasSource_7r4gi")
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_i7141"]
-
 [node name="World" type="Node2D"]
 script = ExtResource("1_7r4gi")
 shop_scene = ExtResource("2_7r4gi")
 chest_scene = ExtResource("8_4mrxx")
-enemy_scene = ExtResource("7_i7141")
+slime_scene = ExtResource("7_i7141")
 
 [node name="GameManager" type="Node" parent="."]
 unique_name_in_owner = true
@@ -245,9 +255,6 @@ physics_quadrant_size = 32
 [node name="Kill zone" parent="." instance=ExtResource("6_qfnet")]
 position = Vector2(152, 136)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Kill zone"]
-shape = SubResource("WorldBoundaryShape2D_i7141")
-
 [node name="Coins" type="Node" parent="."]
 
 [node name="Platforms" type="Node" parent="."]
@@ -262,40 +269,96 @@ shape = SubResource("WorldBoundaryShape2D_i7141")
 
 [node name="Spawners" type="Node" parent="."]
 
-[node name="EnemySpawn" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
-position = Vector2(384, -160)
+[node name="SpawnTimer" type="Timer" parent="Spawners"]
+wait_time = 15.0
+autostart = true
 
-[node name="EnemySpawn2" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
+[node name="Slime Spawners" type="Node" parent="Spawners"]
+
+[node name="EnemySpawn" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(384, -158)
+
+[node name="EnemySpawn2" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
 position = Vector2(304, 0)
 
-[node name="EnemySpawn3" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
-position = Vector2(96, -192)
+[node name="EnemySpawn3" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(96, -190)
 
-[node name="EnemySpawn4" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
+[node name="EnemySpawn4" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
 position = Vector2(768, -320)
 
-[node name="EnemySpawn5" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
+[node name="EnemySpawn5" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
 position = Vector2(1216, -352)
 
-[node name="EnemySpawn6" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
+[node name="EnemySpawn6" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
 position = Vector2(1472, -480)
 
-[node name="EnemySpawn7" type="Marker2D" parent="Spawners" groups=["EnemySpawn"]]
+[node name="EnemySpawn7" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
 position = Vector2(1696, -64)
 
-[node name="ItemLocation" type="Marker2D" parent="Spawners" groups=["ItemGiverSpawn"]]
+[node name="EnemySpawn8" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1632, -64)
+
+[node name="EnemySpawn9" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1760, -64)
+
+[node name="EnemySpawn10" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1680, -288)
+
+[node name="EnemySpawn11" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1536, -480)
+
+[node name="EnemySpawn12" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1408, -480)
+
+[node name="EnemySpawn13" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1472, -128)
+
+[node name="EnemySpawn14" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1184, -352)
+
+[node name="EnemySpawn15" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1024, -416)
+
+[node name="EnemySpawn16" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(928, -416)
+
+[node name="EnemySpawn17" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(928, -288)
+
+[node name="EnemySpawn18" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(736, -64)
+
+[node name="EnemySpawn19" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(800, -64)
+
+[node name="EnemySpawn20" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(608, 32)
+
+[node name="EnemySpawn21" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(480, 0)
+
+[node name="EnemySpawn22" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(0, 32)
+
+[node name="EnemySpawn23" type="Marker2D" parent="Spawners/Slime Spawners" groups=["SlimeSpawn"]]
+position = Vector2(1184, -512)
+
+[node name="Item Giver Spawners" type="Node" parent="Spawners"]
+
+[node name="ItemLocation" type="Marker2D" parent="Spawners/Item Giver Spawners" groups=["ItemGiverSpawn"]]
 position = Vector2(1408, -128)
 
-[node name="ItemLocation2" type="Marker2D" parent="Spawners" groups=["ItemGiverSpawn"]]
+[node name="ItemLocation2" type="Marker2D" parent="Spawners/Item Giver Spawners" groups=["ItemGiverSpawn"]]
 position = Vector2(1152, -512)
 
-[node name="ItemLocation3" type="Marker2D" parent="Spawners" groups=["ItemGiverSpawn"]]
+[node name="ItemLocation3" type="Marker2D" parent="Spawners/Item Giver Spawners" groups=["ItemGiverSpawn"]]
 position = Vector2(1024, -160)
 
-[node name="ItemLocation4" type="Marker2D" parent="Spawners" groups=["ItemGiverSpawn"]]
+[node name="ItemLocation4" type="Marker2D" parent="Spawners/Item Giver Spawners" groups=["ItemGiverSpawn"]]
 position = Vector2(320, -352)
 
-[node name="ItemLocation5" type="Marker2D" parent="Spawners" groups=["ItemGiverSpawn"]]
+[node name="ItemLocation5" type="Marker2D" parent="Spawners/Item Giver Spawners" groups=["ItemGiverSpawn"]]
 position = Vector2(256, 0)
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_nnsk1")]
@@ -330,6 +393,30 @@ editor_draw_drag_margin = true
 z_index = -10
 position = Vector2(0, 220)
 
-[node name="Music" parent="." instance=ExtResource("11_e3hyu")]
+[node name="Audio" type="Node" parent="."]
+
+[node name="World background music" parent="Audio" instance=ExtResource("11_e3hyu")]
+stream = ExtResource("12_q5onr")
+volume_db = -3.0
+parameters/looping = true
+
+[node name="Swing SFX" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("13_jhx03")
+volume_db = -9.0
+max_polyphony = 2
+bus = &"SFX"
+
+[node name="Wind" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("14_o8fc1")
+volume_db = -20.0
+pitch_scale = 0.78
+autoplay = true
+bus = &"Music"
+parameters/looping = true
+
+[node name="Double Jump" type="AudioStreamPlayer" parent="Audio"]
+volume_db = -8.0
+bus = &"SFX"
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]
+[connection signal="timeout" from="Spawners/SpawnTimer" to="." method="_on_spawn_timer_timeout"]
