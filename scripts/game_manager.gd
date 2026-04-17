@@ -100,3 +100,16 @@ const ITEM_DATABASE = {
 	}
 	# Add more...
 }
+
+func reset_game():
+	inventory.clear()
+	currency = 0
+	
+	player_stats = {
+		"speed_bonus": 0,
+		"damage_bonus": 0,
+		"health_bonus": 0,
+		"crit_chance": 0
+	}
+	
+	print("GameManager reset.")

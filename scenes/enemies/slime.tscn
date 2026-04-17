@@ -9,7 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://bl7oxvahyk6r0" path="res://assets/sounds/slime_hit.mp3" id="7_bhme6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0l8pv"]
-size = Vector2(10.588233, 14.705881)
+size = Vector2(7.333331, 12.666662)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bhme6"]
 atlas = ExtResource("3_ankfk")
@@ -238,7 +238,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pjw23"]
-size = Vector2(11.176469, 14.705879)
+size = Vector2(7.333331, 12.666662)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ankfk"]
 radius = 27.62
@@ -251,12 +251,12 @@ collision_layer = 8
 script = ExtResource("1_n6pvg")
 
 [node name="SlimeHitbox" type="Area2D" parent="."]
-collision_layer = 5
+collision_layer = 12
 collision_mask = 2
 script = ExtResource("4_pjw23")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SlimeHitbox"]
-position = Vector2(-0.58823526, -7.3529425)
+position = Vector2(-0.33333322, -6.3333335)
 scale = Vector2(1.0000002, 1.0000002)
 shape = SubResource("RectangleShape2D_0l8pv")
 
@@ -266,9 +266,9 @@ wait_time = 0.3
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -15.882352)
 sprite_frames = SubResource("SpriteFrames_v5wyi")
-animation = &"walk"
+animation = &"attack"
 autoplay = "walk"
-offset = Vector2(0, 0.9)
+offset = Vector2(0, 1.9)
 
 [node name="Raycasts" type="Node2D" parent="."]
 
@@ -289,7 +289,7 @@ position = Vector2(0, -8)
 target_position = Vector2(13, 10)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.2941177, -7.3529425)
+position = Vector2(-0.33333322, -6.3333335)
 scale = Vector2(1.0000002, 1.0000002)
 shape = SubResource("RectangleShape2D_pjw23")
 

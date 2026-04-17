@@ -19,8 +19,8 @@ const JUMP_VELOCITY = -230.0
 const GRAVITY_RISING = 365.0
 const GRAVITY_FALLING = 600.0
 const JUMP_CUT_MULTIPLIER = 0.2
-const DASH_SPEED = 330.0
-const DASH_DECAY = 900.0
+const DASH_SPEED = 380.0
+const DASH_DECAY = 800.0
 const MAX_VELOCITY = 250.0
 # INFO Determines how slow vertical movement must be to trigger "RiseToFall"
 const JUMP_PEAK_THRESHOLD = 60.0
@@ -63,15 +63,18 @@ var current_state = State.NORMAL
 @onready var attack_2_window: Timer = $Position/PlayerAttack/Attack2Window
 @onready var pogo_cooldown: Timer = $Position/PlayerAttack/PogoCooldown
 
-@onready var swing_sfx: AudioStreamPlayer = $"../Audio/Swing SFX"
-@onready var double_jump_sfx: AudioStreamPlayer = $"../Audio/Double Jump"
+@onready var swing_sfx: AudioStreamPlayer = $"../Audio/Swing"
+@onready var dash_sfx: AudioStreamPlayer = $"../Audio/Dash"
+@onready var double_jump_sfx: AudioStreamPlayer = $"../Audio/DoubleJump"
+@onready var footsteps_sfx: AudioStreamPlayer = $"../Audio/Footsteps"
+
 
 # ======================
 # ===== MAIN LOOP ======
 # ======================
 #
 #func _ready() -> void:
-	#Engine.time_scale = 0.1
+	#Engine.time_scale = 0.3
 
 func _physics_process(delta: float) -> void:
 	# INFO Check if at the beginning of the frame the players on the floor
@@ -177,8 +180,8 @@ func jump() -> void:
 	legs_animation.play("StartJump") # INFO Legs always update
 	
 func double_jump() -> void:
-	#double_jump_sfx.pitch_scale = randf_range(0.8, 1.0)
-	#double_jump_sfx.play()
+	double_jump_sfx.pitch_scale = randf_range(0.5, 0.7)
+	double_jump_sfx.play(0.18)
 	
 	has_double_jump = false
 	dash_cooldown_timer.stop()
@@ -295,6 +298,9 @@ func dash() -> void:
 	velocity.x = DASH_SPEED * flip.scale.x * 1.2
 	velocity.y = 0
 	
+	dash_sfx.pitch_scale = randf_range(0.8,1.2)
+	dash_sfx.play(0.18)
+	
 	cancel_attack()
 	attack_cooldown.stop()
 	
@@ -377,6 +383,14 @@ func _on_legs_animation_finished() -> void:
 			else:
 				legs_animation.play("Falling")
 
+func _on_legs_frame_changed() -> void:
+	if legs_animation.animation == "Walk":
+		if not footsteps_sfx.playing:
+			footsteps_sfx.pitch_scale = randf_range(0.6,1.0)
+			footsteps_sfx.play(0.02)
+	else:
+		footsteps_sfx.playing = false
+
 func _on_attack_cooldown_timeout() -> void:
 	if attack_combo_count == 2:
 		attack_combo_count = 0
@@ -414,7 +428,7 @@ func attack() -> void:
 		attack_hit_animation.play("Pogo")
 		torso_animation.play("Pogo")
 		# INFO Pogo animation is too high, using offset to lower it
-		torso_animation.offset = Vector2(0,7)
+		torso_animation.offset = Vector2(0,7.8)
 		attack_cooldown.start(0.4)  # INFO Short cooldown after pogo
 		pogo_cooldown.start(0.4)
 		return
@@ -505,7 +519,7 @@ func die():
 	torso_animation.play("Death")
 	legs_animation.play("Death")
 	player_body.set_deferred("disabled", true)
-	await get_tree().create_timer(2.0).timeout
+	await torso_animation.animation_finished
 	Engine.time_scale = 1
-	get_tree().reload_current_scene()
-	
+	GameManager.reset_game()
+	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")

@@ -7,6 +7,8 @@ var can_pickup = false
 @onready var sprite_default: Sprite2D = $SpriteDefault
 @onready var sprite_highlight: Sprite2D = $SpriteHighlight
 @onready var pickup_area: Area2D = $PickupArea
+@onready var pickup_sfx: AudioStreamPlayer = $Pickup
+@onready var item: CharacterBody2D = $"."
 
 func _ready() -> void:
 	if item_data.has("sprite_default"):
@@ -29,6 +31,7 @@ func _physics_process(delta: float) -> void:
 	
 	if player_in_range and Input.is_action_just_pressed("pickup") and can_pickup:
 		pickup()
+		set_physics_process(false)
 	
 func _on_body_entered(body: Node2D):
 	if body.name == "Player":
@@ -44,4 +47,8 @@ func _on_body_exited(body: Node2D):
 	
 func pickup():
 	GameManager.add_item(item_data)
+	pickup_sfx.pitch_scale = randf_range(0.7,0.9)
+	pickup_sfx.play()
+	item.visible = false
+	await pickup_sfx.finished
 	queue_free()

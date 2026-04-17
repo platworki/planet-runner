@@ -7,6 +7,7 @@ const CHEST_COST = 10
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var item_spawn_point: Marker2D = $ItemSpawnPoint
 @onready var items_container: Node = $/root/World/Items
+@onready var opening_sfx: AudioStreamPlayer = $Opening
 
 func _on_body_entered(body: Node2D):
 	if body.name == "Player":
@@ -25,6 +26,8 @@ func open_chest():
 		GameManager.currency -= CHEST_COST
 		is_opened = true
 		animated_sprite.play("opening")
+		opening_sfx.pitch_scale = randf_range(0.6,0.9)
+		opening_sfx.play()
 		# Wait for animation to play long enough
 		await get_tree().create_timer(0.7).timeout
 		# Spawn item

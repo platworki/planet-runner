@@ -14,7 +14,7 @@ const SPEED = 50
 const CHASE_SPEED = 80
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -65  
-const LUNGE_SPEED = 220
+const LUNGE_SPEED = 245
 const LUNGE_FRICTION = 600  
 
 var HEALTH = 60

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://c2q0h00784m7d"]
+[gd_scene load_steps=7 format=3 uid="uid://c2q0h00784m7d"]
 
 [ext_resource type="Script" uid="uid://814oxuorf15u" path="res://scenes/items/item.gd" id="1_jgeia"]
 [ext_resource type="Texture2D" uid="uid://d3rrsupto6164" path="res://assets/sprites/speed_boot_sprite.png" id="2_jgeia"]
 [ext_resource type="Texture2D" uid="uid://b54rsqxdhgud1" path="res://assets/sprites/speed_boot-highlight.png" id="3_fat2f"]
+[ext_resource type="AudioStream" uid="uid://rgcvd5lwj1k4" path="res://assets/sounds/driken5482-retro-coin-4-236671.mp3" id="4_tfqyq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fat2f"]
 
@@ -33,6 +34,12 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
 shape = SubResource("CircleShape2D_fat2f")
+
+[node name="Pickup" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_tfqyq")
+volume_db = -23.0
+max_polyphony = 2
+bus = &"SFX"
 
 [connection signal="body_entered" from="PickupArea" to="." method="_on_body_entered"]
 [connection signal="body_exited" from="PickupArea" to="." method="_on_body_exited"]

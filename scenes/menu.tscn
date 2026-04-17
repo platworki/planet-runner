@@ -168,6 +168,7 @@ stream = ExtResource("9_i6lef")
 volume_db = -13.0
 autoplay = true
 bus = &"Music"
+parameters/looping = true
 
 [connection signal="pressed" from="Start" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_quit_pressed"]

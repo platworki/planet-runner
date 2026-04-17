@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://c0o1ele2oywt3"]
+[gd_scene load_steps=19 format=3 uid="uid://c0o1ele2oywt3"]
 
 [ext_resource type="Texture2D" uid="uid://dp8nru1utpltg" path="res://assets/sprites/chest_closed.png" id="1_bp1or"]
 [ext_resource type="Script" uid="uid://b8yeen2rplqfn" path="res://scripts/chest.gd" id="1_trlyu"]
 [ext_resource type="Texture2D" uid="uid://c5a2b725aldl1" path="res://assets/sprites/chest_open.png" id="2_trlyu"]
 [ext_resource type="Texture2D" uid="uid://3rtpuva6abs2" path="res://assets/sprites/chest-opening.png" id="3_x7mpe"]
+[ext_resource type="AudioStream" uid="uid://3d2c8jduhb" path="res://assets/sounds/universfield-opening-metal-door-199581.mp3" id="5_yhylo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bv3sb"]
 atlas = ExtResource("1_bp1or")
@@ -123,6 +124,11 @@ shape = SubResource("CircleShape2D_bp1or")
 
 [node name="ItemSpawnPoint" type="Marker2D" parent="."]
 position = Vector2(0, -10)
+
+[node name="Opening" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_yhylo")
+volume_db = -21.0
+bus = &"SFX"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
