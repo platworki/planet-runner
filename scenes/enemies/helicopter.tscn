@@ -250,6 +250,7 @@ wait_time = 0.2
 one_shot = true
 
 [node name="FollowRadius" type="Area2D" parent="."]
+scale = Vector2(0.9942156, 1)
 collision_layer = 0
 collision_mask = 2
 
@@ -258,6 +259,7 @@ position = Vector2(0, -100)
 shape = SubResource("CircleShape2D_deibd")
 
 [node name="AttackRadius" type="Area2D" parent="."]
+scale = Vector2(0.9942156, 1)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("6_j4acn")

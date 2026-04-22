@@ -4,6 +4,7 @@ extends Node
 @export var chest_scene: PackedScene
 @export var slime_scene: PackedScene
 @export var heli_scene: PackedScene # Add the Helicopter scene here!
+@export var fireE_scene: PackedScene # Add the Helicopter scene here!
 
 @onready var enemy_container = $Enemies
 @onready var items_container: Node = $Items
@@ -30,16 +31,35 @@ func _on_spawn_timer_timeout() -> void:
 	attempt_respawn()
 
 func attempt_respawn():
-	# Decide WHAT to spawn first (75% Slime, 25% Heli)
-	var spawn_type = "slime"
-	if randf() > 0.75:
-		spawn_type = "heli"
-	
+	# 1. Define your weights (Higher = More Common)
+	var enemy_weights = {
+		"slime": 60, # 70% chance
+		"heli": 20,  # 20% chance
+		"fireE": 20   # 10% chance
+	}
+	# 2. Pick an enemy based on weight
+	var spawn_type = get_weighted_random(enemy_weights)
+	# 3. Proceed with existing logic
 	var valid_spawners = get_valid_spawners(spawn_type)
 	
 	if valid_spawners.size() > 0:
 		var chosen_marker = valid_spawners.pick_random()
 		spawn_enemy_at(chosen_marker.global_position, spawn_type)
+
+# Helper function to handle the math for you
+func get_weighted_random(weights: Dictionary) -> String:
+	var total_weight = 0
+	for weight in weights.values():
+		total_weight += weight
+		
+	var roll = randi_range(1, total_weight)
+	var current_sum = 0
+	
+	for type in weights:
+		current_sum += weights[type]
+		if roll <= current_sum:
+			return type
+	return "slime" # Fallback
 
 func get_valid_spawners(type: String) -> Array:
 	var valid = []
@@ -48,9 +68,13 @@ func get_valid_spawners(type: String) -> Array:
 	
 	var half_width = view_size.x / 2
 	var half_height = view_size.y / 2
+	var group_name = "SlimeSpawn"
 	
 	# Determine which group to look at
-	var group_name = "SlimeSpawn" if type == "slime" else "HeliSpawn"
+	if type == "heli":
+		group_name = "HeliSpawn"
+	elif type == "fireE":
+		group_name = "FireESpawn"
 	
 	for marker in get_tree().get_nodes_in_group(group_name):
 		var pos = marker.global_position
@@ -68,8 +92,10 @@ func spawn_enemy_at(pos: Vector2, type: String):
 	var enemy = null
 	if type == "slime":
 		enemy = slime_scene.instantiate()
-	else:
+	elif type == "heli":
 		enemy = heli_scene.instantiate()
+	else:
+		enemy = fireE_scene.instantiate()
 		
 	enemy.global_position = pos
 	enemy_container.add_child(enemy)
@@ -83,30 +109,32 @@ func spawn_item_givers():
 		
 		if roll < 50:  # 50% chest
 			var chest = chest_scene.instantiate()
-			chest_container.add_child(chest)
 			chest.global_position = marker.global_position
+			chest_container.add_child(chest)
 		elif roll < 80:  # 30% shop (not implemented yet)
 			var shop = shop_scene.instantiate()
-			shops_container.add_child(shop)
 			shop.global_position = marker.global_position
+			shops_container.add_child(shop)
 		else: # 10% nothing
 			pass
 
 func spawn_enemies():
 	var all_markers = get_tree().get_nodes_in_group("SlimeSpawn")
 	all_markers.append_array(get_tree().get_nodes_in_group("HeliSpawn"))
+	all_markers.append_array(get_tree().get_nodes_in_group("FireESpawn"))
 	
-	all_markers.shuffle() # Randomize the order of markers
+	all_markers.shuffle() 
 	
 	for marker in all_markers:
 		if enemy_container.get_child_count() >= MAX_ENEMIES:
-			break # Use break to stop the loop
-			
-		# Check which group the marker belongs to
-		var type = "slime" if marker.is_in_group("SlimeSpawn") else "heli"
+			break 
 		
-		# Set your spawn chances
-		var chance = 0.5 if type == "slime" else 0.4
+		# Only 30% of markers should actually spawn something at start
+		if randf() > 0.3:
+			continue
+
+		var type = "fireE"
+		if marker.is_in_group("SlimeSpawn"): type = "slime"
+		elif marker.is_in_group("HeliSpawn"): type = "heli"
 		
-		if randf() <= chance:
-			spawn_enemy_at(marker.global_position, type)
+		spawn_enemy_at(marker.global_position, type)

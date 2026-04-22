@@ -146,7 +146,8 @@ func _on_invincibility_timeout() -> void:
 # ======================
 
 func take_damage(damage: int, attacker_position: Vector2):
-	if is_invincible: return
+	if is_invincible: 
+		return
 	
 	HEALTH -= damage
 	heli_hit_sfx.pitch_scale = randf_range(0.8, 1.0)
