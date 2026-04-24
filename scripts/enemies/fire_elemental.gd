@@ -14,7 +14,7 @@ var player_in_ranged = false
 var player_in_melee = false
 var is_attacking = false
 
-const SPEED = 25 # Slow walk
+const SPEED = 22 # Slow walk
 const FRICTION = 400
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -45  
@@ -109,32 +109,49 @@ func patrol():
 	update_direction_visuals()
 
 func ranged_attack(delta):
-	# Stay still during ranged phase
-	velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
-	
-	if player_target:
-		var dir_to_player = sign(player_target.global_position.x - global_position.x)
-		if dir_to_player != 0:
-			direction = dir_to_player
-			update_direction_visuals()
+	# --- 1. HANDLE MOVEMENT BETWEEN SHOTS ---
+	if not is_attacking:
+		if player_target:
+			# Determine direction to player
+			var dir_to_player = sign(player_target.global_position.x - global_position.x)
+			if dir_to_player != 0:
+				direction = dir_to_player
+				update_direction_visuals()
 
-	# IF COOLDOWN IS ACTIVE: Play walk animation so he isn't a statue
-	if not ranged_cooldown.is_stopped():
-		if animated_sprite.animation != "walk":
-			animated_sprite.play("walk")
-		return # Stop here; don't shoot yet
+			# LEDGE PROTECTION: Only move if there is floor ahead
+			var can_move = false
+			if direction > 0 and ray_right_air.is_colliding() and not ray_right_wall.is_colliding():
+				can_move = true
+			elif direction < 0 and ray_left_air.is_colliding() and not ray_left_wall.is_colliding():
+				can_move = true
 
-	# IF COOLDOWN IS READY: Shoot!
-	if is_on_floor():
-		shoot()
-		await animated_sprite.animation_finished
-		is_attacking = false # Unlock the state machine!
+			if can_move and not player_in_melee:
+				velocity.x = direction * SPEED*1.3
+				if animated_sprite.animation != "walk":
+					animated_sprite.play("walk")
+			else:
+				# Stop at edge or if already in melee range
+				velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+				if animated_sprite.animation != "walk":
+					animated_sprite.play("walk")
+	else:
+		# Stay still while actually in the shoot animation
+		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
+	# --- 2. SHOOT LOGIC ---
+	if ranged_cooldown.is_stopped() and not is_attacking and is_on_floor():
+		if player_target: # Double check target exists before locking
+			shoot()
+			
 func shoot():
-	is_attacking = true # Lock the state machine!
-	animated_sprite.play("shoot")	
-	# Enforce exactly a 3 second delay between shots
-	ranged_cooldown.start() 
+	is_attacking = true
+	animated_sprite.play("shoot")
+	ranged_cooldown.start()
+	
+	# Wait for animation, but check if we should "snap out" of it
+	# We use a loop or a specific check to see if target left
+	await animated_sprite.animation_finished
+	is_attacking = false
 	
 func melee_attack(delta):
 	if player_target:
@@ -186,11 +203,16 @@ func _on_rangedradius_body_entered(body: Node2D) -> void:
 		player_target = body
 		player_in_ranged = true
 
+# Update the signal to handle the "Snap to Idle/Walk" logic
 func _on_rangedradius_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		player_in_ranged = false
-		if not player_in_melee: # Safety check to wipe target
-			player_target = null
+		player_target = null
+		ranged_cooldown.stop()
+		# CANCEL ATTACK: If he was shooting and the player leaves, snap him out of it
+		if is_attacking and animated_sprite.animation == "shoot":
+			is_attacking = false
+			animated_sprite.play("walk") # Snaps to walk/idle visuals immediately
 
 func _on_meleeradius_body_entered(body: Node2D) -> void:
 	if body.name == "Player":

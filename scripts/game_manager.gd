@@ -1,8 +1,9 @@
 extends Node
 
+signal stats_changed
 # Inventory storage
 var inventory = []
-var currency = 0
+var currency = 20
 
 # Player stat bonuses (applied from items)
 var player_stats = {
@@ -25,6 +26,8 @@ func can_spend_currency(amount: int) -> bool:
 func add_item(item_data: Dictionary):
 	inventory.append(item_data)
 	apply_item_effect(item_data)
+	# Emit the signal so the Player knows to recalculate
+	stats_changed.emit()
 	print("Picked up: ", item_data.name)
 	print("Inventory size: ", inventory.size())
 	
@@ -83,7 +86,7 @@ func get_random_item_from_database() -> Dictionary:
 const ITEM_DATABASE = {
 	"speed_boots": {
 		"name": "Speedy Boot",
-		"effect_type": "speed",
+		"effect_type": "health",
 		"value": 15,  # Percentage
 		"rarity": "common",
 		"sprite_default": "res://assets/sprites/speed_boot_sprite.png",

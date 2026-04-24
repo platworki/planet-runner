@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PlanetRunner"
-run/main_scene="uid://dc4m88yus5so8"
+run/main_scene="uid://bd6qne43qq7wc"
 config/features=PackedStringArray("4.5", "Forward Plus")
 run/max_fps=240
 config/icon="res://icon.svg"
@@ -28,8 +28,8 @@ window/size/viewport_height=720
 window/size/window_width_override=1152
 window/size/window_height_override=648
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 window/vsync/vsync_mode=0
+window/main_scene="uid://dc4m88yus5so8"
 
 [gui]
 

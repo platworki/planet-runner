@@ -12,7 +12,8 @@ func get_speed() -> float:
 	
 const BASE_DAMAGE = 10
 const BASE_HEALTH = 100
-var HEALTH = BASE_HEALTH + GameManager.player_stats.health_bonus
+var HEALTH = 100
+var MAX_HEALTH = BASE_HEALTH
 
 # CONSTANT PARAMS
 const JUMP_VELOCITY = -230.0
@@ -73,8 +74,9 @@ var current_state = State.NORMAL
 # ===== MAIN LOOP ======
 # ======================
 #
-#func _ready() -> void:
-	#Engine.time_scale = 0.3
+func _ready() -> void:
+	GameManager.stats_changed.connect(update_stats)
+	update_stats() # Initialize on start
 
 func _physics_process(delta: float) -> void:
 	# INFO Check if at the beginning of the frame the players on the floor
@@ -403,6 +405,24 @@ func _on_attack_2_window_timeout() -> void:
 	if attack_combo_count == 1:
 		attack_combo_count = 0
 
+func update_stats():
+	# 1. Calculate the new limit
+	var new_max = BASE_HEALTH + GameManager.player_stats.health_bonus
+	
+	# 2. Calculate how much the limit just increased
+	# (e.g., if new_max is 115 and old MAX_HEALTH was 100, increase is 15)
+	var increase = new_max - MAX_HEALTH
+	
+	# 3. Update the limit
+	MAX_HEALTH = new_max
+	
+	# 4. Add ONLY the increase to your current HEALTH
+	# This turns 60/100 into 75/115
+	HEALTH += increase
+	
+	print("Stats Updated! Current HEALTH (and Max) is now: ", HEALTH)
+	print("Speed is now: ", get_speed())
+
 # INFO Call when the PlayerAttack Area hits an enemy; 'enemy' is the Node I passed
 func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 	# INFO Only add a different behaviour if we are pogoing
@@ -521,5 +541,5 @@ func die():
 	player_body.set_deferred("disabled", true)
 	await torso_animation.animation_finished
 	Engine.time_scale = 1
-	GameManager.reset_game()
 	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")
+	GameManager.reset_game()

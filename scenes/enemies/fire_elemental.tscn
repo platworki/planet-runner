@@ -484,7 +484,6 @@ shape = SubResource("RectangleShape2D_0l8pv")
 wait_time = 0.3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(0, -28.56667)
 sprite_frames = SubResource("SpriteFrames_v5wyi")
 animation = &"walk"
@@ -507,11 +506,11 @@ target_position = Vector2(-20.667, 0)
 
 [node name="RaycastLeftAir" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -8)
-target_position = Vector2(-26.666668, 24.684317)
+target_position = Vector2(-17, 24.684)
 
 [node name="RaycastRightAir" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -8)
-target_position = Vector2(32.666668, 24.684317)
+target_position = Vector2(17, 24.684)
 
 [node name="GroundCollision" type="CollisionShape2D" parent="."]
 position = Vector2(-0.66666627, -21.350983)
