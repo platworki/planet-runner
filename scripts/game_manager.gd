@@ -64,6 +64,7 @@ func _process(delta: float) -> void:
 	if item_stacks.crystal_buckler > 0 and not player_stats.shield_active:
 		buckler_timer -= delta
 		if buckler_timer <= 0:
+			player_node.shield_charge_sfx.play()
 			player_stats.shield_active = true
 			print("Shield Charged!")
 
@@ -278,13 +279,11 @@ func on_enemy_died():
 			# Logic: 5% of Max HP + 2% per extra stack
 			var percent = 0.05 + ((item_stacks.thick_root - 1) * 0.02)
 			var heal_amount = int(player_node.MAX_HEALTH * percent)
-			
 			player_node.heal(heal_amount)
 	
 func reset_game():
 	inventory.clear()
 	currency = 0
-	
 	player_stats = {
 		"speed_bonus": 0, # %
 		"damage_bonus": 0, # %
@@ -296,5 +295,15 @@ func reset_game():
 		"shield_active": false,
 		"shield_cooldown_max": 20.0
 	}
-	
+	item_stacks = {
+		"speed_boots": 0,
+		"precise_map": 0,
+		"thick_root": 0,
+		"combo_board": 0, # NEW
+		"green_buge": 0,
+		"protective_plushie": 0,
+		"reality_eraser": 0, # NEW
+		"swift_scarf": 0,
+		"crystal_buckler": 0
+	}
 	print("GameManager reset.")

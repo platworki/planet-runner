@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cc04sq7uhtbi8" path="res://assets/sprites/Enemies/Fire Elemental/melee-fireE-Sheet.png" id="5_a737n"]
 [ext_resource type="Texture2D" uid="uid://ctljqkbjv2vgk" path="res://assets/sprites/Enemies/Fire Elemental/shoot-fireE-Sheet.png" id="5_dm21t"]
 [ext_resource type="Texture2D" uid="uid://c768bdupnrmj2" path="res://assets/sprites/Enemies/Fire Elemental/walk-fireE-Sheet.png" id="5_m0xfg"]
-[ext_resource type="Script" uid="uid://c6r7i0hmui4je" path="res://scripts/enemies/melee_damage.gd" id="9_fdp3n"]
+[ext_resource type="Script" uid="uid://c6r7i0hmui4je" path="res://scripts/enemies/melee_damage_fireE.gd" id="9_fdp3n"]
 [ext_resource type="AudioStream" uid="uid://baf5giboashir" path="res://assets/sounds/Fire Elemental/take_dmg.wav" id="10_ca6t8"]
 [ext_resource type="AudioStream" uid="uid://dupo61ieucd3f" path="res://assets/sounds/Fire Elemental/charge.mp3" id="11_58w6j"]
 [ext_resource type="AudioStream" uid="uid://ctkl5xxmbgagl" path="res://assets/sounds/Fire Elemental/fireball.mp3" id="12_so46g"]

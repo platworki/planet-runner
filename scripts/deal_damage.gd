@@ -3,8 +3,14 @@ extends Area2D
 signal hit_enemy(enemy)
 
 func _on_area_entered(area: Area2D) -> void:
-	# Check if we hit an enemy hitbox
-	var enemy = area.get_parent()  # Get the slime
+	var enemy = null
+	# 1. Check if the Area itself points to an entity
+	if area.has_meta("entity"):
+		enemy = area.get_meta("entity")
+	# 2. Fallback to parent (for slimes)
+	else:
+		enemy = area.get_parent()
+		
 	if enemy.is_invincible:
 		return
 
@@ -23,7 +29,7 @@ func _on_area_entered(area: Area2D) -> void:
 		# Tell GameManager a hit happened (triggers Combo Board)
 		GameManager.on_player_hit_enemy(is_second_attack)
 		# Get player's damage value
-		# tell the player (or whoever's connected) that we hit an enemy
+		# tell the player that we hit an enemy
 		emit_signal("hit_enemy", enemy)
 		
 		var damage = player.get_current_attack_damage()

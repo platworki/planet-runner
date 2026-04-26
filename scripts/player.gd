@@ -69,6 +69,8 @@ var current_state = State.NORMAL
 @onready var dash_sfx: AudioStreamPlayer = $"../Audio/Dash"
 @onready var double_jump_sfx: AudioStreamPlayer = $"../Audio/DoubleJump"
 @onready var footsteps_sfx: AudioStreamPlayer = $"../Audio/Footsteps"
+@onready var shield_charge_sfx: AudioStreamPlayer = $"Shield charge"
+@onready var shield_break_sfx: AudioStreamPlayer = $"Shield break"
 
 
 # ======================
@@ -551,7 +553,6 @@ func handle_knockback(delta: float) -> void:
 # ====== DAMAGE ========
 # ======================
 
-# Add a heal function if you don't have one
 func heal(amount: int):
 	HEALTH = clampi(HEALTH + amount, 0, MAX_HEALTH)
 	print("Healed! Current HP: ", HEALTH)
@@ -567,6 +568,7 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		GameManager.player_stats.shield_active = false
 		GameManager.buckler_timer = GameManager.player_stats.shield_cooldown_max
 		print("Shield Popped! Reduced damage to: ", int(final_damage))
+		shield_break_sfx.play()
 		# Optional: Play a "Clink" sound or spawn a crystal particle here
 	else:
 		# Normal Damage Reduction (Plushie)

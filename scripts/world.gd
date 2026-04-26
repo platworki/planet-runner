@@ -17,6 +17,7 @@ const MAX_ENEMIES = 30
 const OFFSCREEN_MIN = 50 # Must be AT LEAST 50px outside the camera
 
 func _ready():
+	#Engine.time_scale = 0.2
 	spawn_item_givers()
 	spawn_enemies()
 
