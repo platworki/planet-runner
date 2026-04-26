@@ -286,10 +286,15 @@ func reset_game():
 	currency = 0
 	
 	player_stats = {
-		"speed_bonus": 0,
-		"damage_bonus": 0,
-		"health_bonus": 0,
-		"crit_chance": 0
+		"speed_bonus": 0, # %
+		"damage_bonus": 0, # %
+		"health_bonus": 0, # INT
+		"crit_chance": 0, # %
+		"damage_reduction": 0.0, # NEW: 0.0 to 1.0 (0% to 100%)
+		"insta_kill_chance": 0.0, # %
+		"attack_speed_multiplier": 1.0, # NEW: 1.0 is default
+		"shield_active": false,
+		"shield_cooldown_max": 20.0
 	}
 	
 	print("GameManager reset.")
