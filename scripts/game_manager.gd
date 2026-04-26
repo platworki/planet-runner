@@ -51,7 +51,7 @@ var buckler_timer = 0.0
 func _process(delta: float) -> void:
 	if player_node:
 		if player_stats.shield_active:
-			player_node.torso_animation.modulate = Color(0.5, 0.8, 1.0, 1.0) 
+			player_node.torso_animation.modulate = Color(1.0, 0.661, 0.999, 1.0) 
 		else:
 			player_node.torso_animation.modulate = Color.WHITE
 	

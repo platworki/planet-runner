@@ -17,7 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://ubsu5vexfa7k" path="res://assets/sounds/swing-whoosh-11-198503.mp3" id="13_jhx03"]
 [ext_resource type="AudioStream" uid="uid://cbwsm3cul5xef" path="res://assets/sounds/wind-blowing-sfx-01-423673.mp3" id="14_o8fc1"]
 [ext_resource type="AudioStream" uid="uid://b7hlswdjtc2k5" path="res://assets/sounds/dash.wav" id="15_xo05s"]
-[ext_resource type="AudioStream" uid="uid://ciq0wfepq5tpw" path="res://assets/sounds/footsteps.wav" id="16_dss4m"]
+[ext_resource type="AudioStream" uid="uid://dx33v4unrq23d" path="res://assets/sounds/footsteps.wav" id="16_dss4m"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
 texture = ExtResource("6_w7kh3")
