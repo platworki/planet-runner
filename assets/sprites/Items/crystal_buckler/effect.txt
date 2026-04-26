@@ -1,0 +1,1 @@
+- co 20s (-10% na stack, czyli 20s -> 18s -> 16,2s) gracz dostaje "shielda" blokującego 80% następnego ataku przeciwnika.

@@ -1,0 +1,1 @@
+-heal 20 (+5 na stack) damage'a po pokonaniu przeciwnika

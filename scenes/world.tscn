@@ -17,7 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://ubsu5vexfa7k" path="res://assets/sounds/swing-whoosh-11-198503.mp3" id="13_jhx03"]
 [ext_resource type="AudioStream" uid="uid://cbwsm3cul5xef" path="res://assets/sounds/wind-blowing-sfx-01-423673.mp3" id="14_o8fc1"]
 [ext_resource type="AudioStream" uid="uid://b7hlswdjtc2k5" path="res://assets/sounds/dash.wav" id="15_xo05s"]
-[ext_resource type="AudioStream" uid="uid://dx33v4unrq23d" path="res://assets/sounds/footsteps.wav" id="16_dss4m"]
+[ext_resource type="AudioStream" uid="uid://ciq0wfepq5tpw" path="res://assets/sounds/footsteps.wav" id="16_dss4m"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
 texture = ExtResource("6_w7kh3")
@@ -844,55 +844,58 @@ metadata/_edit_group_ = true
 [node name="Heli Spawners" type="Node" parent="Spawners"]
 
 [node name="HeliSpawnpoint" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(448, -992)
+position = Vector2(448, -918)
 
 [node name="HeliSpawnpoint2" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(1216, -992)
+position = Vector2(1216, -918)
 
 [node name="HeliSpawnpoint3" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(1952, -1056)
+position = Vector2(1952, -982)
 
 [node name="HeliSpawnpoint4" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(1792, -1536)
+position = Vector2(1792, -1462)
 
 [node name="HeliSpawnpoint5" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(608, -1504)
+position = Vector2(608, -1430)
 
 [node name="HeliSpawnpoint6" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(160, -1248)
+position = Vector2(160, -1174)
 
 [node name="HeliSpawnpoint7" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(128, -960)
+position = Vector2(128, -886)
 
 [node name="HeliSpawnpoint8" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(2784, -1600)
+position = Vector2(2784, -1526)
 
 [node name="HeliSpawnpoint9" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(3136, -1600)
+position = Vector2(3136, -1526)
 
 [node name="HeliSpawnpoint10" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(3488, -1248)
+position = Vector2(3488, -1174)
 
 [node name="HeliSpawnpoint12" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(3712, -1056)
+position = Vector2(3712, -982)
 
 [node name="HeliSpawnpoint13" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(2144, -1024)
+position = Vector2(2144, -950)
 
 [node name="HeliSpawnpoint14" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(1632, -992)
+position = Vector2(1632, -918)
 
 [node name="HeliSpawnpoint15" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(800, -960)
+position = Vector2(800, -886)
 
 [node name="HeliSpawnpoint16" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(1824, -512)
+position = Vector2(1824, -438)
 
 [node name="HeliSpawnpoint11" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(4096, -960)
+position = Vector2(4096, -886)
 
 [node name="HeliSpawnpoint17" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
-position = Vector2(1344, -160)
+position = Vector2(1344, -86)
+
+[node name="FireElemental" parent="Spawners/Heli Spawners" instance=ExtResource("8_lakw3")]
+position = Vector2(800, -192)
 
 [node name="FireE Spawners" type="Node" parent="Spawners"]
 
@@ -925,7 +928,7 @@ offset = Vector2(0, -50)
 ignore_rotation = false
 zoom = Vector2(2, 2)
 process_callback = 0
-limit_left = -100
+limit_left = -120
 limit_top = -1890
 limit_right = 6130
 limit_bottom = 120
@@ -978,6 +981,12 @@ bus = &"SFX"
 [node name="Footsteps" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("16_dss4m")
 bus = &"SFX"
+
+[node name="MultiShop2" parent="." instance=ExtResource("2_7r4gi")]
+position = Vector2(-6.1297775e-05, 31.547668)
+
+[node name="MultiShop" parent="." instance=ExtResource("2_7r4gi")]
+position = Vector2(321.3769, 0)
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]
 [connection signal="timeout" from="Spawners/SpawnTimer" to="." method="_on_spawn_timer_timeout"]

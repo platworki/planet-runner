@@ -1,0 +1,1 @@
+1 raz (+1 na stack) na stage, jeśli spadniesz poniżej 15% max hp, healujesz się +80hp

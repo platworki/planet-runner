@@ -1,0 +1,1 @@
++5% damage przez 4s gdy trafisz przeciwnika 2 atakiem w combo. max 3 (+1 na stack) stacki tego buffa

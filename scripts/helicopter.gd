@@ -8,6 +8,7 @@ enum State {
 
 var current_state = State.IDLE
 var player_target = null
+var is_boss = false
 
 const SPEED = 80
 const ACCELERATION = 230
@@ -145,7 +146,7 @@ func _on_invincibility_timeout() -> void:
 # ====== DAMAGE ========
 # ======================
 
-func take_damage(damage: int, attacker_position: Vector2):
+func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float = 1.0):
 	if is_invincible: 
 		return
 	
@@ -158,15 +159,15 @@ func take_damage(damage: int, attacker_position: Vector2):
 	if attacker_position != Vector2.ZERO:
 		var knock_dir = (helicopter_hitbox.global_position - attacker_position).normalized()
 		# Apply knockback in both axes
-		velocity = knock_dir * knockback_force
+		velocity = knock_dir * knockback_force * kb_multiplier
 		is_knocked_back = true
 	if HEALTH <= 0:
 		die()
 
 func die():
+	GameManager.on_enemy_died()
 	GameManager.add_currency(5)
 	helicopter_hitbox.set_deferred("disabled", true)
 	animated_sprite.play("death")
-	
 	await get_tree().create_timer(1.0).timeout
 	queue_free()

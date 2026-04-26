@@ -69,6 +69,12 @@ func update_item_selection():
 func try_purchase():
 	if selected_item == null:
 		return
+	
+	var item_id = selected_item.item_id
+	if GameManager.is_item_maxed(item_id):
+		print("Shop: You already have the maximum amount of this item!")
+		return
+		
 	var cost = 5
 	# Wait for animation to play long enough
 	if GameManager.can_spend_currency(cost):

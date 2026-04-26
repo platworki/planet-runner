@@ -9,6 +9,7 @@ enum State {
 
 var current_state = State.PATROL
 var player_target = null
+var is_boss = false
 
 const SPEED = 50
 const CHASE_SPEED = 80
@@ -193,8 +194,9 @@ func _on_invincibility_timeout() -> void:
 # ====== DAMAGE ========
 # ======================
 
-func take_damage(damage: int, attacker_position: Vector2):
-	if is_invincible: return
+func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float = 1.0):
+	if is_invincible: 
+		return
 	
 	HEALTH -= damage
 	animated_sprite.play("damage")
@@ -208,8 +210,8 @@ func take_damage(damage: int, attacker_position: Vector2):
 
 	if attacker_position != Vector2.ZERO:
 		var knock_dir = sign(global_position.x - attacker_position.x)
-		velocity.x = knock_dir * knockback_force
-		velocity.y = JUMP_KNOCKBACK 
+		velocity.x = knock_dir * knockback_force * kb_multiplier
+		velocity.y = JUMP_KNOCKBACK * kb_multiplier
 		is_knocked_back = true
 
 		current_state = State.CHASE
@@ -222,6 +224,7 @@ func take_damage(damage: int, attacker_position: Vector2):
 			animated_sprite.play("walk")
 
 func die():
+	GameManager.on_enemy_died()
 	GameManager.add_currency(5)
 	print("5 currency added.")
 	slime_hitbox.set_deferred("disabled", true)

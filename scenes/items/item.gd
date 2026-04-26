@@ -4,6 +4,7 @@ var item_data = {}
 var is_display_only = false
 var player_in_range = false
 var can_pickup = false
+var item_id = ""
 
 @onready var sprite_default: Sprite2D = $SpriteDefault
 @onready var sprite_highlight: Sprite2D = $SpriteHighlight
@@ -12,6 +13,10 @@ var can_pickup = false
 @onready var item: CharacterBody2D = $"."
 
 func _ready() -> void:
+	# FIXED: Grab the "id" instead of the "name"
+	if item_data.has("id"):
+		item_id = item_data["id"]
+	
 	if item_data.has("sprite_default"):
 		sprite_default.texture = load(item_data.sprite_default)
 	if item_data.has("sprite_highlight"):
@@ -33,6 +38,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 	if player_in_range and Input.is_action_just_pressed("pickup") and can_pickup and not is_display_only:
+		if GameManager.is_item_maxed(item_id):
+			print("Cannot pickup: Already reached max stacks for ", item_id)
+			# Optional: Add a 'locked' sound effect here
+			return
+		
 		pickup()
 		set_physics_process(false)
 	
@@ -53,7 +63,7 @@ func set_highlight(state: bool):
 	sprite_highlight.visible = state
 
 func pickup():
-	GameManager.add_item(item_data)
+	GameManager.add_item(item_id)
 	pickup_sfx.pitch_scale = randf_range(0.7,0.9)
 	pickup_sfx.play()
 	item.visible = false

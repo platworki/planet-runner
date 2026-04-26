@@ -8,6 +8,7 @@ enum State {
 
 var current_state = State.PATROL
 var player_target = null
+var is_boss = false
 
 # Sensor variables to fix the "await" lockup bug
 var player_in_ranged = false
@@ -44,6 +45,12 @@ var is_invincible = false
 @onready var ray_left_wall: RayCast2D = $Raycasts/RaycastLeftWall
 @onready var ray_right_air: RayCast2D = $Raycasts/RaycastRightAir
 @onready var ray_left_air: RayCast2D = $Raycasts/RaycastLeftAir
+
+@onready var take_dmg_sfx: AudioStreamPlayer = $Audio/TakeDmg
+@onready var charge_fireball_sfx: AudioStreamPlayer = $Audio/ChargeFireball
+@onready var shoot_fireball_sfx: AudioStreamPlayer = $Audio/ShootFireball
+@onready var melee_sfx: AudioStreamPlayer = $Audio/Melee
+@onready var death_sfx: AudioStreamPlayer = $Audio/Death
 
 func _physics_process(delta: float) -> void:
 	if HEALTH <= 0: 
@@ -148,9 +155,13 @@ func shoot():
 	animated_sprite.play("shoot")
 	ranged_cooldown.start()
 	
+	await animated_sprite.animation_finished
+	
 	# Wait for animation, but check if we should "snap out" of it
 	# We use a loop or a specific check to see if target left
-	await animated_sprite.animation_finished
+	if charge_fireball_sfx.playing:
+		charge_fireball_sfx.stop()
+	
 	is_attacking = false
 	
 func melee_attack(delta):
@@ -175,20 +186,32 @@ func melee_attack(delta):
 
 func _on_animated_sprite_2d_frame_changed() -> void:
 	# --- RANGED ATTACK SPAWN ---
-	if animated_sprite.animation == "shoot" and animated_sprite.frame == 11:
-		if player_target:
-			var fireball = fireball_scene.instantiate()
-			fireball.global_position = fireball_spawn.global_position
+	if animated_sprite.animation == "shoot":
+		if animated_sprite.frame == 0:
+			charge_fireball_sfx.pitch_scale = randf_range(0.6,0.9)
+			charge_fireball_sfx.play(0.2)
+		
+		if animated_sprite.frame == 11:
+			charge_fireball_sfx.stop() # Kill the charge sound
+			shoot_fireball_sfx.pitch_scale = randf_range(0.8,1.1)
+			shoot_fireball_sfx.play()
 			
-			# Calculate direction vector and rotation
-			# (Using your Vector2(0,-20) offset to aim at the chest/head)
-			var dir = ((player_target.global_position + Vector2(0, -20)) - fireball_spawn.global_position).normalized()
-			fireball.direction = dir
-			fireball.rotation = dir.angle()
-			get_parent().add_child(fireball)
+			if player_target:
+				var fireball = fireball_scene.instantiate()
+				fireball.global_position = fireball_spawn.global_position
+				
+				# Calculate direction vector and rotation
+				# (Using your Vector2(0,-20) offset to aim at the chest/head)
+				var dir = ((player_target.global_position + Vector2(0, -20)) - fireball_spawn.global_position).normalized()
+				fireball.direction = dir
+				fireball.rotation = dir.angle()
+				get_parent().add_child(fireball)
 
 	# --- MELEE HITBOX LOGIC ---
 	if animated_sprite.animation == "melee":
+		if animated_sprite.frame == 6:
+			melee_sfx.pitch_scale = randf_range(0.8,1.1)
+			melee_sfx.play()
 		if animated_sprite.frame >= 8 and animated_sprite.frame <= 10:
 			melee_damage_hitbox.set_deferred("disabled", false)
 		else:
@@ -209,6 +232,10 @@ func _on_rangedradius_body_exited(body: Node2D) -> void:
 		player_in_ranged = false
 		player_target = null
 		ranged_cooldown.stop()
+		
+		if charge_fireball_sfx.playing:
+			charge_fireball_sfx.stop()
+		
 		# CANCEL ATTACK: If he was shooting and the player leaves, snap him out of it
 		if is_attacking and animated_sprite.animation == "shoot":
 			is_attacking = false
@@ -230,9 +257,11 @@ func _on_invincibility_timeout() -> void:
 # ====== DAMAGE ========
 # ======================
 
-func take_damage(damage: int, attacker_position: Vector2):
+func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float = 1.0):
 	if is_invincible: return
 	
+	take_dmg_sfx.pitch_scale = randf_range(0.6,1.1)
+	take_dmg_sfx.play()
 	HEALTH -= damage
 	if animated_sprite.animation != "melee":
 		animated_sprite.play("damage") # Sorry Paul
@@ -242,17 +271,19 @@ func take_damage(damage: int, attacker_position: Vector2):
 
 	if attacker_position != Vector2.ZERO:
 		var knock_dir = sign(global_position.x - attacker_position.x)
-		velocity.x = knock_dir * knockback_force
-		velocity.y = JUMP_KNOCKBACK 
+		velocity.x = knock_dir * knockback_force * kb_multiplier
+		velocity.y = JUMP_KNOCKBACK
 		is_knocked_back = true
 
 	if HEALTH <= 0:
 		die()
 
 func die():
+	death_sfx.play()
+	GameManager.on_enemy_died()
 	GameManager.add_currency(10)
 	elemental_hitbox.set_deferred("disabled", true)
 	animated_sprite.play("death")
 	direction = 0
-	await get_tree().create_timer(1.0).timeout
+	await death_sfx.finished
 	queue_free()

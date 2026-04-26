@@ -33,6 +33,7 @@ var has_double_jump = true
 var was_on_floor = true
 
 enum State {
+	WAKING,
 	NORMAL,
 	DASHING,
 	KNOCKED_BACK,
@@ -74,9 +75,34 @@ var current_state = State.NORMAL
 # ===== MAIN LOOP ======
 # ======================
 #
-func _ready() -> void:
+func _ready():
+	# Register this node as the "Player" in the GameManager
+	GameManager.player_node = self
 	GameManager.stats_changed.connect(update_stats)
-	update_stats() # Initialize on start
+	update_stats()
+	if current_state == State.WAKING:
+		start_intro_sequence()
+
+func start_intro_sequence():
+	current_state = State.WAKING
+	
+	# 1. Wait a moment for the scene transition/fade to finish
+	await get_tree().create_timer(2).timeout
+	
+	# 2. Play the "Wake Up" animation
+	# (Assuming you have an animation named "WakeUp" on your torso)
+	torso_animation.play("Waking")
+	legs_animation.play("Waking") 
+	
+	# 3. Wait for the animation to finish
+	await torso_animation.animation_finished
+	torso_animation.play("Idle")
+	legs_animation.play("Idle") 
+	
+	await get_tree().create_timer(0.5).timeout
+	# 4. Give control to the player
+	current_state = State.NORMAL
+	print("Player is awake!")
 
 func _physics_process(delta: float) -> void:
 	# INFO Check if at the beginning of the frame the players on the floor
@@ -93,6 +119,9 @@ func _physics_process(delta: float) -> void:
 				legs_animation.play("RiseToFall")
 	
 	match current_state:
+		State.WAKING:
+			velocity.x = 0 # Force stillness
+			gravity(delta) # Still allow them to fall to the floor
 		State.NORMAL:
 			if Input.is_action_just_pressed("dash") and has_air_dash and dash_cooldown_timer.is_stopped():
 				current_state = State.DASHING
@@ -406,6 +435,11 @@ func _on_attack_2_window_timeout() -> void:
 		attack_combo_count = 0
 
 func update_stats():
+	var spd = GameManager.player_stats.attack_speed_multiplier
+	print("Attack speed:", spd)
+	torso_animation.speed_scale = spd
+	print("Torso anim speed:", spd)
+	attack_hit_animation.speed_scale = spd
 	# 1. Calculate the new limit
 	var new_max = BASE_HEALTH + GameManager.player_stats.health_bonus
 	
@@ -443,14 +477,16 @@ func attack() -> void:
 	swing_sfx.pitch_scale = randf_range(0.6,1.1)
 	swing_sfx.play()
 	
+	var spd = GameManager.player_stats.attack_speed_multiplier
+	
 	if Input.is_action_pressed("down") and not is_on_floor():
 		attack_combo_count = 0  # INFO Reset combo
 		attack_hit_animation.play("Pogo")
 		torso_animation.play("Pogo")
 		# INFO Pogo animation is too high, using offset to lower it
 		torso_animation.offset = Vector2(0,7.8)
-		attack_cooldown.start(0.4)  # INFO Short cooldown after pogo
-		pogo_cooldown.start(0.4)
+		attack_cooldown.start(0.4/spd)  # INFO Short cooldown after pogo
+		pogo_cooldown.start(0.4/spd)
 		return
 	
 	# INFO Main attacks - combo system
@@ -459,15 +495,17 @@ func attack() -> void:
 		attack_combo_count = 1
 		attack_hit_animation.play("Attack 1")
 		torso_animation.play("Attack 1")
-		attack_2_window.start()  # INFO Window to do second attack
-		attack_cooldown.start(0.2)
+		
+		attack_2_window.start(0.6/spd)  # INFO Window to do second attack
+		attack_cooldown.start(0.2/spd)
 		
 	elif attack_combo_count == 1 and not attack_2_window.is_stopped():
 		attack_combo_count = 2
 		attack_2_window.stop()
 		attack_hit_animation.play("Attack 2")
 		torso_animation.play("Attack 2")
-		attack_cooldown.start(0.5)  # INFO Long cooldown after combo finishes
+		
+		attack_cooldown.start(0.5/spd)  # INFO Long cooldown after combo finishes
 
 func cancel_attack() -> void:
 	if attack_combo_count == 1:
@@ -481,17 +519,23 @@ func cancel_attack() -> void:
 
 func get_current_attack_damage() -> int:
 	var base_damage = BASE_DAMAGE + GameManager.player_stats.damage_bonus
+	var is_second_attack = attack_hit_animation.current_animation == "Attack 2"
+	var combo_multiplier = GameManager.get_combo_damage_modifier(is_second_attack)
+	
+	# Apply base multiplier (Attack 2 does 1.5x naturally)
+	if is_second_attack:
+		base_damage*=1.5
+	
+	# Apply Item Multiplier (Green Buge / Combo Board)
+	base_damage *= combo_multiplier
+	
 	# Check for crit
 	var crit_chance = GameManager.player_stats.crit_chance
 	if randf() * 100 < crit_chance:  # Random 0-100 vs crit chance
 		base_damage *= 2  # Crit = double damage
 		print("CRITICAL HIT!")
 	
-	var current_anim = attack_hit_animation.current_animation
-	if current_anim == "Attack 2":
-		return base_damage * 1.5
-	else:
-		return base_damage
+	return int(base_damage)
 
 # ======================
 # ===== KNOCKBACK ======
@@ -507,15 +551,34 @@ func handle_knockback(delta: float) -> void:
 # ====== DAMAGE ========
 # ======================
 
+# Add a heal function if you don't have one
+func heal(amount: int):
+	HEALTH = clampi(HEALTH + amount, 0, MAX_HEALTH)
+	print("Healed! Current HP: ", HEALTH)
+
 func take_damage(enemy_damage: int, enemy_position: Vector2):
 	if not invincibility.is_stopped():
 		return
-		
-	HEALTH -= enemy_damage
+	
+	var final_damage = float(enemy_damage)
+	# NEW: Crystal Buckler Logic
+	if GameManager.player_stats.shield_active:
+		final_damage *= 0.2 # Block 80%
+		GameManager.player_stats.shield_active = false
+		GameManager.buckler_timer = GameManager.player_stats.shield_cooldown_max
+		print("Shield Popped! Reduced damage to: ", int(final_damage))
+		# Optional: Play a "Clink" sound or spawn a crystal particle here
+	else:
+		# Normal Damage Reduction (Plushie)
+		final_damage *= (1.0 - GameManager.player_stats.damage_reduction)
+
+	HEALTH -= int(final_damage)
+	
 	if HEALTH <= 0:
 		die()
 		return
-
+	
+	# Cosmetics:
 	print("You have ", HEALTH, " left!")
 	torso_animation.play("Damage")
 	legs_animation.play("Damage")

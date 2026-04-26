@@ -1,0 +1,2 @@
+-Jeśli przeciwnik ma aktywnego bleeda, każdy atak zada mu obrażenia krytyczne (każdy hit to critical na tym przeciwniku). 10% (+5% na stack) Szansy na bleed.
+

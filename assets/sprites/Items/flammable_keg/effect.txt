@@ -1,0 +1,1 @@
+gdy dostajesz damage, przeciwnicy w okręgu o promieniu 2 (+1 na stack) tile'ów dostają burna

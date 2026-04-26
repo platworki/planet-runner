@@ -5,6 +5,9 @@ extends Control
 @onready var exit: TextureButton = $Exit
 
 func _on_play_pressed() -> void:
+	if SceneTransitions.is_transitioning:
+		return
+	
 	start.texture_normal = start.texture_hover
 	start.disabled = true
 	options.disabled = true

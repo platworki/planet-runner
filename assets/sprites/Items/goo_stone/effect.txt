@@ -1,0 +1,1 @@
+-10% (+5% na stack) movement speed przez 5s dla zaatakowanych przeciwników. Efekt się nie stackuje, jedynie odświeża cooldown (np. uderzenie przeciwnika nie nspowolni go o 20%, ale po 2 uderzeniu będzie jeszcze trwać 5s).

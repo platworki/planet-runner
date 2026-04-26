@@ -25,7 +25,7 @@ scroll_scale = Vector2(0.03, 0.05)
 scroll_offset = Vector2(-192.025, 75)
 repeat_size = Vector2(576, 0)
 autoscroll = Vector2(1.3, 0)
-repeat_times = 4
+repeat_times = 6
 
 [node name="Sprite2D" type="Sprite2D" parent="Clouds"]
 scale = Vector2(1.2, 1.2)
@@ -36,7 +36,7 @@ z_index = 2
 scroll_scale = Vector2(0.05, 0.08)
 scroll_offset = Vector2(300, 107.26)
 repeat_size = Vector2(576, 0)
-repeat_times = 4
+repeat_times = 6
 
 [node name="Sprite2D" type="Sprite2D" parent="SandBack"]
 scale = Vector2(1.2, 1.2)
@@ -47,7 +47,7 @@ z_index = 3
 scroll_scale = Vector2(0.06, 0.08)
 scroll_offset = Vector2(300, 120)
 repeat_size = Vector2(576, 0)
-repeat_times = 4
+repeat_times = 6
 
 [node name="Sprite2D" type="Sprite2D" parent="SandFront"]
 scale = Vector2(1.2, 1.2)
