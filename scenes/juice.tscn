@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7ukogaw07asc"]
+
+[ext_resource type="Script" uid="uid://c1fjnukihn73d" path="res://scripts/juice.gd" id="1_brsqy"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_brsqy")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+top_level = true
+z_index = 30
+z_as_relative = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

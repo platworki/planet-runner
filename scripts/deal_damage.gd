@@ -4,24 +4,22 @@ signal hit_enemy(enemy)
 
 func _on_area_entered(area: Area2D) -> void:
 	var enemy = null
-	# 1. Check if the Area itself points to an entity
+	
+	if area.has_meta("is_parry"):
+		enemy = area.get_meta("entity")
+		if enemy and enemy.has_method("trigger_parry_hit"):
+			enemy.trigger_parry_hit()
+			return # IMPORTANT: Stop everything else so we don't deal damage
+
 	if area.has_meta("entity"):
 		enemy = area.get_meta("entity")
-	# 2. Fallback to parent (for slimes)
 	else:
 		enemy = area.get_parent()
 		
-	if enemy.is_invincible:
+	# Safety check for area/enemy existence
+	if not enemy or enemy.get("is_invincible"):
 		return
-
-	# NEW: Reality Eraser Logic
-	if enemy.has_method("die") and not enemy.is_boss:
-		var roll = randf() * 100
-		if roll < GameManager.player_stats.insta_kill_chance:
-			print("REALITY ERASED!")
-			enemy.die() # Trigger enemy death immediately
-			return # Skip normal damage calculation
-
+		
 	if enemy.has_method("take_damage"):
 		var player = get_parent().get_parent()
 		

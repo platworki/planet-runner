@@ -1,16 +1,94 @@
-[gd_scene load_steps=88 format=3 uid="uid://duhwo8fpqfcq2"]
+[gd_scene load_steps=111 format=3 uid="uid://duhwo8fpqfcq2"]
 
 [ext_resource type="Script" uid="uid://6xaxen2y65ot" path="res://scripts/enemies/boss.gd" id="1_262in"]
 [ext_resource type="Texture2D" uid="uid://dnsmsnpok62xi" path="res://assets/sprites/Enemies/Boss/enter_portal_snek-Sheet.png" id="1_hp8g2"]
 [ext_resource type="Texture2D" uid="uid://oaus5as8ihyc" path="res://assets/sprites/Enemies/Boss/void_snek_idle-Sheet.png" id="1_qr8g4"]
-[ext_resource type="PackedScene" uid="uid://mavn8s3vlntc" path="res://scenes/spawner_cloud.tscn" id="2_860m3"]
+[ext_resource type="PackedScene" uid="uid://mavn8s3vlntc" path="res://scenes/enemies/spawner_cloud.tscn" id="2_860m3"]
 [ext_resource type="Texture2D" uid="uid://eqia4uri4svk" path="res://assets/sprites/Enemies/Boss/parry_base-Sheet.png" id="2_it6ib"]
+[ext_resource type="Texture2D" uid="uid://cf8e4wdp6wfye" path="res://assets/sprites/Enemies/Boss/snek_die-Sheet.png" id="3_37bjw"]
 [ext_resource type="Texture2D" uid="uid://csjo7ma2r2yvj" path="res://assets/sprites/Enemies/Boss/exit_portal_snek-Sheet.png" id="4_860m3"]
 [ext_resource type="Texture2D" uid="uid://dm0cm7bg4e0u2" path="res://assets/sprites/Enemies/Boss/snek_attac1-Sheet.png" id="6_d127w"]
 [ext_resource type="Texture2D" uid="uid://dtkkn6aumqb00" path="res://assets/sprites/Enemies/Boss/parry_attacking-Sheet.png" id="7_a6rat"]
 [ext_resource type="Texture2D" uid="uid://cdb5fk7acil3n" path="res://assets/sprites/Enemies/Boss/parry-stagger-Sheet.png" id="8_uiupq"]
 [ext_resource type="Script" uid="uid://butw8fmubkqon" path="res://scripts/take_dmg_from_enemy_boss.gd" id="10_d127w"]
 [ext_resource type="Script" uid="uid://de2vaes4vterk" path="res://scripts/enemies/melee_damage_boss.gd" id="11_a6rat"]
+[ext_resource type="Script" uid="uid://dvvabkf61bxoj" path="res://scripts/enemies/parry_damage_boss.gd" id="12_uiupq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b2odv"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(0, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dw8ij"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(128, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bawn2"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(256, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ty84o"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(384, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7abls"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(512, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ki54a"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(640, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdkwk"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(768, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lucdm"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(896, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p0vp2"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1024, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kk6ao"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1152, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ijss"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1280, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17boi"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1408, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qfjc"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1536, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4coc"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1664, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_387br"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1792, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5sqxu"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(1920, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b23yx"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(2048, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nt2ax"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(2176, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rysnl"]
+atlas = ExtResource("3_37bjw")
+region = Rect2(2304, 0, 128, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rx8d5"]
 atlas = ExtResource("2_it6ib")
@@ -303,6 +381,68 @@ region = Rect2(1792, 0, 128, 96)
 [sub_resource type="SpriteFrames" id="SpriteFrames_dm84w"]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b2odv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dw8ij")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bawn2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ty84o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7abls")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ki54a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdkwk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lucdm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p0vp2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kk6ao")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ijss")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_17boi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8qfjc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4coc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_387br")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5sqxu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b23yx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nt2ax")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rysnl")
+}],
+"loop": false,
+"name": &"Death",
+"speed": 11.0
+}, {
+"frames": [{
 "duration": 0.71,
 "texture": SubResource("AtlasTexture_rx8d5")
 }, {
@@ -576,11 +716,18 @@ animations = [{
 size = Vector2(9, 40)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_860m3"]
-radius = 28.254257
-height = 56.508514
+radius = 19.672695
+height = 61.93347
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uiupq"]
+radius = 14.0
+height = 52.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_860m3"]
-size = Vector2(45, 11)
+size = Vector2(49, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uiupq"]
+size = Vector2(8, 38)
 
 [node name="PortalBoss" type="CharacterBody2D"]
 collision_layer = 8
@@ -590,8 +737,8 @@ cloud_scene = ExtResource("2_860m3")
 [node name="Position" type="Node2D" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Position"]
-z_index = 9
-position = Vector2(-32, -48)
+z_index = 13
+position = Vector2(-32, -47)
 sprite_frames = SubResource("SpriteFrames_dm84w")
 animation = &"Idle"
 autoplay = "Idle"
@@ -612,29 +759,51 @@ wait_time = 0.3
 
 [node name="MeleeHitboxArea" type="Area2D" parent="Position"]
 position = Vector2(-26, -42.000004)
-rotation = 0.99483776
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("11_a6rat")
 
 [node name="MeleeHitbox" type="CollisionShape2D" parent="Position/MeleeHitboxArea"]
+position = Vector2(1.000001, -0.9999957)
+rotation = 0.32463124
+scale = Vector2(1.3001883, 1.098188)
 shape = SubResource("CapsuleShape2D_860m3")
 disabled = true
 
-[node name="ParryHitbox" type="CollisionShape2D" parent="."]
+[node name="ParryCheckArea" type="Area2D" parent="Position"]
 position = Vector2(-37.5, -21.5)
+collision_layer = 12
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Position/ParryCheckArea"]
+position = Vector2(22.5, -9.5)
+shape = SubResource("CapsuleShape2D_uiupq")
+disabled = true
+
+[node name="ParryHitboxArea" type="Area2D" parent="Position"]
+position = Vector2(-37.5, -21.5)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("12_uiupq")
+
+[node name="ParryHitbox" type="CollisionShape2D" parent="Position/ParryHitboxArea"]
+position = Vector2(-2, 3)
 shape = SubResource("RectangleShape2D_860m3")
 disabled = true
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-10, -20)
+shape = SubResource("RectangleShape2D_uiupq")
+
 [node name="StateTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 1.5
 one_shot = true
 
-[node name="ParryWindow" type="Timer" parent="."]
-one_shot = true
+[node name="P3Timer" type="Timer" parent="."]
+wait_time = 4.5
 
 [node name="Invincibility" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.1
 one_shot = true
 
 [connection signal="animation_finished" from="Position/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
@@ -643,5 +812,5 @@ one_shot = true
 [connection signal="body_exited" from="Position/BodyHitboxArea" to="Position/BodyHitboxArea" method="_on_body_exited"]
 [connection signal="timeout" from="Position/BodyHitboxArea/DamageIfInside" to="Position/BodyHitboxArea" method="_on_damage_timer_timeout"]
 [connection signal="timeout" from="StateTimer" to="." method="_on_state_timer_timeout"]
-[connection signal="timeout" from="ParryWindow" to="." method="_on_parry_window_timeout"]
+[connection signal="timeout" from="P3Timer" to="." method="_on_p_3_timer_timeout"]
 [connection signal="timeout" from="Invincibility" to="." method="_on_invincibility_timeout"]

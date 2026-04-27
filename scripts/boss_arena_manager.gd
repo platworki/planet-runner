@@ -8,6 +8,7 @@ extends Area2D
 
 var player: CharacterBody2D
 var is_active = false
+var boss_defeated = false
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
@@ -17,12 +18,16 @@ func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		player = null
 
-func _input(event: InputEvent) -> void:
-	if is_active:
-		return
-		
+func _input(event: InputEvent) -> void:	
 	if player and event.is_action_pressed("pickup"):
-		start_boss_sequence()
+		# IF BOSS IS DEAD: Transition to next level
+		if boss_defeated:
+			exit_level()
+			return
+		
+		# IF BOSS IS NOT STARTED: Start sequence
+		if not is_active:
+			start_boss_sequence()
 
 func start_boss_sequence() -> void:
 	is_active = true
@@ -48,10 +53,18 @@ func spawn_boss() -> void:
 	get_parent().get_parent().add_child(boss)
 
 func _on_boss_defeated() -> void:
+	boss_defeated = true
+	
+	await get_tree().create_timer(3.0).timeout
 	animated_sprite.play("EndOpen")
-	# 2. Unlock Walls
 	invisible_wall.set_deferred("disabled", true)
 	
 	var camera = get_viewport().get_camera_2d()
 	if camera:
-		camera.limit_left = -120 # Reset to default large value
+		camera.limit_left = -120
+
+func exit_level():
+	# Prevent double-clicks during fade
+	set_process_input(false)
+	set_physics_process(false)
+	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")

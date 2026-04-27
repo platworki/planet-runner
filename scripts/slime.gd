@@ -18,7 +18,7 @@ const JUMP_KNOCKBACK = -65
 const LUNGE_SPEED = 245
 const LUNGE_FRICTION = 600  
 
-var HEALTH = 60
+var HEALTH = 70
 var DAMAGE = 10
 var direction = 1
 var knockback_force = 85.0
@@ -215,7 +215,9 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 		is_knocked_back = true
 
 		current_state = State.CHASE
-
+		
+	Effects.play_hit_flash(animated_sprite,Color(0.546, 0.78, 0.581, 1.0),0.25)
+	
 	if HEALTH <= 0:
 		die()
 	else:

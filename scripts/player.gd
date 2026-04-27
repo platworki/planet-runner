@@ -582,8 +582,13 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 	
 	# Cosmetics:
 	print("You have ", HEALTH, " left!")
+	
 	torso_animation.play("Damage")
 	legs_animation.play("Damage")
+	
+	Effects.play_hit_flash(torso_animation, Color(4.617, 4.617, 4.617, 1.0), 0.25)
+	Effects.play_hit_flash(legs_animation, Color(5.133, 5.133, 5.133, 1.0), 0.25)
+	
 	# INFO Calculate the hit direction, then add the non-smoothed value for knockback distance
 	var knock_dir = sign(global_position.x - enemy_position.x)
 	velocity.x = knock_dir * knockback_force

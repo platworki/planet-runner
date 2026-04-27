@@ -1,6 +1,6 @@
 extends Area2D
 
-const SPEED = 350
+const SPEED = 400
 var direction = Vector2.ZERO
 var damage = 25
 var is_flying = false

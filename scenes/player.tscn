@@ -1539,7 +1539,6 @@ size = Vector2(9.75, 42.995)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 4
-y_sort_enabled = true
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_qhqgy")
@@ -1593,8 +1592,10 @@ disabled = true
 z_index = 1
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Waking"
+animation = &"Damage"
 autoplay = "Waking"
+frame = 6
+frame_progress = 1.0
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(12, -22)

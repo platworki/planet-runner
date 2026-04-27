@@ -461,21 +461,21 @@ texture_region_size = Vector2i(32, 32)
 0:6/size_in_atlas = Vector2i(1, 2)
 0:6/0 = 0
 0:6/0/texture_origin = Vector2i(0, 16)
-0:6/0/z_index = 7
+0:6/0/z_index = 5
 11:0/0 = 0
-11:0/0/z_index = 7
+11:0/0/z_index = 5
 12:0/0 = 0
-12:0/0/z_index = 7
+12:0/0/z_index = 5
 13:0/0 = 0
-13:0/0/z_index = 7
+13:0/0/z_index = 5
 14:0/0 = 0
 15:0/0 = 0
 11:1/0 = 0
-11:1/0/z_index = 7
+11:1/0/z_index = 5
 12:1/0 = 0
-12:1/0/z_index = 7
+12:1/0/z_index = 5
 13:1/0 = 0
-13:1/0/z_index = 7
+13:1/0/z_index = 5
 14:1/0 = 0
 15:1/0 = 0
 12:2/0 = 0
@@ -483,17 +483,17 @@ texture_region_size = Vector2i(32, 32)
 14:2/0 = 0
 15:2/0 = 0
 11:3/0 = 0
-11:3/0/z_index = 7
+11:3/0/z_index = 5
 12:3/0 = 0
 13:3/0 = 0
 14:3/0 = 0
 15:3/0 = 0
 11:4/0 = 0
-11:4/0/z_index = 7
+11:4/0/z_index = 5
 12:4/0 = 0
-12:4/0/z_index = 7
+12:4/0/z_index = 5
 13:4/0 = 0
-13:4/0/z_index = 7
+13:4/0/z_index = 5
 14:4/0 = 0
 15:4/0 = 0
 11:5/0 = 0
@@ -1139,9 +1139,6 @@ position = Vector2(4096, -886)
 [node name="HeliSpawnpoint17" type="Marker2D" parent="Spawners/Heli Spawners" groups=["HeliSpawn"]]
 position = Vector2(1344, -86)
 
-[node name="FireElemental" parent="Spawners/Heli Spawners" instance=ExtResource("8_lakw3")]
-position = Vector2(800, -192)
-
 [node name="FireE Spawners" type="Node" parent="Spawners"]
 
 [node name="FireESpawnpoint" type="Marker2D" parent="Spawners/FireE Spawners" groups=["FireESpawn"]]
@@ -1163,21 +1160,21 @@ position = Vector2(4000, -864)
 unique_name_in_owner = true
 physics_interpolation_mode = 1
 z_index = 6
-position = Vector2(5536, -64)
+position = Vector2(4992, -64)
 platform_on_leave = 1
 safe_margin = 0.01
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 physics_interpolation_mode = 1
 z_index = 1
-offset = Vector2(0, -50)
+offset = Vector2(0, -65)
 ignore_rotation = false
 zoom = Vector2(2, 2)
 process_callback = 0
 limit_left = -120
 limit_top = -1890
 limit_right = 6130
-limit_bottom = 75
+limit_bottom = 130
 limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 3.5
@@ -1228,12 +1225,6 @@ bus = &"SFX"
 stream = ExtResource("16_dss4m")
 bus = &"SFX"
 
-[node name="MultiShop2" parent="." instance=ExtResource("2_7r4gi")]
-position = Vector2(-6.1297775e-05, 31.547668)
-
-[node name="MultiShop" parent="." instance=ExtResource("2_7r4gi")]
-position = Vector2(321.3769, 0)
-
 [node name="BossArena" type="Node" parent="."]
 
 [node name="MagicalDoor" type="Area2D" parent="BossArena"]
@@ -1267,7 +1258,67 @@ disabled = true
 [node name="CloudSpawnPoints" type="Node" parent="BossArena"]
 
 [node name="RangedSpawnPoint" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
-position = Vector2(5600, -64)
+position = Vector2(5760, -64)
+
+[node name="RangedSpawnPoint2" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5696, -64)
+
+[node name="RangedSpawnPoint3" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5632, -64)
+
+[node name="RangedSpawnPoint4" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5760, -192)
+
+[node name="RangedSpawnPoint5" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5440, -192)
+
+[node name="RangedSpawnPoint6" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5440, -64)
+
+[node name="RangedSpawnPoint7" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5344, -64)
+
+[node name="RangedSpawnPoint8" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5248, -64)
+
+[node name="RangedSpawnPoint9" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5152, -32)
+
+[node name="RangedSpawnPoint10" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5056, -32)
+
+[node name="RangedSpawnPoint11" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(4960, -32)
+
+[node name="RangedSpawnPoint12" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(4896, -32)
+
+[node name="RangedSpawnPoint13" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5888, -64)
+
+[node name="RangedSpawnPoint14" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(6016, -64)
+
+[node name="RangedSpawnPoint15" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5792, -192)
+
+[node name="RangedSpawnPoint16" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5376, -192)
+
+[node name="RangedSpawnPoint17" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5568, -64)
+
+[node name="RangedSpawnPoint18" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5280, -64)
+
+[node name="RangedSpawnPoint19" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5088, -32)
+
+[node name="RangedSpawnPoint20" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
+position = Vector2(5824, -64)
+
+[node name="Slime" parent="." instance=ExtResource("7_i7141")]
+position = Vector2(800, -192)
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]
 [connection signal="timeout" from="Spawners/SpawnTimer" to="." method="_on_spawn_timer_timeout"]

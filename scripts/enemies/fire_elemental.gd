@@ -20,7 +20,7 @@ const FRICTION = 400
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -45  
 
-var HEALTH = 100
+var HEALTH = 110
 var DAMAGE = 20
 var MELEE_DAMAGE = 25
 var direction = 1
@@ -264,7 +264,9 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 	take_dmg_sfx.play()
 	HEALTH -= damage
 	if animated_sprite.animation != "melee":
-		animated_sprite.play("damage") # Sorry Paul
+		animated_sprite.play("damage")
+	
+	Effects.play_hit_flash(animated_sprite,Color(0.927, 0.613, 0.428, 1.0),0.25)
 	
 	invincibility.start()
 	is_invincible = true

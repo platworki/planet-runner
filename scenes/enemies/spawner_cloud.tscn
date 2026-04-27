@@ -178,17 +178,18 @@ script = ExtResource("1_aw1y2")
 fireball_scene = ExtResource("2_2upw4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-z_index = 9
-position = Vector2(0, -45)
+z_index = 13
+position = Vector2(0, -56.25)
+scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_kot8n")
 animation = &"Open"
 autoplay = "Open"
 
 [node name="ShotTimer" type="Timer" parent="."]
-wait_time = 0.3
+wait_time = 0.25
 one_shot = true
 
 [node name="Muzzle" type="Marker2D" parent="."]
-position = Vector2(-1, -70)
+position = Vector2(-2, -85)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

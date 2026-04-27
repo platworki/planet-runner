@@ -16,7 +16,7 @@ const FRICTION = 400
 # How close horizontally it needs to be to shoot
 const ATTACK_X_RANGE = 10
 
-var HEALTH = 40
+var HEALTH = 60
 var DAMAGE = 10
 var LASER_DAMAGE = 30
 var knockback_force = 100.0
@@ -152,6 +152,7 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 	
 	HEALTH -= damage
 	heli_hit_sfx.pitch_scale = randf_range(0.8, 1.0)
+	Effects.play_hit_flash(animated_sprite,Color(0.627, 0.526, 0.414, 1.0),0.25)
 	heli_hit_sfx.play()
 	
 	invincibility.start()
