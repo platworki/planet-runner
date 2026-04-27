@@ -2,9 +2,11 @@ extends Node2D
 
 signal cloud_finished
 
-@onready var sprite = $AnimatedSprite2D
-@onready var muzzle = $Muzzle
-@onready var shot_timer = $ShotTimer
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var muzzle: Marker2D = $Muzzle
+@onready var shot_timer: Timer = $ShotTimer
+@onready var fireball_sfx: AudioStreamPlayer = $Fireball
+@onready var appear_portal_sfx: AudioStreamPlayer = $AppearPortal
 
 @export var fireball_scene: PackedScene # Drag your fireball.tscn her
 
@@ -14,6 +16,8 @@ var player = null
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("Player")
 	sprite.play("Open")
+	appear_portal_sfx.pitch_scale = randf_range(0.5,0.7)
+	appear_portal_sfx.play(0.1)
 	# Start shooting shortly after opening
 	get_tree().create_timer(0.8).timeout.connect(fire_sequence)
 
@@ -34,6 +38,8 @@ func spawn_projectile() -> void:
 	var dir = (target_pos - muzzle.global_position).normalized()
 	fireball.direction = dir
 	fireball.rotation = dir.angle()
+	
+	Effects.play_sound(fireball_sfx.stream,0.3)
 	
 	get_parent().add_child(fireball)
 

@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal player_died
+
 # ======================
 # === CONFIGURATION ====
 # ======================
@@ -69,8 +71,9 @@ var current_state = State.NORMAL
 @onready var dash_sfx: AudioStreamPlayer = $"../Audio/Dash"
 @onready var double_jump_sfx: AudioStreamPlayer = $"../Audio/DoubleJump"
 @onready var footsteps_sfx: AudioStreamPlayer = $"../Audio/Footsteps"
-@onready var shield_charge_sfx: AudioStreamPlayer = $"Shield charge"
-@onready var shield_break_sfx: AudioStreamPlayer = $"Shield break"
+@onready var shield_charge_sfx: AudioStreamPlayer = $ShieldCharge
+@onready var shield_break_sfx: AudioStreamPlayer = $ShieldBreak
+@onready var death_sfx: AudioStreamPlayer = $Death
 
 
 # ======================
@@ -603,12 +606,15 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 	knockback_time.start()
 	
 func die():
+	player_died.emit()
 	print("You died!")
 	Engine.time_scale = 0.5
 	set_physics_process(false)
 	torso_animation.play("Death")
 	legs_animation.play("Death")
 	player_body.set_deferred("disabled", true)
+	await get_tree().create_timer(0.1).timeout
+	death_sfx.play(0.1)
 	await torso_animation.animation_finished
 	Engine.time_scale = 1
 	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")

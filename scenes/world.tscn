@@ -1160,7 +1160,7 @@ position = Vector2(4000, -864)
 unique_name_in_owner = true
 physics_interpolation_mode = 1
 z_index = 6
-position = Vector2(4992, -64)
+position = Vector2(5024, -32)
 platform_on_leave = 1
 safe_margin = 0.01
 
@@ -1303,7 +1303,7 @@ position = Vector2(6016, -64)
 position = Vector2(5792, -192)
 
 [node name="RangedSpawnPoint16" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
-position = Vector2(5376, -192)
+position = Vector2(5408, -192)
 
 [node name="RangedSpawnPoint17" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
 position = Vector2(5568, -64)

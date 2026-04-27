@@ -1,18 +1,20 @@
 extends CanvasLayer
 
-var MAX_BAR_WIDTH = 0
 const ITEM_SLOT_SIZE = 32  # Pixel size of each item slot
 
 @onready var currency_label: Label = $UIcontainer/HPcontainer/CurrencyLabel
 @onready var health_bar: TextureProgressBar = $UIcontainer/HPcontainer/HealthBar
 @onready var hp_label: Label = $UIcontainer/HPcontainer/HPlabel
 @onready var item_grid: GridContainer = $UIcontainer/ItemBar/TextureRect/ItemGrid
+@onready var boss_container: Control = $UIcontainer/BossContainer
+@onready var boss_hp_label: Label = $UIcontainer/BossContainer/BossHPLabel
+@onready var boss_health_bar: TextureProgressBar = $UIcontainer/BossContainer/BossHealthBar
 
 var player_node = null
+var current_boss = null
 
 func _ready() -> void:
 	await get_tree().process_frame
-	MAX_BAR_WIDTH = health_bar.max_value
 
 func _process(_delta: float) -> void:
 	if player_node == null:
@@ -22,6 +24,36 @@ func _process(_delta: float) -> void:
 		return
 	update_health_bar()
 	update_currency()
+	
+	if current_boss != null and is_instance_valid(current_boss):
+		update_boss_bar()
+	elif boss_container.visible:
+		boss_container.visible = false
+# Call this from your Boss Manager or the Boss's _ready()
+
+func register_boss(boss_node):
+	current_boss = boss_node
+	
+	boss_container.modulate.a = 0
+	boss_container.visible = true
+	
+	var tween = create_tween()
+	tween.tween_property(boss_container, "modulate:a", 1.0, 1).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(boss_hp_label, "self_modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE)
+	# Optional: Animate the bar filling up from 0 to full
+	boss_health_bar.value = 0
+	tween.parallel().tween_property(boss_health_bar, "value", 100, 2).set_trans(Tween.TRANS_QUINT)
+	
+func update_boss_bar():
+	# Using the HEALTH and MAX_HEALTH variables from your boss script
+	var health_ratio = float(current_boss.HEALTH) / current_boss.MAX_HEALTH
+	boss_health_bar.value = health_ratio * 100
+	boss_hp_label.text = str(current_boss.HEALTH) + "/" + str(current_boss.MAX_HEALTH)
+	# Optional: Hide if dead
+	if current_boss.HEALTH <= 0:
+		await get_tree().create_timer(3.0).timeout
+		current_boss = null
+		boss_container.visible = false
 
 func update_health_bar() -> void:
 	var current_health = player_node.HEALTH

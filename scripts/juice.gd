@@ -26,8 +26,26 @@ func hit_stop(time_scale: float, duration: float):
 	await get_tree().create_timer(duration * time_scale).timeout
 	Engine.time_scale = 1.0
 
-func play_screen_flash(duration: float = 0.3, max_alpha: float = 0.8):
+func play_screen_flash(duration: float = 0.3, max_alpha: float = 0.6):
 	var tween = create_tween()
 	# Ensure the rect is white
-	screen_flash_rect.self_modulate = Color(7, 7, 7, max_alpha)
+	screen_flash_rect.self_modulate = Color(1, 1, 1, max_alpha)
 	tween.tween_property(screen_flash_rect, "self_modulate:a", 0.0, duration).set_trans(Tween.TRANS_CUBIC)
+
+# Change 'audio' to 'stream' so we pass the file, not the node
+func play_sound(stream: AudioStream, pitch_range: float = 0.0):
+	if not stream: 
+		return
+	
+	# Create a brand new, temporary audio player
+	var new_player = AudioStreamPlayer.new()
+	new_player.stream = stream
+	
+	if pitch_range > 0:
+		new_player.pitch_scale = randf_range(1.0 - pitch_range, 1.0 + pitch_range)
+	new_player.volume_db = -15.5
+	get_tree().current_scene.add_child(new_player)
+	new_player.play()
+	
+	# Clean up when done
+	new_player.finished.connect(new_player.queue_free)

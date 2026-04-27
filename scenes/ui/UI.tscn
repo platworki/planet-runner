@@ -1,14 +1,16 @@
-[gd_scene load_steps=9 format=3 uid="uid://c4wwtt3b6puos"]
+[gd_scene load_steps=13 format=3 uid="uid://c4wwtt3b6puos"]
 
 [ext_resource type="Script" uid="uid://cmt1auyogqsqv" path="res://scripts/ui/ui.gd" id="1_d2gw2"]
 [ext_resource type="FontFile" uid="uid://clisj16mb204t" path="res://assets/sprites/Fonts/windows-bold[1].ttf" id="2_dqg8s"]
 [ext_resource type="Texture2D" uid="uid://cjhn8uldh2j6n" path="res://assets/sprites/hp_bar.png" id="2_nnfdp"]
 [ext_resource type="Texture2D" uid="uid://baprf03dqj8d3" path="res://assets/sprites/hp_progress_bar.png" id="3_s64wo"]
 [ext_resource type="Texture2D" uid="uid://5yyuj5ey0fsp" path="res://assets/sprites/item_background.png" id="4_s64wo"]
+[ext_resource type="Texture2D" uid="uid://lvbfe7jh668" path="res://assets/sprites/Enemies/Boss/boss1_hp_bar.png" id="6_j3nm3"]
+[ext_resource type="Texture2D" uid="uid://hu2lli0f4tgj" path="res://assets/sprites/Enemies/Boss/boss1_hp_pink_stuff.png" id="7_p6rkd"]
 
 [sub_resource type="FontVariation" id="FontVariation_tnv4l"]
 base_font = ExtResource("2_dqg8s")
-variation_transform = Transform2D(1, 0, 0, 0.99, 0, 0)
+variation_transform = Transform2D(1, 0, 0, 0.96, 0, 0)
 
 [sub_resource type="LabelSettings" id="LabelSettings_s64wo"]
 font = SubResource("FontVariation_tnv4l")
@@ -20,6 +22,19 @@ font = SubResource("FontVariation_tnv4l")
 font_size = 19
 font_color = Color(0.6, 0.8980392, 0.3137255, 1)
 
+[sub_resource type="FontVariation" id="FontVariation_j3nm3"]
+base_font = ExtResource("2_dqg8s")
+variation_transform = Transform2D(1, 0, 0, 0.96, 0, 0)
+spacing_glyph = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_dqg8s"]
+font = SubResource("FontVariation_j3nm3")
+font_size = 21
+font_color = Color(0.92286307, 0.6066588, 0.82015365, 1)
+outline_size = 2
+outline_color = Color(0.047058824, 0, 0, 1)
+shadow_size = 0
+
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_d2gw2")
 
@@ -30,6 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="HPcontainer" type="Control" parent="UIcontainer"]
@@ -39,6 +55,7 @@ offset_top = 4.0
 offset_right = 521.0
 offset_bottom = 119.0
 size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="HPlabel" type="Label" parent="UIcontainer/HPcontainer"]
 z_index = 1
@@ -56,7 +73,6 @@ label_settings = SubResource("LabelSettings_s64wo")
 horizontal_alignment = 1
 justification_flags = 171
 text_direction = 1
-metadata/_edit_use_anchors_ = true
 
 [node name="CurrencyLabel" type="Label" parent="UIcontainer/HPcontainer"]
 z_index = 1
@@ -84,6 +100,7 @@ offset_left = 444.0
 offset_top = 5.0
 offset_right = 941.7079
 offset_bottom = 99.0
+mouse_filter = 2
 
 [node name="TextureRect" type="TextureRect" parent="UIcontainer/ItemBar"]
 layout_mode = 2
@@ -100,3 +117,49 @@ mouse_filter = 2
 theme_override_constants/h_separation = 3
 theme_override_constants/v_separation = 3
 columns = 17
+
+[node name="BossContainer" type="Control" parent="UIcontainer"]
+custom_minimum_size = Vector2(1236, 105)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -618.0
+offset_top = -105.0
+offset_right = 618.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BossHPLabel" type="Label" parent="UIcontainer/BossContainer"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0578125
+anchor_right = 0.17890625
+offset_left = -0.00025177002
+offset_top = 19.715
+offset_right = -0.0002593994
+offset_bottom = 48.714977
+text = "90/100"
+label_settings = SubResource("LabelSettings_dqg8s")
+horizontal_alignment = 1
+justification_flags = 171
+text_direction = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="BossHealthBar" type="TextureProgressBar" parent="UIcontainer/BossContainer"]
+custom_minimum_size = Vector2(0, 105)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 105.0
+grow_horizontal = 2
+mouse_filter = 2
+step = 0.1
+value = 100.0
+nine_patch_stretch = true
+texture_under = ExtResource("6_j3nm3")
+texture_progress = ExtResource("7_p6rkd")

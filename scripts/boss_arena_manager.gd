@@ -27,6 +27,7 @@ func _input(event: InputEvent) -> void:
 		
 		# IF BOSS IS NOT STARTED: Start sequence
 		if not is_active:
+			player.z_index = 14
 			start_boss_sequence()
 
 func start_boss_sequence() -> void:
@@ -43,14 +44,20 @@ func start_boss_sequence() -> void:
 	invisible_wall.set_deferred("disabled", false)
 	spawn_boss()
 
-
+# Inside boss_arena_manager.gd
 func spawn_boss() -> void:
 	var boss = boss_scene.instantiate()
 	boss.global_position = left_arena_boundary.global_position + Vector2(300, 0)
-	# Connect the death signal so the door knows when to open
 	boss.boss_died.connect(_on_boss_defeated)
-	
+	# Get the UI and register the boss
+	# Adjust this path depending on where your UI node lives
+	var ui = get_tree().get_first_node_in_group("UI") 
+	if ui:
+		ui.register_boss(boss)
+		
+	await get_tree().create_timer(2.0).timeout
 	get_parent().get_parent().add_child(boss)
+	
 
 func _on_boss_defeated() -> void:
 	boss_defeated = true

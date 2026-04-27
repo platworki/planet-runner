@@ -1,4 +1,4 @@
-[gd_scene load_steps=207 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=208 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
 [ext_resource type="Script" uid="uid://csoy286hyp5i3" path="res://scripts/deal_damage.gd" id="2_dqkch"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://8ljsb2d3rlx3" path="res://assets/sprites/new-and-improved-LEGS-sheet.png" id="10_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b50rjr1y6isk" path="res://assets/sprites/death_spritesheet_legs.png" id="11_f1ej7"]
 [ext_resource type="AudioStream" uid="uid://cpxg8mvfxkqgd" path="res://assets/sounds/BeepBox-Song.wav" id="15_a8ls1"]
+[ext_resource type="AudioStream" uid="uid://bdf0mt3r7aspc" path="res://assets/sounds/Boss/dragon-studio-lightning-spell-386163.mp3" id="16_fulsm"]
 [ext_resource type="AudioStream" uid="uid://d172pypwa26by" path="res://assets/sounds/shield_crack.wav" id="16_qfm1y"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
@@ -1636,15 +1637,22 @@ z_index = 2
 position = Vector2(0.875, -21.5025)
 shape = SubResource("RectangleShape2D_dqkch")
 
-[node name="Shield charge" type="AudioStreamPlayer" parent="."]
+[node name="ShieldCharge" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("15_a8ls1")
 volume_db = -15.005
 max_polyphony = 2
 bus = &"SFX"
 
-[node name="Shield break" type="AudioStreamPlayer" parent="."]
+[node name="ShieldBreak" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("16_qfm1y")
-volume_db = -2.0
+volume_db = -6.0
+max_polyphony = 2
+bus = &"SFX"
+
+[node name="Death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_fulsm")
+volume_db = -14.0
+pitch_scale = 0.7
 max_polyphony = 2
 bus = &"SFX"
 

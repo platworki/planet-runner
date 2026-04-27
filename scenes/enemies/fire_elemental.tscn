@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cwhqbl6psytrf" path="res://scripts/enemies/fire_elemental.gd" id="1_a737n"]
 [ext_resource type="Script" uid="uid://dpcthuo7kn7pi" path="res://scripts/take_dmg_from_enemy.gd" id="2_dm21t"]
-[ext_resource type="PackedScene" uid="uid://guec2ebes6xr" path="res://scenes/fireprojectile.tscn" id="2_fdp3n"]
+[ext_resource type="PackedScene" uid="uid://guec2ebes6xr" path="res://scenes/enemies/fireprojectile.tscn" id="2_fdp3n"]
 [ext_resource type="Texture2D" uid="uid://b48tp4jg53usg" path="res://assets/sprites/Enemies/Fire Elemental/get-hit-fireE-Sheet - Copy.png" id="4_fdp3n"]
 [ext_resource type="Texture2D" uid="uid://cn1pfl6fku223" path="res://assets/sprites/Enemies/Fire Elemental/death_fireE-Sheet.png" id="4_gsw22"]
 [ext_resource type="Texture2D" uid="uid://cc04sq7uhtbi8" path="res://assets/sprites/Enemies/Fire Elemental/melee-fireE-Sheet.png" id="5_a737n"]

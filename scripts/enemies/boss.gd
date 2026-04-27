@@ -12,7 +12,7 @@ enum State {
 	DISAPPEARING
 }
 
-const MAX_HEALTH = 400
+const MAX_HEALTH = 500
 var HEALTH = MAX_HEALTH
 var DAMAGE = 15
 var MELEE_DAMAGE = 30
@@ -21,18 +21,23 @@ var PARRY_DAMAGE = 25
 var current_state = State.HIDDEN
 var is_boss = true # For reality eraser immunity
 var is_invincible = false
+var is_player_dead = false
 
 @onready var position_node: Node2D = $Position
-@onready var body_hitbox_area: Area2D = $Position/BodyHitboxArea
 @onready var main_hitbox: CollisionShape2D = $Position/BodyHitboxArea/BodyHitbox
 @onready var melee_hitbox: CollisionShape2D = $Position/MeleeHitboxArea/MeleeHitbox
-@onready var state_timer: Timer = $StateTimer
 @onready var parry_hitbox: CollisionShape2D = $Position/ParryHitboxArea/ParryHitbox
-@onready var animated_sprite: AnimatedSprite2D = $Position/AnimatedSprite2D
-@onready var invincibility: Timer = $Invincibility
-@onready var parry_check_area: Area2D = $Position/ParryCheckArea
 @onready var parry_check_hitbox: CollisionShape2D = $Position/ParryCheckArea/CollisionShape2D
+@onready var animated_sprite: AnimatedSprite2D = $Position/AnimatedSprite2D
+@onready var parry_check_area: Area2D = $Position/ParryCheckArea
+@onready var body_hitbox_area: Area2D = $Position/BodyHitboxArea
+@onready var state_timer: Timer = $StateTimer
 @onready var p3_timer: Timer = $P3Timer
+@onready var invincibility: Timer = $Invincibility
+@onready var parry_sfx: AudioStreamPlayer = $Audio/Parry
+@onready var portal_sfx: AudioStreamPlayer = $Audio/Portal
+@onready var melee_sfx: AudioStreamPlayer = $Audio/Melee
+@onready var shield_crack_sfx: AudioStreamPlayer = $Audio/ShieldCrack
 
 var last_state = State.HIDDEN
 var repeat_count = 0
@@ -44,7 +49,8 @@ var player = null
 
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("Player")
-	
+	if player:
+		player.player_died.connect(_on_player_died)
 	# Metadata for regular damage
 	body_hitbox_area.set_meta("entity",self)
 	# Metadata for parry check
@@ -52,7 +58,6 @@ func _ready() -> void:
 	parry_check_area.set_meta("is_parry", true)
 	
 	enter_hidden()
-	player.z_index = 14
 
 func enter_hidden():
 	current_state = State.HIDDEN
@@ -60,7 +65,8 @@ func enter_hidden():
 	# Reset position far away just in case of ghost frames
 	global_position = Vector2(-1000, -1000) 
 	main_hitbox.set_deferred("disabled", true)
-	_on_attack_finished()
+	if not is_player_dead:
+		_on_attack_finished()
 
 func _on_state_timer_timeout() -> void:
 	determine_next_move()
@@ -153,8 +159,8 @@ func spawn_cloud_logic():
 	if nearby_points.size() > 0:
 		var point = nearby_points.pick_random()
 		var cloud = cloud_scene.instantiate()
-		get_parent().add_child(cloud)
 		cloud.global_position = point.global_position
+		get_parent().add_child(cloud)
 		return cloud # Return it so we can connect signals if needed
 	return null
 
@@ -183,7 +189,7 @@ func setup_position(x_offset: float):
 	var space_state = get_world_2d().direct_space_state
 	
 	var query = PhysicsRayQueryParameters2D.create(
-		Vector2(target_x, player.global_position.y - 50), 
+		Vector2(target_x, player.global_position.y - 50),
 		Vector2(target_x, player.global_position.y + 200)
 	)
 	query.exclude = [self.get_rid(), player.get_rid()]
@@ -211,6 +217,8 @@ func appear():
 	# Ensure animation starts at Frame 0 to prevent "frame skipping"
 	animated_sprite.frame = 0
 	animated_sprite.play("ExitPortal")
+	portal_sfx.pitch_scale = randf_range(0.6,0.8)
+	portal_sfx.play()
 	# Small yield to ensure position is set before drawing
 	await get_tree().process_frame 
 	visible = true
@@ -223,6 +231,20 @@ func _on_p_3_timer_timeout() -> void:
 	spawn_cloud_logic()
 	
 	p3_timer.start(randf_range(2.5, 4.0))
+	
+func _on_player_died():
+	# 1. Set the flag so we know the player is gone
+	is_player_dead = true
+	
+	# 2. Stop the Phase 3 chaotic spawns immediately
+	p3_timer.stop()
+	
+	# 3. Stop the state timer so no NEW moves are chosen
+	state_timer.stop()
+	
+	# Note: We do NOT call disappear() here. 
+	# We let the current animation finish its natural course.
+	print("Player died. Boss is finishing current move and idling.")
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	var anim = animated_sprite.animation
@@ -244,6 +266,8 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 			enter_hidden()
 		"EnterParry":
 			current_state = State.STUNNED
+			shield_crack_sfx.pitch_scale = randf_range(0.6,0.9)
+			shield_crack_sfx.play()
 			animated_sprite.play("ParryStagger")
 
 func _on_animated_sprite_2d_frame_changed() -> void:
@@ -253,6 +277,8 @@ func _on_animated_sprite_2d_frame_changed() -> void:
 	# --- MELEE HITBOX ---
 	if anim == "Melee":
 		if frame == 6:
+			melee_sfx.pitch_scale = randf_range(0.75,1.2)
+			melee_sfx.play()
 			melee_hitbox.set_deferred("disabled", false)
 		if frame == 9:
 			melee_hitbox.set_deferred("disabled", true)
@@ -277,6 +303,8 @@ func _on_animated_sprite_2d_frame_changed() -> void:
 # --- THE PARRY SYSTEM ---
 
 func start_parry_window():
+	parry_sfx.pitch_scale = randf_range(0.8,1.1)
+	parry_sfx.play()
 	animated_sprite.play("EnterParry")
 
 func _on_invincibility_timeout() -> void:
@@ -285,6 +313,9 @@ func _on_invincibility_timeout() -> void:
 # --- COMBAT ---
 
 func _on_attack_finished():
+	if is_player_dead:
+		return
+	
 	var hp_ratio = float(HEALTH) / MAX_HEALTH
 	var cooldown_time = 1.0 # Base cooldown
 	
@@ -320,6 +351,8 @@ func trigger_counter_attack():
 
 func disappear():
 	animated_sprite.play("EnterPortal")
+	portal_sfx.pitch_scale = randf_range(1.0,1.2)
+	portal_sfx.play()
 
 func take_damage(amount: int, _attacker_pos: Vector2, _kb: float = 1.0):
 	if animated_sprite.animation == "EnterParry" and animated_sprite.frame:
@@ -331,14 +364,14 @@ func take_damage(amount: int, _attacker_pos: Vector2, _kb: float = 1.0):
 	if is_invincible:
 		return
 	
-	Effects.play_hit_flash(animated_sprite,Color(10,0,0,1),0.3)
+	Effects.play_hit_flash(animated_sprite,Color(1.116, 0.027, 0.0, 1.0),0.3)
 	
 	invincibility.start()
 	HEALTH -= amount
 	is_invincible = true
 	if HEALTH <= 0:
 		die()
-		
+	
 	print("Boss has ", HEALTH, " HP left!")
 
 func die():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=111 format=3 uid="uid://duhwo8fpqfcq2"]
+[gd_scene load_steps=115 format=3 uid="uid://duhwo8fpqfcq2"]
 
 [ext_resource type="Script" uid="uid://6xaxen2y65ot" path="res://scripts/enemies/boss.gd" id="1_262in"]
 [ext_resource type="Texture2D" uid="uid://dnsmsnpok62xi" path="res://assets/sprites/Enemies/Boss/enter_portal_snek-Sheet.png" id="1_hp8g2"]
@@ -13,6 +13,10 @@
 [ext_resource type="Script" uid="uid://butw8fmubkqon" path="res://scripts/take_dmg_from_enemy_boss.gd" id="10_d127w"]
 [ext_resource type="Script" uid="uid://de2vaes4vterk" path="res://scripts/enemies/melee_damage_boss.gd" id="11_a6rat"]
 [ext_resource type="Script" uid="uid://dvvabkf61bxoj" path="res://scripts/enemies/parry_damage_boss.gd" id="12_uiupq"]
+[ext_resource type="AudioStream" uid="uid://bovgnooopwcgk" path="res://assets/sounds/Boss/parry.mp3" id="14_jq4mg"]
+[ext_resource type="AudioStream" uid="uid://d0mpx2nee6cfq" path="res://assets/sounds/Boss/portal.mp3" id="15_8iwby"]
+[ext_resource type="AudioStream" uid="uid://c165fwpuj01np" path="res://assets/sounds/Boss/fire1.wav" id="16_6cmwa"]
+[ext_resource type="AudioStream" uid="uid://d172pypwa26by" path="res://assets/sounds/shield_crack.wav" id="18_hudss"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b2odv"]
 atlas = ExtResource("3_37bjw")
@@ -805,6 +809,35 @@ wait_time = 4.5
 [node name="Invincibility" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Parry" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("14_jq4mg")
+volume_db = -6.0
+max_polyphony = 5
+bus = &"SFX"
+
+[node name="Portal" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("15_8iwby")
+volume_db = -12.0
+pitch_scale = 1.1
+max_polyphony = 5
+bus = &"SFX"
+
+[node name="Melee" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("16_6cmwa")
+volume_db = -12.0
+pitch_scale = 0.6
+max_polyphony = 5
+bus = &"SFX"
+
+[node name="ShieldCrack" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("18_hudss")
+volume_db = -3.0
+pitch_scale = 0.65
+max_polyphony = 5
+bus = &"SFX"
 
 [connection signal="animation_finished" from="Position/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="frame_changed" from="Position/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]
