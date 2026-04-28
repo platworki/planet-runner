@@ -1,11 +1,9 @@
-[gd_scene load_steps=25 format=3 uid="uid://bd6qne43qq7wc"]
+[gd_scene load_steps=23 format=3 uid="uid://bd6qne43qq7wc"]
 
 [ext_resource type="Script" uid="uid://ht8o1k7qprid" path="res://scripts/menu/menu.gd" id="1_13sgg"]
 [ext_resource type="Texture2D" uid="uid://ikpbtnrmg1ti" path="res://assets/sprites/Menu/main_menu.png" id="1_yqeox"]
 [ext_resource type="Texture2D" uid="uid://d1lpqlhaevehc" path="res://assets/sprites/Menu/start_button.png" id="2_con2f"]
 [ext_resource type="Texture2D" uid="uid://ch8y1xpebdhj0" path="res://assets/sprites/Menu/start_button_select.png" id="3_mhnvy"]
-[ext_resource type="Texture2D" uid="uid://b0crdujs55ab8" path="res://assets/sprites/Menu/options_neutral.png" id="4_v86rl"]
-[ext_resource type="Texture2D" uid="uid://bhs52a82gjqa" path="res://assets/sprites/Menu/options_selected.png" id="5_13sgg"]
 [ext_resource type="Texture2D" uid="uid://cqtw4b6wjf37a" path="res://assets/sprites/Menu/exit_neutral.png" id="6_i6lef"]
 [ext_resource type="Texture2D" uid="uid://iiqkj0cu8d3s" path="res://assets/sprites/Menu/exit_selected.png" id="7_70i5f"]
 [ext_resource type="AudioStream" uid="uid://d3mjwm40h0gmi" path="res://assets/music/BeepBox-Song (6).mp3" id="9_i6lef"]
@@ -135,29 +133,19 @@ centered = false
 
 [node name="Start" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 256.0
-offset_right = 421.33334
-offset_bottom = 384.0
+offset_left = 32.0
+offset_top = 288.0
+offset_right = 448.0
+offset_bottom = 448.0
 texture_normal = ExtResource("2_con2f")
 texture_hover = ExtResource("3_mhnvy")
 stretch_mode = 4
 
-[node name="Options" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 416.0
-offset_right = 320.0
-offset_bottom = 512.0
-texture_normal = ExtResource("4_v86rl")
-texture_hover = ExtResource("5_13sgg")
-stretch_mode = 4
-
 [node name="Exit" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 544.0
-offset_right = 320.0
+offset_left = 32.0
+offset_top = 512.0
+offset_right = 352.0
 offset_bottom = 640.0
 texture_normal = ExtResource("6_i6lef")
 texture_hover = ExtResource("7_70i5f")
