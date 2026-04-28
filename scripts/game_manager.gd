@@ -3,7 +3,7 @@ extends Node
 signal stats_changed
 # Inventory storage
 var inventory = []
-var currency = 20
+var currency = 0
 var player_node = null
 var combo_board_buff_stacks = 0
 
