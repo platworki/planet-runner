@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=4 uid="uid://dc4m88yus5so8"]
+[gd_scene load_steps=60 format=4 uid="uid://dc4m88yus5so8"]
 
 [ext_resource type="Script" uid="uid://mwkayw7kjxhj" path="res://scripts/game_manager.gd" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://n54h5jcxrw8" path="res://scripts/world.gd" id="1_7r4gi"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c0o1ele2oywt3" path="res://scenes/chest.tscn" id="8_4mrxx"]
 [ext_resource type="PackedScene" uid="uid://dee5yo14nun5d" path="res://scenes/enemies/fire_elemental.tscn" id="8_lakw3"]
 [ext_resource type="PackedScene" uid="uid://dfsexrrtx82ba" path="res://scenes/enemies/helicopter.tscn" id="9_7t5mc"]
+[ext_resource type="PackedScene" uid="uid://7wnb17bonlt" path="res://scenes/ui/itemPopup.tscn" id="10_xgqkh"]
 [ext_resource type="PackedScene" uid="uid://m5lnnpajrh2h" path="res://scenes/music.tscn" id="11_e3hyu"]
 [ext_resource type="AudioStream" uid="uid://lrfq7hknym5d" path="res://assets/music/DA_DESSERT.mp3" id="12_q5onr"]
 [ext_resource type="AudioStream" uid="uid://ubsu5vexfa7k" path="res://assets/sounds/swing-whoosh-11-198503.mp3" id="13_jhx03"]
@@ -23,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://0bcf6ci3kc83" path="res://assets/sprites/activate_door-Sheet.png" id="20_oo54l"]
 [ext_resource type="Texture2D" uid="uid://cqcjw8doiawf1" path="res://assets/sprites/end_door-Sheet.png" id="21_kpybi"]
 [ext_resource type="Texture2D" uid="uid://b53wfs21flrdn" path="res://assets/sprites/end_door_idle.png" id="22_ctatt"]
+[ext_resource type="PackedScene" uid="uid://b2j6a6fmq0o3" path="res://scenes/ui/interactUI.tscn" id="24_ctatt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
 texture = ExtResource("6_w7kh3")
@@ -440,7 +442,7 @@ texture_region_size = Vector2i(32, 32)
 10:6/0 = 0
 10:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 1:7/0 = 0
-1:7/0/z_index = -1
+1:7/0/z_index = 5
 2:7/0 = 0
 3:7/0 = 0
 3:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
@@ -682,21 +684,21 @@ texture_region_size = Vector2i(32, 32)
 0:6/size_in_atlas = Vector2i(1, 2)
 0:6/0 = 0
 0:6/0/texture_origin = Vector2i(0, 16)
-0:6/0/z_index = 5
+0:6/0/z_index = 4
 11:0/0 = 0
-11:0/0/z_index = 5
+11:0/0/z_index = 4
 12:0/0 = 0
-12:0/0/z_index = 5
+12:0/0/z_index = 4
 13:0/0 = 0
-13:0/0/z_index = 5
+13:0/0/z_index = 4
 14:0/0 = 0
 15:0/0 = 0
 11:1/0 = 0
-11:1/0/z_index = 5
+11:1/0/z_index = 4
 12:1/0 = 0
-12:1/0/z_index = 5
+12:1/0/z_index = 4
 13:1/0 = 0
-13:1/0/z_index = 5
+13:1/0/z_index = 4
 14:1/0 = 0
 15:1/0 = 0
 12:2/0 = 0
@@ -704,17 +706,17 @@ texture_region_size = Vector2i(32, 32)
 14:2/0 = 0
 15:2/0 = 0
 11:3/0 = 0
-11:3/0/z_index = 5
+11:3/0/z_index = 4
 12:3/0 = 0
 13:3/0 = 0
 14:3/0 = 0
 15:3/0 = 0
 11:4/0 = 0
-11:4/0/z_index = 5
+11:4/0/z_index = 4
 12:4/0 = 0
-12:4/0/z_index = 5
+12:4/0/z_index = 4
 13:4/0 = 0
-13:4/0/z_index = 5
+13:4/0/z_index = 4
 14:4/0 = 0
 15:4/0 = 0
 11:5/0 = 0
@@ -957,6 +959,8 @@ tile_set = SubResource("TileSet_7iits")
 
 [node name="UI" parent="." groups=["UI"] instance=ExtResource("7_w7kh3")]
 
+[node name="ItemPopup" parent="UI" groups=["ItemPopup"] instance=ExtResource("10_xgqkh")]
+
 [node name="Kill zone" parent="." instance=ExtResource("6_qfnet")]
 position = Vector2(152, 136)
 collision_mask = 10
@@ -1159,8 +1163,8 @@ position = Vector2(4000, -864)
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_nnsk1")]
 unique_name_in_owner = true
 physics_interpolation_mode = 1
-z_index = 6
-position = Vector2(5024, -32)
+z_index = 5
+position = Vector2(224, 0)
 platform_on_leave = 1
 safe_margin = 0.01
 
@@ -1247,6 +1251,11 @@ sprite_frames = SubResource("SpriteFrames_d46x8")
 animation = &"EndOpen"
 autoplay = "Idle"
 
+[node name="InteractUI" parent="BossArena/MagicalDoor" instance=ExtResource("24_ctatt")]
+z_index = 15
+position = Vector2(22.09417, -75.911575)
+scale = Vector2(0.8, 0.8)
+
 [node name="LeftArenaBoundary" type="StaticBody2D" parent="BossArena"]
 position = Vector2(4798, -96)
 collision_mask = 2
@@ -1316,9 +1325,6 @@ position = Vector2(5088, -32)
 
 [node name="RangedSpawnPoint20" type="Marker2D" parent="BossArena/CloudSpawnPoints" groups=["BossPSpawn"]]
 position = Vector2(5824, -64)
-
-[node name="Slime" parent="." instance=ExtResource("7_i7141")]
-position = Vector2(800, -192)
 
 [connection signal="body_entered" from="Kill zone" to="Kill zone" method="_on_body_entered"]
 [connection signal="timeout" from="Spawners/SpawnTimer" to="." method="_on_spawn_timer_timeout"]

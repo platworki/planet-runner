@@ -53,7 +53,9 @@ var is_invincible = false
 @onready var death_sfx: AudioStreamPlayer = $Audio/Death
 
 func _physics_process(delta: float) -> void:
-	if HEALTH <= 0: 
+	if HEALTH <= 0:
+		if animated_sprite.animation != "death":
+			animated_sprite.play("death")
 		return
 
 	# Slime Gravity
@@ -280,12 +282,22 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 	if HEALTH <= 0:
 		die()
 
+func erase_from_reality():
+	# 1. Visual: Pure White Flash (Over-exposed)
+	Effects.play_hit_flash(animated_sprite, Color(10, 10, 10, 1.0), 3)
+	die() # Calls your existing death logic (particles, sound, etc.)
+
 func die():
+	HEALTH = -100
 	death_sfx.play()
 	GameManager.on_enemy_died()
 	GameManager.add_currency(10)
 	elemental_hitbox.set_deferred("disabled", true)
 	animated_sprite.play("death")
 	direction = 0
-	await death_sfx.finished
+	await animated_sprite.animation_finished 
+	visible = false
+	
+	if death_sfx.playing:
+		await death_sfx.finished
 	queue_free()

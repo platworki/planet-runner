@@ -34,6 +34,8 @@ var has_air_dash = true
 var has_double_jump = true
 var was_on_floor = true
 
+var input_enabled = true
+
 enum State {
 	WAKING,
 	NORMAL,
@@ -110,6 +112,17 @@ func start_intro_sequence():
 	print("Player is awake!")
 
 func _physics_process(delta: float) -> void:
+	if not input_enabled:
+		# Stop horizontal movement but allow gravity to keep them grounded
+		velocity.x = 0
+		if not is_on_floor():
+			handle_air_animations()
+		else:
+			torso_animation.play("Idle")
+			legs_animation.play("Idle") 
+		move_and_slide()
+		return
+		
 	# INFO Check if at the beginning of the frame the players on the floor
 	was_on_floor = is_on_floor()
 	

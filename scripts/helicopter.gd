@@ -34,6 +34,8 @@ var is_knocked_back = false
 
 func _physics_process(delta: float) -> void:
 	if HEALTH <= 0:
+		if animated_sprite.animation != "death":
+			animated_sprite.play("death")
 		return
 		
 	if is_knocked_back:
@@ -164,11 +166,17 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 		is_knocked_back = true
 	if HEALTH <= 0:
 		die()
+		
+func erase_from_reality():
+	HEALTH = -100
+	# 1. Visual: Pure White Flash (Over-exposed)
+	Effects.play_hit_flash(animated_sprite, Color(10, 10, 10, 1.0), 3)
+	die() # Calls your existing death logic (particles, sound, etc.)
 
 func die():
 	GameManager.on_enemy_died()
 	GameManager.add_currency(5)
 	helicopter_hitbox.set_deferred("disabled", true)
 	animated_sprite.play("death")
-	await get_tree().create_timer(1.0).timeout
+	await animated_sprite.animation_finished
 	queue_free()

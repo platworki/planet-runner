@@ -4,11 +4,14 @@ var player_in_range = false
 var is_opened = false
 var displayed_items = []
 var selected_item = null
+		
+var ITEM_COST = 10
 
 @onready var curtains: AnimatedSprite2D = $Curtains
 @onready var item_spawn_point: Marker2D = $ItemSpawnPoint
 @onready var items_container: Node = $/root/World/Items
 @onready var item_spots = $ItemSpots.get_children()
+@onready var interact_ui: Node2D = $InteractUI
 
 func _ready() -> void:
 	setup_display_items()
@@ -22,10 +25,12 @@ func _process(_delta):
 	
 func _on_body_entered(body: Node2D):
 	if body.name == "Player":
+		interact_ui.show_ui(ITEM_COST)
 		player_in_range = true
 	
 func _on_body_exited(body: Node2D):
 	if body.name == "Player":
+		interact_ui.hide_ui()
 		player_in_range = false
 	
 func setup_display_items():
@@ -74,12 +79,12 @@ func try_purchase():
 	if GameManager.is_item_maxed(item_id):
 		print("Shop: You already have the maximum amount of this item!")
 		return
-		
-	var cost = 5
+
 	# Wait for animation to play long enough
-	if GameManager.can_spend_currency(cost):
+	if GameManager.can_spend_currency(ITEM_COST):
 		buy_item()
 	else:
+		interact_ui.flash_ui_red()
 		print("Not enough money")
 
 func buy_item():
@@ -108,4 +113,5 @@ func buy_item():
 	displayed_items.clear()
 	
 	curtains.play("closing")
+	interact_ui.lock_and_hide()
 	print("Item bought")

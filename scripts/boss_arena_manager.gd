@@ -5,6 +5,7 @@ extends Area2D
 @onready var left_arena_boundary: StaticBody2D = $"../LeftArenaBoundary"
 @onready var invisible_wall: CollisionShape2D = $"../LeftArenaBoundary/CollisionShape2D"
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var interact_ui: Node2D = $InteractUI
 
 var player: CharacterBody2D
 var is_active = false
@@ -12,10 +13,12 @@ var boss_defeated = false
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
+		interact_ui.show_ui()
 		player = body
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
+		interact_ui.hide_ui()
 		player = null
 
 func _input(event: InputEvent) -> void:	
@@ -33,6 +36,7 @@ func _input(event: InputEvent) -> void:
 func start_boss_sequence() -> void:
 	is_active = true
 	# 2. Door Animation
+	interact_ui.lock_and_hide()
 	animated_sprite.play("BossActivate")
 	await animated_sprite.animation_finished
 	animated_sprite.play("Idle")
@@ -61,6 +65,7 @@ func spawn_boss() -> void:
 
 func _on_boss_defeated() -> void:
 	boss_defeated = true
+	interact_ui.unlock()
 	
 	await get_tree().create_timer(3.0).timeout
 	animated_sprite.play("EndOpen")
@@ -74,4 +79,6 @@ func exit_level():
 	# Prevent double-clicks during fade
 	set_process_input(false)
 	set_physics_process(false)
+	
+	player.input_enabled = false
 	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")

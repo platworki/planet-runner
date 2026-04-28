@@ -3,7 +3,7 @@ extends Node
 signal stats_changed
 # Inventory storage
 var inventory = []
-var currency = 0
+var currency = 20
 var player_node = null
 var combo_board_buff_stacks = 0
 
@@ -93,6 +93,11 @@ func add_item(item_id: String):
 		return # Prevents the game from crashing if an error happens
 		
 	inventory.append(item_data)
+	
+	var popup = get_tree().get_first_node_in_group("ItemPopup")
+	if popup:
+		popup.display_item(item_data)
+	
 	apply_item_effect(item_id)
 	
 	stats_changed.emit()
@@ -104,6 +109,7 @@ func add_item(item_id: String):
 	var ui = get_tree().get_nodes_in_group("UI")
 	if not ui.is_empty():
 		ui[0].update_item_display()
+	
 
 func apply_item_effect(item_id: String):
 	if item_stacks.has(item_id):
@@ -188,7 +194,7 @@ const ITEM_DATABASE = {
 		"name": "Precise Map",
 		"effect_type": "crit_chance",
 		"value": 15,
-		"rarity": "rare",
+		"rarity": "common",
 		"sprite_default": "res://assets/sprites/crit_map_sprite.png",
 		"sprite_highlight": "res://assets/sprites/crit_map_highlight.png",
 		"description": "+15% crit percentage"
@@ -204,14 +210,14 @@ const ITEM_DATABASE = {
 	},
 	"combo_board": {
 		"name": "Combo Board",
-		"rarity": "rare",
+		"rarity": "common",
 		"sprite_default": "res://assets/sprites/Items/combo_board/suspicious_scoreboard.png",
 		"sprite_highlight": "res://assets/sprites/Items/combo_board/suspicious_scoreboard_highlight.png",
 		"description": "2nd hit grants damage buff"
 	},
 	"green_buge": {
 		"name": "Green Buge",
-		"rarity": "rare",
+		"rarity": "super_rare",
 		"sprite_default": "res://assets/sprites/Items/green_buge/strong_beetle.png",
 		"sprite_highlight": "res://assets/sprites/Items/green_buge/strong_beetle_highlight.png",
 		"description": "Stronger 2nd combo hit"
@@ -232,7 +238,7 @@ const ITEM_DATABASE = {
 	},
 	"swift_scarf": {
 		"name": "Swift Scarf",
-		"rarity": "rare",
+		"rarity": "common",
 		"sprite_default": "res://assets/sprites/Items/swift_scarf/quick_bandana.png",
 		"sprite_highlight": "res://assets/sprites/Items/swift_scarf/quick_bandana_highlight.png",
 		"description": "Increases attack speed significantly"

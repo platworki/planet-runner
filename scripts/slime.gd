@@ -39,6 +39,8 @@ var is_invincible = false
 
 func _physics_process(delta: float) -> void:
 	if HEALTH <= 0:
+		if animated_sprite.animation != "death":
+			animated_sprite.play("death")
 		return
 
 	if not is_on_floor():
@@ -224,6 +226,12 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 		await get_tree().create_timer(invincibility.wait_time).timeout
 		if HEALTH > 0 and animated_sprite.animation == "damage":
 			animated_sprite.play("walk")
+			
+func erase_from_reality():
+	HEALTH = -100
+	# 1. Visual: Pure White Flash (Over-exposed)
+	Effects.play_hit_flash(animated_sprite, Color(10, 10, 10, 1.0), 3)
+	die() # Calls your existing death logic (particles, sound, etc.)
 
 func die():
 	GameManager.on_enemy_died()
@@ -232,5 +240,5 @@ func die():
 	slime_hitbox.set_deferred("disabled", true)
 	animated_sprite.play("death")
 	direction = 0
-	await get_tree().create_timer(1.0).timeout
+	await animated_sprite.animation_finished
 	queue_free()

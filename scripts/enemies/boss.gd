@@ -12,7 +12,7 @@ enum State {
 	DISAPPEARING
 }
 
-const MAX_HEALTH = 500
+const MAX_HEALTH = 400
 var HEALTH = MAX_HEALTH
 var DAMAGE = 15
 var MELEE_DAMAGE = 30

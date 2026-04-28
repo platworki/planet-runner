@@ -20,6 +20,14 @@ func _on_area_entered(area: Area2D) -> void:
 	if not enemy or enemy.get("is_invincible"):
 		return
 		
+	if not enemy.get("is_boss"): # Safety: Don't erase bosses!
+			var chance = GameManager.player_stats.insta_kill_chance
+			if randf() * 100 < chance:
+				if enemy.has_method("erase_from_reality"):
+					enemy.erase_from_reality()
+					print("REALITY ERASED!")
+					return # Skip normal damage if erased	
+		
 	if enemy.has_method("take_damage"):
 		var player = get_parent().get_parent()
 		
