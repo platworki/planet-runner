@@ -44,7 +44,7 @@ enum State {
 	ATTACKING
 }
 
-var current_state = State.NORMAL
+var current_state = State.WAKING
 
 # ======================
 # === NODE REFERENCES ==
@@ -76,7 +76,9 @@ var current_state = State.NORMAL
 @onready var shield_charge_sfx: AudioStreamPlayer = $ShieldCharge
 @onready var shield_break_sfx: AudioStreamPlayer = $ShieldBreak
 @onready var death_sfx: AudioStreamPlayer = $Death
+@onready var electricity_sfx: AudioStreamPlayer = $"../Audio/Electricity"
 
+@onready var world_background_music: AudioStreamPlayer = $"../Audio/World background music"
 
 # ======================
 # ===== MAIN LOOP ======
@@ -94,18 +96,23 @@ func start_intro_sequence():
 	current_state = State.WAKING
 	
 	# 1. Wait a moment for the scene transition/fade to finish
-	await get_tree().create_timer(2).timeout
+	await get_tree().create_timer(3).timeout
 	
 	# 2. Play the "Wake Up" animation
 	# (Assuming you have an animation named "WakeUp" on your torso)
 	torso_animation.play("Waking")
 	legs_animation.play("Waking") 
 	
+	#await get_tree().create_timer(0).timeout
+	electricity_sfx.play()
+	await get_tree().create_timer(0.6).timeout
+	electricity_sfx.play()
 	# 3. Wait for the animation to finish
 	await torso_animation.animation_finished
 	torso_animation.play("Idle")
-	legs_animation.play("Idle") 
-	
+	legs_animation.play("Idle")
+
+	world_background_music.play()
 	await get_tree().create_timer(0.5).timeout
 	# 4. Give control to the player
 	current_state = State.NORMAL

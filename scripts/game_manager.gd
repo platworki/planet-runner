@@ -21,14 +21,14 @@ var player_stats = {
 }
 
 const MAX_STACKS = {
-	"speed_boots": 3,
-	"precise_map": 3,
-	"thick_root": 2,
-	"combo_board": 3,
-	"green_buge": 2,
+	"speed_boots": 5,
+	"precise_map": 5,
+	"thick_root": 5,
+	"combo_board": 5,
+	"green_buge": 5,
 	"protective_plushie": 5,
-	"reality_eraser": 4,
-	"swift_scarf": 4,
+	"reality_eraser": 5,
+	"swift_scarf": 5,
 	"crystal_buckler": 5
 }
 

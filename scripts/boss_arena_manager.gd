@@ -82,3 +82,4 @@ func exit_level():
 	
 	player.input_enabled = false
 	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")
+	GameManager.reset_game()

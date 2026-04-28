@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=4 uid="uid://dc4m88yus5so8"]
+[gd_scene load_steps=61 format=4 uid="uid://dc4m88yus5so8"]
 
 [ext_resource type="Script" uid="uid://mwkayw7kjxhj" path="res://scripts/game_manager.gd" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://n54h5jcxrw8" path="res://scripts/world.gd" id="1_7r4gi"]
@@ -21,6 +21,7 @@
 [ext_resource type="AudioStream" uid="uid://ciq0wfepq5tpw" path="res://assets/sounds/footsteps.wav" id="16_dss4m"]
 [ext_resource type="Script" uid="uid://c2tkrpfdqwb36" path="res://scripts/boss_arena_manager.gd" id="19_pm21f"]
 [ext_resource type="PackedScene" uid="uid://duhwo8fpqfcq2" path="res://scenes/enemies/snek.tscn" id="20_kpybi"]
+[ext_resource type="AudioStream" uid="uid://1tp2870h601t" path="res://assets/sounds/creatorshome-electric-shock-334777.mp3" id="20_munwf"]
 [ext_resource type="Texture2D" uid="uid://0bcf6ci3kc83" path="res://assets/sprites/activate_door-Sheet.png" id="20_oo54l"]
 [ext_resource type="Texture2D" uid="uid://cqcjw8doiawf1" path="res://assets/sprites/end_door-Sheet.png" id="21_kpybi"]
 [ext_resource type="Texture2D" uid="uid://b53wfs21flrdn" path="res://assets/sprites/end_door_idle.png" id="22_ctatt"]
@@ -1198,6 +1199,7 @@ position = Vector2(0, 220)
 [node name="World background music" parent="Audio" instance=ExtResource("11_e3hyu")]
 stream = ExtResource("12_q5onr")
 volume_db = -3.0
+autoplay = false
 parameters/looping = true
 
 [node name="Swing" type="AudioStreamPlayer" parent="Audio"]
@@ -1227,6 +1229,12 @@ bus = &"SFX"
 
 [node name="Footsteps" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("16_dss4m")
+bus = &"SFX"
+
+[node name="Electricity" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("20_munwf")
+volume_db = -6.0
+max_polyphony = 3
 bus = &"SFX"
 
 [node name="BossArena" type="Node" parent="."]

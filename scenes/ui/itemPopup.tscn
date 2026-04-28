@@ -31,10 +31,10 @@ script = ExtResource("1_8biki")
 
 [node name="PanelBackground" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 408.0
-offset_top = 563.0
-offset_right = 920.6786
-offset_bottom = 679.0
+offset_left = 442.0
+offset_top = 595.0
+offset_right = 954.6786
+offset_bottom = 711.0
 texture = ExtResource("2_8biki")
 expand_mode = 1
 stretch_mode = 4
@@ -68,7 +68,7 @@ offset_top = 34.0
 offset_right = 523.2346
 offset_bottom = 74.625
 scale = Vector2(0.895, 0.895)
-text = "Small chance to insta-kill non-bosses"
+text = "15% speed boost"
 label_settings = SubResource("LabelSettings_xiw37")
 horizontal_alignment = 1
 autowrap_mode = 3

@@ -58,8 +58,8 @@ func display_item(item_data: Dictionary):
 	# PHASE 1: Move Up & Fade In
 	# The first property starts the tween. 
 	# The second property uses .parallel() to bind to the first.
-	active_tween.tween_property(panel_background, "position", visible_pos, 1.0).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-	active_tween.parallel().tween_property(self, "modulate:a", 1.0, 0.8).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	active_tween.tween_property(panel_background, "position", visible_pos, 0.7).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	active_tween.parallel().tween_property(self, "modulate:a", 1.0, 0.5).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 	
 	# PHASE 2: The Wait
 	# .chain() forces this interval to wait for Phase 1 to finish.
