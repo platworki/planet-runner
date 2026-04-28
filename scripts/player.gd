@@ -68,6 +68,7 @@ var current_state = State.WAKING
 @onready var pogo_hitbox: CollisionShape2D = $Position/PlayerAttack/PogoHitbox
 @onready var attack_2_window: Timer = $Position/PlayerAttack/Attack2Window
 @onready var pogo_cooldown: Timer = $Position/PlayerAttack/PogoCooldown
+@onready var regen_timer: Timer = $Position/RegenTimer
 
 @onready var swing_sfx: AudioStreamPlayer = $"../Audio/Swing"
 @onready var dash_sfx: AudioStreamPlayer = $"../Audio/Dash"
@@ -79,6 +80,8 @@ var current_state = State.WAKING
 @onready var electricity_sfx: AudioStreamPlayer = $"../Audio/Electricity"
 
 @onready var world_background_music: AudioStreamPlayer = $"../Audio/World background music"
+
+var regen_amount: int = 2
 
 # ======================
 # ===== MAIN LOOP ======
@@ -117,6 +120,7 @@ func start_intro_sequence():
 	# 4. Give control to the player
 	current_state = State.NORMAL
 	print("Player is awake!")
+	regen_timer.start()
 
 func _physics_process(delta: float) -> void:
 	if not input_enabled:
@@ -368,6 +372,11 @@ func dash() -> void:
 # ======================
 # ====== TIMEOUTS ======
 # ======================
+
+func _on_regen_timer_timeout() -> void:
+	if HEALTH <= 0 or HEALTH >= MAX_HEALTH:
+		return
+	heal(regen_amount)
 
 func _on_dash_timeout():
 	# INFO If the dash jump buffer is active and the player is holding jump
@@ -627,6 +636,7 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 	
 func die():
 	player_died.emit()
+	regen_timer.stop()
 	print("You died!")
 	Engine.time_scale = 0.5
 	set_physics_process(false)

@@ -465,7 +465,7 @@ radius = 8.690454
 height = 44.814842
 
 [node name="FireElemental" type="CharacterBody2D"]
-z_index = 3
+z_index = 5
 scale = Vector2(1.5, 1.5)
 collision_layer = 8
 platform_floor_layers = 4294967041

@@ -6,6 +6,7 @@ extends Area2D
 @onready var invisible_wall: CollisionShape2D = $"../LeftArenaBoundary/CollisionShape2D"
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var interact_ui: Node2D = $InteractUI
+@onready var laser_sfx: AudioStreamPlayer = $Laser
 
 var player: CharacterBody2D
 var is_active = false
@@ -38,6 +39,7 @@ func start_boss_sequence() -> void:
 	# 2. Door Animation
 	interact_ui.lock_and_hide()
 	animated_sprite.play("BossActivate")
+	laser_sfx.play(0.85)
 	await animated_sprite.animation_finished
 	animated_sprite.play("Idle")
 	# 3. Camera and Wall Lockdown

@@ -216,7 +216,7 @@ radius = 7.0
 height = 84.0
 
 [node name="Helicopter" type="CharacterBody2D"]
-z_index = 6
+z_index = 5
 collision_layer = 8
 script = ExtResource("1_vb6or")
 

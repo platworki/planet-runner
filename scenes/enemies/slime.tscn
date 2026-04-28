@@ -245,7 +245,7 @@ radius = 27.62
 height = 120.6
 
 [node name="Slime" type="CharacterBody2D"]
-z_index = 3
+z_index = 5
 scale = Vector2(1.5, 1.5)
 collision_layer = 8
 script = ExtResource("1_n6pvg")

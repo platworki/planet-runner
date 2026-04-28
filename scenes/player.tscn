@@ -1760,6 +1760,9 @@ animation = &"Waking"
 wait_time = 0.12
 one_shot = true
 
+[node name="RegenTimer" type="Timer" parent="Position"]
+wait_time = 3.0
+
 [node name="KnockbackTime" type="Timer" parent="Position"]
 wait_time = 0.35
 one_shot = true
@@ -1815,5 +1818,6 @@ bus = &"SFX"
 [connection signal="animation_finished" from="Position/Torso" to="." method="_on_torso_animation_finished"]
 [connection signal="animation_finished" from="Position/Legs" to="." method="_on_legs_animation_finished"]
 [connection signal="frame_changed" from="Position/Legs" to="." method="_on_legs_frame_changed"]
+[connection signal="timeout" from="Position/RegenTimer" to="." method="_on_regen_timer_timeout"]
 [connection signal="timeout" from="Position/KnockbackTime" to="." method="_on_knockback_time_timeout"]
 [connection signal="timeout" from="Position/DashTimer" to="." method="_on_dash_timeout"]

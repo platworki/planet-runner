@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=4 uid="uid://dc4m88yus5so8"]
+[gd_scene load_steps=63 format=4 uid="uid://dc4m88yus5so8"]
 
 [ext_resource type="Script" uid="uid://mwkayw7kjxhj" path="res://scripts/game_manager.gd" id="1_4mrxx"]
 [ext_resource type="Script" uid="uid://n54h5jcxrw8" path="res://scripts/world.gd" id="1_7r4gi"]
@@ -24,8 +24,10 @@
 [ext_resource type="AudioStream" uid="uid://1tp2870h601t" path="res://assets/sounds/creatorshome-electric-shock-334777.mp3" id="20_munwf"]
 [ext_resource type="Texture2D" uid="uid://0bcf6ci3kc83" path="res://assets/sprites/activate_door-Sheet.png" id="20_oo54l"]
 [ext_resource type="Texture2D" uid="uid://cqcjw8doiawf1" path="res://assets/sprites/end_door-Sheet.png" id="21_kpybi"]
+[ext_resource type="AudioStream" uid="uid://c7fd14uaaohcg" path="res://assets/sounds/error.mp3" id="21_ts3gi"]
 [ext_resource type="Texture2D" uid="uid://b53wfs21flrdn" path="res://assets/sprites/end_door_idle.png" id="22_ctatt"]
 [ext_resource type="PackedScene" uid="uid://b2j6a6fmq0o3" path="res://scenes/ui/interactUI.tscn" id="24_ctatt"]
+[ext_resource type="AudioStream" uid="uid://ckgecj1iaqlpc" path="res://assets/sounds/laser_beam.mp3" id="28_0nbtd"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
 texture = ExtResource("6_w7kh3")
@@ -1165,7 +1167,7 @@ position = Vector2(4000, -864)
 unique_name_in_owner = true
 physics_interpolation_mode = 1
 z_index = 5
-position = Vector2(224, 0)
+position = Vector2(288, 0)
 platform_on_leave = 1
 safe_margin = 0.01
 
@@ -1256,13 +1258,25 @@ shape = SubResource("RectangleShape2D_lakw3")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="BossArena/MagicalDoor"]
 position = Vector2(37, -62)
 sprite_frames = SubResource("SpriteFrames_d46x8")
-animation = &"EndOpen"
+animation = &"BossActivate"
 autoplay = "Idle"
 
 [node name="InteractUI" parent="BossArena/MagicalDoor" instance=ExtResource("24_ctatt")]
 z_index = 15
 position = Vector2(22.09417, -75.911575)
 scale = Vector2(0.8, 0.8)
+
+[node name="Error" type="AudioStreamPlayer" parent="BossArena/MagicalDoor/InteractUI"]
+stream = ExtResource("21_ts3gi")
+volume_db = -17.0
+bus = &"SFX"
+
+[node name="Laser" type="AudioStreamPlayer" parent="BossArena/MagicalDoor"]
+stream = ExtResource("28_0nbtd")
+volume_db = -17.0
+pitch_scale = 0.6
+max_polyphony = 2
+bus = &"SFX"
 
 [node name="LeftArenaBoundary" type="StaticBody2D" parent="BossArena"]
 position = Vector2(4798, -96)

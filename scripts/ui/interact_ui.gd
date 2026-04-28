@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var cost_label: Label = $Label
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var error_sfx: AudioStreamPlayer = $Error
 
 var active_tween: Tween
 var is_locked = false
@@ -30,7 +31,7 @@ func show_ui(cost: int = 0):
 func flash_ui_red():
 	var tween = create_tween()
 	tween.parallel().tween_property(self, "modulate:s", 0.8, 0.1).set_trans(Tween.TRANS_QUAD)
-	#await get_tree().create_timer(0.1).timeout
+	error_sfx.play()
 	tween.tween_property(self, "modulate:s", 0, 0.2).set_trans(Tween.TRANS_SINE)
 
 func hide_ui():
