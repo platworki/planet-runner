@@ -80,17 +80,17 @@ func determine_next_move():
 		var roll = randf()
 		
 		# --- Phase 1 ---
-		if hp_ratio > 0.7:
+		if hp_ratio > 0.85:
 			if roll < 0.4:
 				next_move = State.RANGED
 			else:
 				next_move =  State.MELEE
 		
 		# --- Phase 2 ---
-		elif hp_ratio > 0.4:
+		elif hp_ratio > 0.5:
 			if roll < 0.3: 
 				next_move = State.RANGED
-			elif roll < 0.7: 
+			elif roll < 0.6: 
 				next_move = State.MELEE
 			else: 
 				next_move = State.PARRY
@@ -224,7 +224,7 @@ func appear():
 	visible = true
 
 func _on_p_3_timer_timeout() -> void:
-	if HEALTH <= 0 or float(HEALTH) / MAX_HEALTH > 0.4:
+	if HEALTH <= 0 or float(HEALTH) / MAX_HEALTH > 0.5:
 		p3_timer.stop()
 		return
 
@@ -319,7 +319,7 @@ func _on_attack_finished():
 	var hp_ratio = float(HEALTH) / MAX_HEALTH
 	var cooldown_time = 1.0 # Base cooldown
 	
-	if hp_ratio > 0.4:
+	if hp_ratio > 0.5:
 		match current_state:
 			State.RANGED:
 				cooldown_time = 1 # Faster reset after ranged?

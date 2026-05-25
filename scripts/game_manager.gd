@@ -17,7 +17,9 @@ var player_stats = {
 	"insta_kill_chance": 0.0, # %
 	"attack_speed_multiplier": 1.0, # NEW: 1.0 is default
 	"shield_active": false,
-	"shield_cooldown_max": 20.0
+	"shield_cooldown_max": 20.0,
+	"karma_stacks": 0,
+	"karma_healing": 40
 }
 
 const MAX_STACKS = {
@@ -29,7 +31,9 @@ const MAX_STACKS = {
 	"protective_plushie": 5,
 	"reality_eraser": 5,
 	"swift_scarf": 5,
-	"crystal_buckler": 5
+	"crystal_buckler": 5,
+	"power_fruit": 5,
+	"karma_flower": 5
 }
 
 # 2. Track current stacks
@@ -42,7 +46,9 @@ var item_stacks = {
 	"protective_plushie": 0,
 	"reality_eraser": 0, # NEW
 	"swift_scarf": 0,
-	"crystal_buckler": 0
+	"crystal_buckler": 0,
+	"power_fruit": 0,
+	"karma_flower": 0
 }
 
 var combo_board_timer = 0.0
@@ -51,7 +57,7 @@ var buckler_timer = 0.0
 func _process(delta: float) -> void:
 	if player_node:
 		if player_stats.shield_active:
-			player_node.torso_animation.modulate = Color(1.0, 0.661, 0.999, 1.0)
+			player_node.torso_animation.modulate = Color(1.18, 0.785, 1.18, 1.0)
 		else:
 			player_node.torso_animation.modulate = Color.WHITE
 	
@@ -128,6 +134,11 @@ func apply_item_effect(item_id: String):
 			pass
 		"green_buge":
 			pass
+		"power_fruit":
+			player_stats.health_bonus = 20 + ((item_stacks.power_fruit - 1) * 10)
+		"karma_flower":
+			player_stats.karma_stacks += 1
+			player_stats.karma_healing = 40 + (10 *(item_stacks.karma_flower - 1))
 		"protective_plushie":
 			# 5% base + 3% per extra stack
 			player_stats.damage_reduction = 0.05 + ((item_stacks.protective_plushie - 1) * 0.03)
@@ -249,6 +260,20 @@ const ITEM_DATABASE = {
 		"sprite_default": "res://assets/sprites/Items/crystal_buckler/crystal_scute.png",
 		"sprite_highlight": "res://assets/sprites/Items/crystal_buckler/crystal_scute_highlight.png",
 		"description": "Blocks 80% of next hit every 20s"
+	},
+	"power_fruit": {
+		"name": "Power Fruit",
+		"rarity": "common",
+		"sprite_default": "res://assets/sprites/Items/funky_fruit/power_pumpkin.png",
+		"sprite_highlight": "res://assets/sprites/Items/funky_fruit/power_pumpkin_highlight.png",
+		"description": "Increases base player health"
+	},
+	"karma_flower": {
+		"name": "Karma Flower",
+		"rarity": "rare",
+		"sprite_default": "res://assets/sprites/Items/revival_bloom/revive_flower.png",
+		"sprite_highlight": "res://assets/sprites/Items/revival_bloom/revive_flower_highlight.png",
+		"description": "Heals when low HP, once per stage"
 	}
 	# Add more...
 }
@@ -299,7 +324,9 @@ func reset_game():
 		"insta_kill_chance": 0.0, # %
 		"attack_speed_multiplier": 1.0, # NEW: 1.0 is default
 		"shield_active": false,
-		"shield_cooldown_max": 20.0
+		"shield_cooldown_max": 20.0,
+		"karma_stacks": 0,
+		"karma_healing": 40
 	}
 	item_stacks = {
 		"speed_boots": 0,
@@ -310,6 +337,8 @@ func reset_game():
 		"protective_plushie": 0,
 		"reality_eraser": 0, # NEW
 		"swift_scarf": 0,
-		"crystal_buckler": 0
+		"crystal_buckler": 0,
+		"power_fruit": 0,
+		"karma_flower": 0
 	}
 	print("GameManager reset.")
