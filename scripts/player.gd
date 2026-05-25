@@ -609,7 +609,7 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 	HEALTH -= int(final_damage)
 	if GameManager.item_stacks.karma_flower > 0:
 		if HEALTH <= 0.2 * MAX_HEALTH:
-			var karma_heal_value = GameManager.player_stats.karma_stacks * GameManager.player_stats.karma_healing
+			var karma_heal_value = GameManager.player_stats.karma_healing * MAX_HEALTH
 			print("Found", karma_heal_value, " karma healing balance")
 			heal(karma_heal_value)
 			GameManager.player_stats.karma_stacks -= 1

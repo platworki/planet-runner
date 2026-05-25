@@ -19,7 +19,7 @@ var player_stats = {
 	"shield_active": false,
 	"shield_cooldown_max": 20.0,
 	"karma_stacks": 0,
-	"karma_healing": 40
+	"karma_healing": 0.5
 }
 
 const MAX_STACKS = {
@@ -138,7 +138,7 @@ func apply_item_effect(item_id: String):
 			player_stats.health_bonus = 20 + ((item_stacks.power_fruit - 1) * 10)
 		"karma_flower":
 			player_stats.karma_stacks += 1
-			player_stats.karma_healing = 40 + (10 *(item_stacks.karma_flower - 1))
+			player_stats.karma_healing = 0.5 + (0.1 *(item_stacks.karma_flower - 1))
 		"protective_plushie":
 			# 5% base + 3% per extra stack
 			player_stats.damage_reduction = 0.05 + ((item_stacks.protective_plushie - 1) * 0.03)
@@ -326,7 +326,7 @@ func reset_game():
 		"shield_active": false,
 		"shield_cooldown_max": 20.0,
 		"karma_stacks": 0,
-		"karma_healing": 40
+		"karma_healing": 0.5
 	}
 	item_stacks = {
 		"speed_boots": 0,
