@@ -147,7 +147,7 @@ func apply_item_effect(item_id: String):
 			player_stats.karma_healing = 0.4 + (0.1 *(item_stacks.karma_flower - 1))
 		"wind_turbine":
 			player_stats.dash_boost += 15
-			player_stats.dash_cooldown_modifier = 0.85
+			player_stats.dash_cooldown_modifier = player_stats.dash_cooldown_modifier * 0.9
 		"particle_accelerator":
 			player_stats.dash_boost += 25
 		"protective_plushie":

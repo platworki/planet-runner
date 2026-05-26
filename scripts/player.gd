@@ -60,6 +60,7 @@ var current_state = State.WAKING
 @onready var coyote_time: Timer = $Position/CoyoteTime
 @onready var jump_buffer: Timer = $Position/JumpBuffer
 @onready var dash_timer: Timer = $Position/DashTimer
+@onready var dash_invincibility_timer: Timer = $Position/DashInvincibleCooldown
 @onready var dash_cooldown_timer: Timer = $Position/DashCooldown
 @onready var knockback_time: Timer = $Position/KnockbackTime
 @onready var invincibility: Timer = $Position/Invincibility
@@ -354,6 +355,7 @@ func gravity(delta: float) -> void:
 
 #definicja koloru do .modulate przy invincibility dashu
 var dash_color := Color(0.0, 18.61, 18.892, 0.431)
+var dash_invincibility_ready := true
 
 func dash() -> void:
 	torso_animation.play("Dash")
@@ -361,8 +363,11 @@ func dash() -> void:
 	velocity.x = (DASH_SPEED + GameManager.player_stats.dash_boost) * flip.scale.x * 1.2
 	velocity.y = 0
 	if GameManager.item_stacks.particle_accelerator > 0:
-		torso_animation.get_node("ModulateStack").set_layer("dash", Color(0.0, 18.61, 18.892, 0.431))
-		legs_animation.get_node("ModulateStack").set_layer("dash", Color(0.0, 18.61, 18.892, 0.431))
+		if dash_invincibility_ready:
+			torso_animation.get_node("ModulateStack").set_layer("dash", Color(0.0, 18.61, 18.892, 0.431))
+			legs_animation.get_node("ModulateStack").set_layer("dash", Color(0.0, 18.61, 18.892, 0.431))
+			dash_invincibility_timer.start()
+			
 	dash_sfx.pitch_scale = randf_range(0.8,1.2)
 	dash_sfx.play(0.18)
 	
@@ -378,15 +383,21 @@ func dash() -> void:
 # ====== TIMEOUTS ======
 # ======================
 
-func _on_regen_timer_timeout() -> void:
-	if HEALTH <= 0 or HEALTH >= MAX_HEALTH:
-		return
-	heal(regen_amount)
+func _on_dash_invincible_cooldown_timeout() -> void:
+	dash_invincibility_ready = true
+	var og_volume_electric = electricity_sfx.volume_db
+	electricity_sfx.volume_db = -20
+	electricity_sfx.play()
+	Effects.play_hit_flash(torso_animation, Color(0.105, 4.096, 4.617, 1.0), 0.25)
+	Effects.play_hit_flash(legs_animation, Color(0.105, 4.096, 4.617, 1.0), 0.25)
+	await electricity_sfx.finished
+	electricity_sfx.volume_db = og_volume_electric
 
 func _on_dash_timeout():
-	if GameManager.item_stacks.particle_accelerator > 0:
+	if GameManager.item_stacks.particle_accelerator > 0 && dash_invincibility_ready:
 		torso_animation.get_node("ModulateStack").remove_layer("dash")
 		legs_animation.get_node("ModulateStack").remove_layer("dash")
+		dash_invincibility_ready = false
 	# INFO If the dash jump buffer is active and the player is holding jump
 	if not dash_jump_buffer.is_stopped() and Input.is_action_pressed("jump"):
 		if is_on_floor():
@@ -397,6 +408,11 @@ func _on_dash_timeout():
 
 	if current_state != State.KNOCKED_BACK:
 		current_state = State.NORMAL
+
+func _on_regen_timer_timeout() -> void:
+	if HEALTH <= 0 or HEALTH >= MAX_HEALTH:
+		return
+	heal(regen_amount)
 
 func _on_torso_animation_finished() -> void:
 	var current_anim = torso_animation.animation
@@ -602,7 +618,7 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		return
 	
 	var final_damage = float(enemy_damage)
-	if current_state == State.DASHING && GameManager.item_stacks.particle_accelerator > 0:
+	if current_state == State.DASHING && GameManager.item_stacks.particle_accelerator > 0 && dash_invincibility_ready == true:
 		return
 	# NEW: Crystal Buckler Logic
 	if GameManager.player_stats.shield_active:

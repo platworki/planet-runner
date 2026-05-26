@@ -1794,6 +1794,10 @@ one_shot = true
 wait_time = 0.5
 one_shot = true
 
+[node name="DashInvincibleCooldown" type="Timer" parent="Position"]
+wait_time = 3.75
+one_shot = true
+
 [node name="PlayerBody" type="CollisionShape2D" parent="."]
 z_index = 2
 position = Vector2(0.875, -21.5025)
@@ -1828,3 +1832,4 @@ bus = &"SFX"
 [connection signal="timeout" from="Position/RegenTimer" to="." method="_on_regen_timer_timeout"]
 [connection signal="timeout" from="Position/KnockbackTime" to="." method="_on_knockback_time_timeout"]
 [connection signal="timeout" from="Position/DashTimer" to="." method="_on_dash_timeout"]
+[connection signal="timeout" from="Position/DashInvincibleCooldown" to="." method="_on_dash_invincible_cooldown_timeout"]
