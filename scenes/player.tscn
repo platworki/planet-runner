@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://b0t0o2kxyyt4n" path="res://assets/sprites/body-walk-spritesheet.png" id="5_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://bvhrffl30viek" path="res://assets/sprites/body-attack-2-Sheet.png" id="5_y4r1p"]
 [ext_resource type="Texture2D" uid="uid://bw6e0f88buu5j" path="res://assets/sprites/legs-walk-spritesheet.png" id="6_fjrip"]
-[ext_resource type="Texture2D" uid="uid://dfknwo52udpt0" path="res://assets/sprites/death_spritesheet_body.png" id="6_jej6c"]
+[ext_resource type="Texture2D" uid="uid://cqkc18uh26i72" path="res://assets/sprites/death_spritesheet_body.png" id="6_jej6c"]
 [ext_resource type="Texture2D" uid="uid://xridl48gaox7" path="res://assets/sprites/body_jump_sheet.png" id="7_d2wvv"]
 [ext_resource type="Texture2D" uid="uid://cbobf8sd1ov6l" path="res://assets/sprites/new-and-improved-BODY-sheet.png" id="8_f1ej7"]
 [ext_resource type="Texture2D" uid="uid://dogtt2315p6a8" path="res://assets/sprites/pogo-Sheet.png" id="9_jej6c"]

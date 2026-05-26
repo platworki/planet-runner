@@ -22,7 +22,7 @@ const JUMP_VELOCITY = -270.0
 const GRAVITY_RISING = 465.0
 const GRAVITY_FALLING = 800.0
 const JUMP_CUT_MULTIPLIER = 0.2
-const DASH_SPEED = 380.0
+const DASH_SPEED = 370.0
 const DASH_DECAY = 800.0
 const MAX_VELOCITY = 250.0
 # INFO Determines how slow vertical movement must be to trigger "RiseToFall"
@@ -355,7 +355,7 @@ func gravity(delta: float) -> void:
 func dash() -> void:
 	torso_animation.play("Dash")
 	legs_animation.play("Dash")
-	velocity.x = DASH_SPEED * flip.scale.x * 1.2
+	velocity.x = (DASH_SPEED + GameManager.player_stats.dash_boost) * flip.scale.x * 1.2
 	velocity.y = 0
 	
 	dash_sfx.pitch_scale = randf_range(0.8,1.2)
@@ -365,7 +365,7 @@ func dash() -> void:
 	attack_cooldown.stop()
 	
 	dash_timer.start()
-	dash_cooldown_timer.start()
+	dash_cooldown_timer.start(dash_cooldown_timer.wait_time * GameManager.player_stats.dash_cooldown_modifier)
 	if not is_on_floor():
 		has_air_dash = false
 
