@@ -352,12 +352,17 @@ func gravity(delta: float) -> void:
 # ======== DASH ========
 # ======================	
 
+#definicja koloru do .modulate przy invincibility dashu
+var dash_color := Color(0.0, 18.61, 18.892, 0.431)
+
 func dash() -> void:
 	torso_animation.play("Dash")
 	legs_animation.play("Dash")
 	velocity.x = (DASH_SPEED + GameManager.player_stats.dash_boost) * flip.scale.x * 1.2
 	velocity.y = 0
-	
+	if GameManager.item_stacks.particle_accelerator > 0:
+		torso_animation.get_node("ModulateStack").set_layer("dash", Color(0.0, 18.61, 18.892, 0.431))
+		legs_animation.get_node("ModulateStack").set_layer("dash", Color(0.0, 18.61, 18.892, 0.431))
 	dash_sfx.pitch_scale = randf_range(0.8,1.2)
 	dash_sfx.play(0.18)
 	
@@ -379,6 +384,9 @@ func _on_regen_timer_timeout() -> void:
 	heal(regen_amount)
 
 func _on_dash_timeout():
+	if GameManager.item_stacks.particle_accelerator > 0:
+		torso_animation.get_node("ModulateStack").remove_layer("dash")
+		legs_animation.get_node("ModulateStack").remove_layer("dash")
 	# INFO If the dash jump buffer is active and the player is holding jump
 	if not dash_jump_buffer.is_stopped() and Input.is_action_pressed("jump"):
 		if is_on_floor():
@@ -594,6 +602,8 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		return
 	
 	var final_damage = float(enemy_damage)
+	if current_state == State.DASHING && GameManager.item_stacks.particle_accelerator > 0:
+		return
 	# NEW: Crystal Buckler Logic
 	if GameManager.player_stats.shield_active:
 		final_damage *= 0.2 # Block 80%

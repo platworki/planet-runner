@@ -1,4 +1,4 @@
-[gd_scene load_steps=232 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=233 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
 [ext_resource type="Script" uid="uid://csoy286hyp5i3" path="res://scripts/deal_damage.gd" id="2_dqkch"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://dnti0x1yy3die" path="res://assets/sprites/WAKE_UUUUPPPPP-body-Sheet.png" id="10_4r5pv"]
 [ext_resource type="Texture2D" uid="uid://8ljsb2d3rlx3" path="res://assets/sprites/new-and-improved-LEGS-sheet.png" id="10_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b50rjr1y6isk" path="res://assets/sprites/death_spritesheet_legs.png" id="11_f1ej7"]
+[ext_resource type="Script" uid="uid://eiuj72wpjtrv" path="res://scripts/modulate_stack.gd" id="12_60mlk"]
 [ext_resource type="Texture2D" uid="uid://bh820ofphfti3" path="res://assets/sprites/WAKE_UUUUPPPPP-legs-Sheet.png" id="15_60mlk"]
 [ext_resource type="AudioStream" uid="uid://cpxg8mvfxkqgd" path="res://assets/sounds/BeepBox-Song.wav" id="15_a8ls1"]
 [ext_resource type="AudioStream" uid="uid://bdf0mt3r7aspc" path="res://assets/sounds/Boss/dragon-studio-lightning-spell-386163.mp3" id="16_fulsm"]
@@ -1751,10 +1752,16 @@ position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"Waking"
 
+[node name="ModulateStack" type="Node" parent="Position/Torso"]
+script = ExtResource("12_60mlk")
+
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
 animation = &"Waking"
+
+[node name="ModulateStack" type="Node" parent="Position/Legs"]
+script = ExtResource("12_60mlk")
 
 [node name="CoyoteTime" type="Timer" parent="Position"]
 wait_time = 0.12

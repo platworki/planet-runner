@@ -36,7 +36,8 @@ const MAX_STACKS = {
 	"crystal_buckler": 5,
 	"power_fruit": 5,
 	"karma_flower": 5,
-	"wind_turbine": 5
+	"wind_turbine": 5,
+	"particle_accelerator": 5
 }
 
 # 2. Track current stacks
@@ -52,7 +53,8 @@ var item_stacks = {
 	"crystal_buckler": 0,
 	"power_fruit": 0,
 	"karma_flower": 0,
-	"wind_turbine": 0
+	"wind_turbine": 0,
+	"particle_accelerator": 0
 }
 
 var combo_board_timer = 0.0
@@ -61,9 +63,9 @@ var buckler_timer = 0.0
 func _process(delta: float) -> void:
 	if player_node:
 		if player_stats.shield_active:
-			player_node.torso_animation.modulate = Color(1.18, 0.785, 1.18, 1.0)
+			player_node.torso_animation.get_node("ModulateStack").set_layer("shield", Color(1.18, 0.785, 1.18, 1.0))
 		else:
-			player_node.torso_animation.modulate = Color.WHITE
+			player_node.torso_animation.get_node("ModulateStack").remove_layer("shield")
 	
 	if combo_board_timer > 0:
 		combo_board_timer -= delta
@@ -144,8 +146,10 @@ func apply_item_effect(item_id: String):
 			player_stats.karma_stacks += 1
 			player_stats.karma_healing = 0.4 + (0.1 *(item_stacks.karma_flower - 1))
 		"wind_turbine":
-			player_stats.dash_boost = 25 + ((item_stacks.power_fruit - 1) * 7)
-			player_stats.dash_cooldown_modifier = 0.7
+			player_stats.dash_boost += 15
+			player_stats.dash_cooldown_modifier = 0.85
+		"particle_accelerator":
+			player_stats.dash_boost += 25
 		"protective_plushie":
 			# 5% base + 3% per extra stack
 			player_stats.damage_reduction = 0.05 + ((item_stacks.protective_plushie - 1) * 0.03)
@@ -288,6 +292,13 @@ const ITEM_DATABASE = {
 		"sprite_default": "res://assets/sprites/Items/wind_dynamo/wind_generator.png",
 		"sprite_highlight": "res://assets/sprites/Items/wind_dynamo/wind_generator_highlight.png",
 		"description": "Improves dash speed and cooldown"
+	},
+	"particle_accelerator": {
+		"name": "Particle Accelerator",
+		"rarity": "super_rare",
+		"sprite_default": "res://assets/sprites/Items/particle_accelerator/prtcl_accelerator.png",
+		"sprite_highlight": "res://assets/sprites/Items/particle_accelerator/prtcl_accelerator_highlight.png",
+		"description": "Dashing is improved and gives invincibility"
 	}
 	# Add more...
 }
@@ -342,7 +353,8 @@ func reset_game():
 		"karma_stacks": 0,
 		"karma_healing": 0.5,
 		"dash_boost": 0,
-		"dash_cooldown_modifier": 1
+		"dash_cooldown_modifier": 1,
+		"dash_iframes": false
 	}
 	item_stacks = {
 		"speed_boots": 0,
@@ -356,6 +368,7 @@ func reset_game():
 		"crystal_buckler": 0,
 		"power_fruit": 0,
 		"karma_flower": 0,
-		"wind_turbine": 0
+		"wind_turbine": 0,
+		"particle_accelerator": 0
 	}
 	print("GameManager reset.")
