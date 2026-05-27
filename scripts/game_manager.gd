@@ -295,7 +295,7 @@ const ITEM_DATABASE = {
 	},
 	"particle_accelerator": {
 		"name": "Particle Accelerator",
-		"rarity": "super_rare",
+		"rarity": "common",
 		"sprite_default": "res://assets/sprites/Items/particle_accelerator/prtcl_accelerator.png",
 		"sprite_highlight": "res://assets/sprites/Items/particle_accelerator/prtcl_accelerator_highlight.png",
 		"description": "Dashing is improved and gives invincibility"
