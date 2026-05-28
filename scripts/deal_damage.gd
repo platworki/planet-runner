@@ -40,5 +40,9 @@ func _on_area_entered(area: Area2D) -> void:
 		
 		var damage = player.get_current_attack_damage()
 		var kb_multiplier = GameManager.get_combo_knockback_modifier(is_second_attack)
-		
+
+# Blood Hammer: bonus damage to bleeding enemies
+		var bleed_modifier = GameManager.get_bleed_damage_modifier(enemy)
+		damage = int(player.BASE_DAMAGE * bleed_modifier)
+
 		enemy.take_damage(damage, player.global_position, kb_multiplier)

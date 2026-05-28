@@ -377,7 +377,7 @@ func dash() -> void:
 	attack_cooldown.stop()
 	
 	dash_timer.start()
-	dash_cooldown_timer.start(dash_cooldown_timer.wait_time * GameManager.player_stats.dash_cooldown_modifier)
+	dash_cooldown_timer.start(dash_cooldown_timer.wait_time)
 	if not is_on_floor():
 		has_air_dash = false
 
@@ -582,13 +582,13 @@ func get_current_attack_damage() -> int:
 	var base_damage = BASE_DAMAGE + GameManager.player_stats.damage_bonus
 	var is_second_attack = attack_hit_animation.current_animation == "Attack 2"
 	var combo_multiplier = GameManager.get_combo_damage_modifier(is_second_attack)
-	
 	# Apply base multiplier (Attack 2 does 1.5x naturally)
 	if is_second_attack:
 		base_damage*=1.5
 	
 	# Apply Item Multiplier (Green Buge / Combo Board)
 	base_damage *= combo_multiplier
+	
 	
 	# Check for crit
 	var crit_chance = GameManager.player_stats.crit_chance
@@ -636,10 +636,12 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		final_damage *= (1.0 - GameManager.player_stats.damage_reduction)
 
 	HEALTH -= int(final_damage)
-	if GameManager.item_stacks.karma_flower > 0:
+	if GameManager.player_stats.karma_stacks > 0:
 		if HEALTH <= 0.2 * MAX_HEALTH:
 			var karma_heal_value = GameManager.player_stats.karma_healing * MAX_HEALTH
 			print("Found", karma_heal_value, " karma healing balance")
+			Effects.play_hit_flash(torso_animation, Color(2.583, 2.442, 0.656, 1.0), 3)
+			Effects.play_hit_flash(legs_animation, Color(2.583, 2.442, 0.656, 1.0), 3)
 			heal(karma_heal_value)
 			GameManager.player_stats.karma_stacks -= 1
 	

@@ -1167,7 +1167,7 @@ position = Vector2(4000, -864)
 unique_name_in_owner = true
 physics_interpolation_mode = 1
 z_index = 5
-position = Vector2(288, 0)
+position = Vector2(192, -15)
 platform_on_leave = 1
 safe_margin = 0.01
 

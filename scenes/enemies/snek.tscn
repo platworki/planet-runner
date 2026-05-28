@@ -1,8 +1,9 @@
-[gd_scene load_steps=115 format=3 uid="uid://duhwo8fpqfcq2"]
+[gd_scene load_steps=116 format=3 uid="uid://duhwo8fpqfcq2"]
 
 [ext_resource type="Script" uid="uid://6xaxen2y65ot" path="res://scripts/enemies/boss.gd" id="1_262in"]
 [ext_resource type="Texture2D" uid="uid://dnsmsnpok62xi" path="res://assets/sprites/Enemies/Boss/enter_portal_snek-Sheet.png" id="1_hp8g2"]
 [ext_resource type="Texture2D" uid="uid://oaus5as8ihyc" path="res://assets/sprites/Enemies/Boss/void_snek_idle-Sheet.png" id="1_qr8g4"]
+[ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="2_6cmwa"]
 [ext_resource type="PackedScene" uid="uid://mavn8s3vlntc" path="res://scenes/enemies/spawner_cloud.tscn" id="2_860m3"]
 [ext_resource type="Texture2D" uid="uid://eqia4uri4svk" path="res://assets/sprites/Enemies/Boss/parry_base-Sheet.png" id="2_it6ib"]
 [ext_resource type="Texture2D" uid="uid://cf8e4wdp6wfye" path="res://assets/sprites/Enemies/Boss/snek_die-Sheet.png" id="3_37bjw"]
@@ -736,6 +737,7 @@ size = Vector2(8, 38)
 [node name="PortalBoss" type="CharacterBody2D"]
 collision_layer = 8
 script = ExtResource("1_262in")
+effect_scene = ExtResource("2_6cmwa")
 cloud_scene = ExtResource("2_860m3")
 
 [node name="Position" type="Node2D" parent="."]
@@ -838,6 +840,9 @@ volume_db = -3.0
 pitch_scale = 0.65
 max_polyphony = 5
 bus = &"SFX"
+
+[node name="StatusEffectPoint" type="Marker2D" parent="."]
+position = Vector2(-7, -26)
 
 [connection signal="animation_finished" from="Position/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="frame_changed" from="Position/AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]

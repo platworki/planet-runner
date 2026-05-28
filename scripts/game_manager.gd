@@ -21,7 +21,10 @@ var player_stats = {
 	"karma_stacks": 0,
 	"karma_healing": 0.5,
 	"dash_boost": 0,
-	"dash_cooldown_modifier": 1
+	"bleed_chance": 0.1,
+	"poison_chance": 0.1,
+	"slow_chance": 0.2,
+	"burn_chance": 0.1
 }
 
 const MAX_STACKS = {
@@ -37,7 +40,8 @@ const MAX_STACKS = {
 	"power_fruit": 5,
 	"karma_flower": 5,
 	"wind_turbine": 5,
-	"particle_accelerator": 5
+	"particle_accelerator": 5,
+	"blood_hammer": 5
 }
 
 # 2. Track current stacks
@@ -54,7 +58,35 @@ var item_stacks = {
 	"power_fruit": 0,
 	"karma_flower": 0,
 	"wind_turbine": 0,
-	"particle_accelerator": 0
+	"particle_accelerator": 0,
+	"blood_hammer": 0
+}
+
+var status_effects_info = {
+	"bleed": {
+		"damage_per_tick": 2,
+		"duration": 2.5, #in seconds
+		"effect_animation": "bleed_animation",
+		"max_stacks": 999
+	},
+	"burn": {
+		"damage_per_tick": 1,
+		"duration": 5.5, #in seconds
+		"effect_animation": "burn_animation",
+		"max_stacks": 1
+	},
+	"poison": {
+		"damage_per_tick": 0.01, #this is a percentage
+		"duration": 4, #in seconds
+		"effect_animation": "poison_animation",
+		"max_stacks": 3 # add a green modulate when 3 stacks apply
+	},
+	"slow": {
+		"damage_per_tick": 0,
+		"duration": 3, #in seconds
+		"effect_animation": "slow_animation",
+		"max_stacks": 1
+	}
 }
 
 var combo_board_timer = 0.0
@@ -146,10 +178,10 @@ func apply_item_effect(item_id: String):
 			player_stats.karma_stacks += 1
 			player_stats.karma_healing = 0.4 + (0.1 *(item_stacks.karma_flower - 1))
 		"wind_turbine":
-			player_stats.dash_boost += 15
-			player_stats.dash_cooldown_modifier = player_stats.dash_cooldown_modifier * 0.9
+			player_stats.dash_boost += 16
+			player_stats.speed_bonus += 2
 		"particle_accelerator":
-			player_stats.dash_boost += 25
+			player_stats.dash_boost += 40
 		"protective_plushie":
 			# 5% base + 3% per extra stack
 			player_stats.damage_reduction = 0.05 + ((item_stacks.protective_plushie - 1) * 0.03)
@@ -166,6 +198,8 @@ func apply_item_effect(item_id: String):
 			# If they just bought it, start the timer
 			if not player_stats.shield_active and buckler_timer <= 0:
 				buckler_timer = player_stats.shield_cooldown_max
+		"blood_hammer":
+			pass  # Passive — no stat to update, checked at hit time
 
 func get_item_from_database(item_name: String) -> Dictionary:
 	if ITEM_DATABASE.has(item_name):
@@ -200,6 +234,17 @@ func get_random_item_from_database() -> Dictionary:
 	var data = ITEM_DATABASE[random_item_name].duplicate()
 	data["id"] = random_item_name # NEW: Inject the true ID!
 	return data
+	
+func get_bleed_damage_modifier(enemy) -> float:
+	if item_stacks.blood_hammer <= 0:
+		return 1.0
+	if not enemy.get("active_effects"):
+		return 1.0
+	if not "bleed" in enemy.active_effects:
+		return 1.0
+	# +20% per stack, e.g. stack 1 = 1.2x, stack 5 = 2.0x
+	print("POBRANO BLOOD HAMMER MODIFIER")
+	return 1.0 + (item_stacks.blood_hammer * 0.40)
 	
 # Item database - all possible items
 const ITEM_DATABASE = {
@@ -291,14 +336,49 @@ const ITEM_DATABASE = {
 		"rarity": "rare",
 		"sprite_default": "res://assets/sprites/Items/wind_dynamo/wind_generator.png",
 		"sprite_highlight": "res://assets/sprites/Items/wind_dynamo/wind_generator_highlight.png",
-		"description": "Improves dash speed and cooldown"
+		"description": "Improves dash and walking speed"
 	},
 	"particle_accelerator": {
 		"name": "Particle Accelerator",
-		"rarity": "common",
+		"rarity": "super_rare",
 		"sprite_default": "res://assets/sprites/Items/particle_accelerator/prtcl_accelerator.png",
 		"sprite_highlight": "res://assets/sprites/Items/particle_accelerator/prtcl_accelerator_highlight.png",
 		"description": "Dashing is improved and gives invincibility"
+	},
+	"blood_hammer": {
+	"name": "Blood Hammer",
+	"rarity": "super_rare",
+	"sprite_default": "res://assets/sprites/Items/blood_hammer/bld_hammer_sprite.png",
+	"sprite_highlight": "res://assets/sprites/Items/blood_hammer/bld_hammer_highlight.png",
+	"description": "Deal bonus damage to bleeding enemies"
+	},
+	"sticky_stone": {
+	"name": "Sticky Stone",
+	"rarity": "rare",
+	"sprite_default": "res://assets/sprites/Items/goo_stone/goo_rock_sprite.png",
+	"sprite_highlight": "res://assets/sprites/Items/goo_stone/goo_rock_highlight.png",
+	"description": "+15% chance to slow enemies"
+	},
+	"flammable_keg": {
+		"name": "Flammable Keg",
+		"rarity": "common",
+		"sprite_default": "res://assets/sprites/Items/flammable_keg/oil_sprite.png",
+		"sprite_highlight": "res://assets/sprites/Items/flammable_keg/oil_highlight.png",
+		"description": "+8% chance to burn enemies"
+	},
+	"edge_sharpener": {
+		"name": "Edge Sharpener",
+		"rarity": "common",
+		"sprite_default": "res://assets/sprites/Items/weapon_sharpener/sharp_sprite.png",
+		"sprite_highlight": "res://assets/sprites/Items/weapon_sharpener/sharp_highlight.png",
+		"description": "+10% chance to bleed enemies"
+	},
+	"uranium_gel": {
+		"name": "Uranium Gel",
+		"rarity": "common",
+		"sprite_default": "res://assets/sprites/Items/weapon_sharpener/sharp_sprite.png",
+		"sprite_highlight": "res://assets/sprites/Items/weapon_sharpener/sharp_highlight.png",
+		"description": "+10% chance to bleed enemies"
 	}
 	# Add more...
 }
@@ -353,8 +433,10 @@ func reset_game():
 		"karma_stacks": 0,
 		"karma_healing": 0.5,
 		"dash_boost": 0,
-		"dash_cooldown_modifier": 1,
-		"dash_iframes": false
+		"bleed_chance": 0.1,
+		"poison_chance": 0.1,
+		"slow_chance": 0.2,
+		"burn_chance": 0.1
 	}
 	item_stacks = {
 		"speed_boots": 0,
@@ -369,6 +451,7 @@ func reset_game():
 		"power_fruit": 0,
 		"karma_flower": 0,
 		"wind_turbine": 0,
-		"particle_accelerator": 0
+		"particle_accelerator": 0,
+		"blood_hammer": 0
 	}
 	print("GameManager reset.")

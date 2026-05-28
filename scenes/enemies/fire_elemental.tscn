@@ -1,8 +1,9 @@
-[gd_scene load_steps=78 format=3 uid="uid://dee5yo14nun5d"]
+[gd_scene load_steps=79 format=3 uid="uid://dee5yo14nun5d"]
 
 [ext_resource type="Script" uid="uid://cwhqbl6psytrf" path="res://scripts/enemies/fire_elemental.gd" id="1_a737n"]
 [ext_resource type="Script" uid="uid://dpcthuo7kn7pi" path="res://scripts/take_dmg_from_enemy.gd" id="2_dm21t"]
 [ext_resource type="PackedScene" uid="uid://guec2ebes6xr" path="res://scenes/enemies/fireprojectile.tscn" id="2_fdp3n"]
+[ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="3_58w6j"]
 [ext_resource type="Texture2D" uid="uid://b48tp4jg53usg" path="res://assets/sprites/Enemies/Fire Elemental/get-hit-fireE-Sheet - Copy.png" id="4_fdp3n"]
 [ext_resource type="Texture2D" uid="uid://cn1pfl6fku223" path="res://assets/sprites/Enemies/Fire Elemental/death_fireE-Sheet.png" id="4_gsw22"]
 [ext_resource type="Texture2D" uid="uid://cc04sq7uhtbi8" path="res://assets/sprites/Enemies/Fire Elemental/melee-fireE-Sheet.png" id="5_a737n"]
@@ -472,8 +473,10 @@ platform_floor_layers = 4294967041
 platform_wall_layers = 1
 script = ExtResource("1_a737n")
 fireball_scene = ExtResource("2_fdp3n")
+effect_scene = ExtResource("3_58w6j")
 
 [node name="FireEHitbox" type="Area2D" parent="."]
+visible = false
 position = Vector2(0, -12.684317)
 collision_layer = 12
 collision_mask = 2
@@ -498,6 +501,7 @@ offset = Vector2(0, 1.9)
 position = Vector2(-23.333334, -16.684317)
 
 [node name="Raycasts" type="Node2D" parent="."]
+visible = false
 position = Vector2(0, -12.684317)
 
 [node name="RaycastRightWall" type="RayCast2D" parent="Raycasts"]
@@ -526,6 +530,7 @@ wait_time = 0.2
 one_shot = true
 
 [node name="RangedRadius" type="Area2D" parent="."]
+visible = false
 position = Vector2(0, -12.684317)
 collision_layer = 0
 collision_mask = 2
@@ -536,6 +541,7 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_a737n")
 
 [node name="MeleeRadius" type="Area2D" parent="."]
+visible = false
 position = Vector2(0, -12.684317)
 collision_layer = 0
 collision_mask = 2
@@ -601,6 +607,9 @@ stream = ExtResource("14_3kucm")
 volume_db = -10.0
 max_polyphony = 5
 bus = &"SFX"
+
+[node name="StatusEffectPoint" type="Marker2D" parent="."]
+position = Vector2(3.3333335, -23.333334)
 
 [connection signal="body_entered" from="FireEHitbox" to="FireEHitbox" method="_on_body_entered"]
 [connection signal="body_exited" from="FireEHitbox" to="FireEHitbox" method="_on_body_exited"]

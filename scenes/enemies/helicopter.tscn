@@ -1,9 +1,10 @@
-[gd_scene load_steps=39 format=3 uid="uid://dfsexrrtx82ba"]
+[gd_scene load_steps=40 format=3 uid="uid://dfsexrrtx82ba"]
 
 [ext_resource type="Script" uid="uid://dpcthuo7kn7pi" path="res://scripts/take_dmg_from_enemy.gd" id="1_jxapq"]
-[ext_resource type="Script" uid="uid://bsgwjs1wa7i0s" path="res://scripts/helicopter.gd" id="1_vb6or"]
+[ext_resource type="Script" uid="uid://bsgwjs1wa7i0s" path="res://scripts/enemies/helicopter.gd" id="1_vb6or"]
+[ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="2_6jqoi"]
 [ext_resource type="Texture2D" uid="uid://d3wfus8fb5k66" path="res://assets/sprites/Enemies/Helipopter/heli-laser-Sheet.png" id="2_jxapq"]
-[ext_resource type="Texture2D" uid="uid://b8fq2nmapgi6a" path="res://assets/sprites/Enemies/Helipopter/heli-death-Sheet.png" id="4_vb6or"]
+[ext_resource type="Texture2D" uid="uid://pbyhhyx0i3ir" path="res://assets/sprites/Enemies/Helipopter/heli-death-Sheet.png" id="4_vb6or"]
 [ext_resource type="Texture2D" uid="uid://cuk4tguyvcv8s" path="res://assets/sprites/Enemies/Helipopter/heli-coper-Sheet.png" id="5_j4acn"]
 [ext_resource type="Script" uid="uid://4yq5xc20it6f" path="res://scripts/enemies/laser_damage.gd" id="6_j4acn"]
 [ext_resource type="AudioStream" uid="uid://v8hon5wfcsbm" path="res://assets/sounds/metal_hit1.mp3" id="7_j4acn"]
@@ -219,6 +220,7 @@ height = 84.0
 z_index = 5
 collision_layer = 8
 script = ExtResource("1_vb6or")
+effect_scene = ExtResource("2_6jqoi")
 
 [node name="HelicopterHitbox" type="Area2D" parent="."]
 collision_layer = 12
@@ -250,6 +252,7 @@ wait_time = 0.2
 one_shot = true
 
 [node name="FollowRadius" type="Area2D" parent="."]
+visible = false
 scale = Vector2(0.9942156, 1)
 collision_layer = 0
 collision_mask = 2
@@ -290,6 +293,9 @@ bus = &"SFX"
 stream = ExtResource("9_6jqoi")
 volume_db = -12.0
 bus = &"SFX"
+
+[node name="StatusEffectPoint" type="Marker2D" parent="."]
+position = Vector2(0, -96)
 
 [connection signal="body_entered" from="HelicopterHitbox" to="HelicopterHitbox" method="_on_body_entered"]
 [connection signal="body_exited" from="HelicopterHitbox" to="HelicopterHitbox" method="_on_body_exited"]

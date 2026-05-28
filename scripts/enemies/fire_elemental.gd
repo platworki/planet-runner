@@ -19,12 +19,13 @@ const SPEED = 22 # Slow walk
 const FRICTION = 400
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -45  
+const MAX_HEALTH = 110
 
 var HEALTH = 110
 var DAMAGE = 20
 var MELEE_DAMAGE = 25
 var direction = 1
-var knockback_force = 60.0
+var knockback_force = 50.0
 var is_knocked_back = false
 var is_invincible = false
 
@@ -51,6 +52,13 @@ var is_invincible = false
 @onready var shoot_fireball_sfx: AudioStreamPlayer = $Audio/ShootFireball
 @onready var melee_sfx: AudioStreamPlayer = $Audio/Melee
 @onready var death_sfx: AudioStreamPlayer = $Audio/Death
+
+@export var effect_scene: PackedScene
+@onready var status_effect_point: Marker2D = $StatusEffectPoint
+var is_dying = false
+
+var active_effects: Dictionary = {}  
+var speed_multiplier: float = 1.0    
 
 func _physics_process(delta: float) -> void:
 	if HEALTH <= 0:
@@ -108,7 +116,7 @@ func patrol():
 	if animated_sprite.animation != "walk":
 		animated_sprite.play("walk")
 		
-	velocity.x = direction * SPEED
+	velocity.x = direction * SPEED * speed_multiplier
 	
 	if ray_right_wall.is_colliding() or not ray_right_air.is_colliding():
 		direction = -1
@@ -135,7 +143,7 @@ func ranged_attack(delta):
 				can_move = true
 
 			if can_move and not player_in_melee:
-				velocity.x = direction * SPEED*1.3
+				velocity.x = (direction * SPEED* 1.3) * speed_multiplier
 				if animated_sprite.animation != "walk":
 					animated_sprite.play("walk")
 			else:
@@ -259,7 +267,7 @@ func _on_invincibility_timeout() -> void:
 # ====== DAMAGE ========
 # ======================
 
-func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float = 1.0):
+func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float = 1.0, from_effect: bool = false):
 	if is_invincible: return
 	
 	take_dmg_sfx.pitch_scale = randf_range(0.6,1.1)
@@ -270,8 +278,22 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 	
 	Effects.play_hit_flash(animated_sprite,Color(0.927, 0.613, 0.428, 1.0),0.25)
 	
-	invincibility.start()
-	is_invincible = true
+	if not from_effect:
+		var P_roll = randf()
+		var S_roll = randf()
+		var Bu_roll = randf()
+		var Bl_roll = randf()
+		
+		if GameManager.player_stats.bleed_chance > Bl_roll:
+			apply_status_effect("bleed")
+		if GameManager.player_stats.poison_chance > P_roll:
+			apply_status_effect("poison")
+		if GameManager.player_stats.slow_chance > S_roll:
+			apply_status_effect("slow")
+		if GameManager.player_stats.burn_chance > Bu_roll:
+			apply_status_effect("burn")
+			invincibility.start()
+			is_invincible = true
 
 	if attacker_position != Vector2.ZERO:
 		var knock_dir = sign(global_position.x - attacker_position.x)
@@ -288,6 +310,9 @@ func erase_from_reality():
 	die() # Calls your existing death logic (particles, sound, etc.)
 
 func die():
+	if is_dying:
+		return
+	is_dying = true
 	HEALTH = -100
 	death_sfx.play()
 	GameManager.on_enemy_died()
@@ -301,3 +326,76 @@ func die():
 	if death_sfx.playing:
 		await death_sfx.finished
 	queue_free()
+# ======================
+# ==== STATUS EFFECTS ==
+# ======================
+
+func apply_status_effect(effect_name: String, stacks: int = 1) -> void:
+	var info = GameManager.status_effects_info[effect_name]
+	var max_stacks = info["max_stacks"]
+	if effect_name in active_effects:
+		var current = active_effects[effect_name]
+		if effect_name == "bleed":
+			current["stacks"] += stacks
+			print("Slime started bleeding")
+		else:
+			current["stacks"] = min(current["stacks"] + stacks, max_stacks)
+		# Increment generation so old timers know they're stale
+		current["generation"] += 1
+		var gen = current["generation"]
+		var new_timer = get_tree().create_timer(info["duration"])
+		new_timer.timeout.connect(_remove_status_effect.bind(effect_name, gen))
+		current["timer"] = new_timer
+		_on_stack_change(effect_name, current["stacks"])
+		return
+	var node = effect_scene.instantiate()
+	add_child(node)
+	node.global_position = status_effect_point.global_position
+	node.play_effect(effect_name)
+	var timer = get_tree().create_timer(info["duration"])
+	active_effects[effect_name] = {
+		"timer": timer,
+		"node": node,
+		"stacks": stacks,
+		"generation": 0
+	}
+	timer.timeout.connect(_remove_status_effect.bind(effect_name, 0))
+	_on_stack_change(effect_name, stacks)
+	_start_damage_tick(effect_name)
+
+func _start_damage_tick(effect_name: String) -> void:
+	var info = GameManager.status_effects_info[effect_name]
+	if info["damage_per_tick"] == 0:
+		return
+	while effect_name in active_effects and HEALTH > 0 and not is_dying:
+		await get_tree().create_timer(0.5).timeout
+		if not effect_name in active_effects or is_dying:
+			break
+		var stacks = active_effects[effect_name]["stacks"]
+		var dmg = info["damage_per_tick"]
+		if effect_name == "poison":
+			Effects.play_hit_flash(animated_sprite, Color(0.504, 3.024, 0.0, 1.0), 3)
+			dmg = int(MAX_HEALTH * dmg) * stacks
+		elif effect_name == "bleed":
+			Effects.play_hit_flash(animated_sprite, Color(2.748, 0.589, 0.612, 1.0), 3)
+			dmg = int(dmg * stacks)  # scales directly with stacks, no cap
+		else:
+			dmg = int(dmg * stacks)
+		take_damage(dmg, Vector2.ZERO, 1.0, true)
+
+
+func _remove_status_effect(effect_name: String, generation: int) -> void:
+	if not effect_name in active_effects:
+		return
+	# If a newer timer has been created, this is a stale callback — ignore it
+	if active_effects[effect_name]["generation"] != generation:
+		return
+	active_effects[effect_name]["node"].queue_free()
+	active_effects.erase(effect_name)
+	if effect_name == "slow":
+		speed_multiplier = 1.0
+	print("Slime had effect removed")
+
+func _on_stack_change(effect_name: String, stacks: int) -> void:
+	if effect_name == "slow":
+		speed_multiplier = 0.5

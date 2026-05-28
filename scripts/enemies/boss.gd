@@ -22,6 +22,7 @@ var current_state = State.HIDDEN
 var is_boss = true # For reality eraser immunity
 var is_invincible = false
 var is_player_dead = false
+var is_dying = false
 
 @onready var position_node: Node2D = $Position
 @onready var main_hitbox: CollisionShape2D = $Position/BodyHitboxArea/BodyHitbox
@@ -42,6 +43,12 @@ var is_player_dead = false
 var last_state = State.HIDDEN
 var repeat_count = 0
 const MAX_REPEATS = 3
+
+@export var effect_scene: PackedScene
+@onready var status_effect_point: Marker2D = $StatusEffectPoint
+
+var active_effects: Dictionary = {}  
+var speed_multiplier: float = 1.0       
 
 @export var cloud_scene: PackedScene # Drag spawner_cloud.tscn here in Inspector
 
@@ -354,27 +361,45 @@ func disappear():
 	portal_sfx.pitch_scale = randf_range(1.0,1.2)
 	portal_sfx.play()
 
-func take_damage(amount: int, _attacker_pos: Vector2, _kb: float = 1.0):
-	if animated_sprite.animation == "EnterParry" and animated_sprite.frame:
+func take_damage(amount: int, _attacker_pos: Vector2, _kb: float = 1.0, from_effect: bool = false):
+	if animated_sprite.animation == "EnterParry" and animated_sprite.frame and not from_effect:
 		print("Damage blocked by Parry Stance!")
 		# We still call the parry logic just in case the area detection missed it
 		trigger_parry_hit() 
 		return
 		
-	if is_invincible:
+	if is_invincible || State.HIDDEN:
 		return
-	
-	Effects.play_hit_flash(animated_sprite,Color(1.116, 0.027, 0.0, 1.0),0.3)
-	
-	invincibility.start()
+		
 	HEALTH -= amount
-	is_invincible = true
+	
+	Effects.play_hit_flash(animated_sprite,Color(0.164, 0.164, 0.164, 1.0),0.3)
+	if not from_effect:
+		var P_roll = randf()
+		var S_roll = randf()
+		var Bu_roll = randf()
+		var Bl_roll = randf()
+		
+		if GameManager.player_stats.bleed_chance > Bl_roll:
+			apply_status_effect("bleed")
+		if GameManager.player_stats.poison_chance > P_roll:
+			apply_status_effect("poison")
+		if GameManager.player_stats.slow_chance > S_roll:
+			apply_status_effect("slow")
+		if GameManager.player_stats.burn_chance > Bu_roll:
+			apply_status_effect("burn")
+			invincibility.start()
+			is_invincible = true
+	
+	
+	
 	if HEALTH <= 0:
 		die()
 	
 	print("Boss has ", HEALTH, " HP left!")
 
 func die():
+	is_dying = true
 	state_timer.stop()
 	p3_timer.stop()
 	# Disable all hitboxes so he doesn't hit you while dying
@@ -388,3 +413,75 @@ func die():
 	boss_died.emit()
 	await animated_sprite.animation_finished
 	queue_free()
+
+# ======================
+# ==== STATUS EFFECTS ==
+# ======================
+
+func apply_status_effect(effect_name: String, stacks: int = 1) -> void:
+	var info = GameManager.status_effects_info[effect_name]
+	var max_stacks = info["max_stacks"]
+	if effect_name in active_effects:
+		var current = active_effects[effect_name]
+		if effect_name == "bleed":
+			current["stacks"] += stacks
+			print("Slime started bleeding")
+		else:
+			current["stacks"] = min(current["stacks"] + stacks, max_stacks)
+		# Increment generation so old timers know they're stale
+		current["generation"] += 1
+		var gen = current["generation"]
+		var new_timer = get_tree().create_timer(info["duration"])
+		new_timer.timeout.connect(_remove_status_effect.bind(effect_name, gen))
+		current["timer"] = new_timer
+		_on_stack_change(effect_name, current["stacks"])
+		return
+	var node = effect_scene.instantiate()
+	add_child(node)
+	node.global_position = status_effect_point.global_position
+	node.play_effect(effect_name)
+	var timer = get_tree().create_timer(info["duration"])
+	active_effects[effect_name] = {
+		"timer": timer,
+		"node": node,
+		"stacks": stacks,
+		"generation": 0
+	}
+	timer.timeout.connect(_remove_status_effect.bind(effect_name, 0))
+	_on_stack_change(effect_name, stacks)
+	_start_damage_tick(effect_name)
+
+func _start_damage_tick(effect_name: String) -> void:
+	var info = GameManager.status_effects_info[effect_name]
+	if info["damage_per_tick"] == 0:
+		return
+	while effect_name in active_effects and HEALTH > 0 and not is_dying:
+		await get_tree().create_timer(0.5).timeout
+		if not effect_name in active_effects or is_dying:
+			break
+		var stacks = active_effects[effect_name]["stacks"]
+		var dmg = info["damage_per_tick"]
+		if effect_name == "poison":
+			dmg = int(MAX_HEALTH * dmg) * stacks
+		elif effect_name == "bleed":
+			dmg = int(dmg * stacks)  # scales directly with stacks, no cap
+		else:
+			dmg = int(dmg * stacks)
+		take_damage(dmg, Vector2.ZERO, 1.0, true)
+
+
+func _remove_status_effect(effect_name: String, generation: int) -> void:
+	if not effect_name in active_effects:
+		return
+	# If a newer timer has been created, this is a stale callback — ignore it
+	if active_effects[effect_name]["generation"] != generation:
+		return
+	active_effects[effect_name]["node"].queue_free()
+	active_effects.erase(effect_name)
+	if effect_name == "slow":
+		speed_multiplier = 1.0
+	print("Slime had effect removed")
+
+func _on_stack_change(effect_name: String, stacks: int) -> void:
+	if effect_name == "slow":
+		speed_multiplier = 0.5
