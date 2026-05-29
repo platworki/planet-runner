@@ -246,7 +246,7 @@ func double_jump() -> void:
 	
 	has_double_jump = false
 	dash_cooldown_timer.stop()
-	velocity.y = JUMP_VELOCITY*0.95
+	velocity.y = JUMP_VELOCITY * 0.95 * GameManager.player_stats.jump_multiplier
 	
 	# INFO If not currently attack animation, play start jump on torso
 	if not is_torso_attacking():

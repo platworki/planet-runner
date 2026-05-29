@@ -21,10 +21,11 @@ var player_stats = {
 	"karma_stacks": 0,
 	"karma_healing": 0.5,
 	"dash_boost": 0,
-	"bleed_chance": 0.1,
-	"poison_chance": 0.1,
-	"slow_chance": 0.2,
-	"burn_chance": 0.1
+	"bleed_chance": 0.0,
+	"poison_chance": 0.0,
+	"slow_chance": 0.0,
+	"burn_chance": 0.0,
+	"jump_multiplier": 1.0
 }
 
 const MAX_STACKS = {
@@ -41,7 +42,12 @@ const MAX_STACKS = {
 	"karma_flower": 5,
 	"wind_turbine": 5,
 	"particle_accelerator": 5,
-	"blood_hammer": 5
+	"blood_hammer": 5,
+	"sticky_stone": 5,
+	"flammable_keg": 5,
+	"edge_sharpener": 5,
+	"uranium_gel": 5,
+	"booster_jets": 5
 }
 
 # 2. Track current stacks
@@ -59,7 +65,12 @@ var item_stacks = {
 	"karma_flower": 0,
 	"wind_turbine": 0,
 	"particle_accelerator": 0,
-	"blood_hammer": 0
+	"blood_hammer": 0,
+	"sticky_stone": 0,
+	"flammable_keg": 0,
+	"edge_sharpener": 0,
+	"uranium_gel": 0,
+	"booster_jets": 0
 }
 
 var status_effects_info = {
@@ -178,8 +189,7 @@ func apply_item_effect(item_id: String):
 			player_stats.karma_stacks += 1
 			player_stats.karma_healing = 0.4 + (0.1 *(item_stacks.karma_flower - 1))
 		"wind_turbine":
-			player_stats.dash_boost += 16
-			player_stats.speed_bonus += 2
+			player_stats.dash_boost += 22
 		"particle_accelerator":
 			player_stats.dash_boost += 40
 		"protective_plushie":
@@ -200,6 +210,17 @@ func apply_item_effect(item_id: String):
 				buckler_timer = player_stats.shield_cooldown_max
 		"blood_hammer":
 			pass  # Passive — no stat to update, checked at hit time
+		"sticky_stone":
+			player_stats.slow_chance += 0.15
+		"flammable_keg":
+			player_stats.burn_chance += 0.08
+		"edge_sharpener":
+			player_stats.bleed_chance += 0.1
+		"uranium_gel":
+			player_stats.poison_chance += 0.1
+			player_stats.burn_chance += 0.08
+		"booster_jets":
+			player_stats.jump_multiplier = 1.15 + ((item_stacks.booster_jets - 1) * 0.5)
 
 func get_item_from_database(item_name: String) -> Dictionary:
 	if ITEM_DATABASE.has(item_name):
@@ -336,7 +357,7 @@ const ITEM_DATABASE = {
 		"rarity": "rare",
 		"sprite_default": "res://assets/sprites/Items/wind_dynamo/wind_generator.png",
 		"sprite_highlight": "res://assets/sprites/Items/wind_dynamo/wind_generator_highlight.png",
-		"description": "Improves dash and walking speed"
+		"description": "Improves dash speed"
 	},
 	"particle_accelerator": {
 		"name": "Particle Accelerator",
@@ -364,7 +385,7 @@ const ITEM_DATABASE = {
 		"rarity": "common",
 		"sprite_default": "res://assets/sprites/Items/flammable_keg/oil_sprite.png",
 		"sprite_highlight": "res://assets/sprites/Items/flammable_keg/oil_highlight.png",
-		"description": "+8% chance to burn enemies"
+		"description": "+8% chance to burn enemies [to be changed]"
 	},
 	"edge_sharpener": {
 		"name": "Edge Sharpener",
@@ -375,10 +396,17 @@ const ITEM_DATABASE = {
 	},
 	"uranium_gel": {
 		"name": "Uranium Gel",
-		"rarity": "common",
-		"sprite_default": "res://assets/sprites/Items/weapon_sharpener/sharp_sprite.png",
-		"sprite_highlight": "res://assets/sprites/Items/weapon_sharpener/sharp_highlight.png",
-		"description": "+10% chance to bleed enemies"
+		"rarity": "rare",
+		"sprite_default": "res://assets/sprites/Items/uranium_jelly/uranium_jelly.png",
+		"sprite_highlight": "res://assets/sprites/Items/uranium_jelly/uranium_jelly_highlight.png",
+		"description": "+8% chance to burn or poison enemies"
+	},
+	"booster_jets": {
+		"name": "Booster Jets",
+		"rarity": "rare",
+		"sprite_default": "res://assets/sprites/Items/jump_pack/jump_pack.png",
+		"sprite_highlight": "res://assets/sprites/Items/jump_pack/jump_pack_highlight.png",
+		"description": "Improves jump and double jump"
 	}
 	# Add more...
 }
@@ -433,10 +461,11 @@ func reset_game():
 		"karma_stacks": 0,
 		"karma_healing": 0.5,
 		"dash_boost": 0,
-		"bleed_chance": 0.1,
-		"poison_chance": 0.1,
-		"slow_chance": 0.2,
-		"burn_chance": 0.1
+		"bleed_chance": 0.0,
+		"poison_chance": 0.0,
+		"slow_chance": 0.0,
+		"burn_chance": 0.0,
+		"jump_multiplier": 1.0
 	}
 	item_stacks = {
 		"speed_boots": 0,
@@ -452,6 +481,11 @@ func reset_game():
 		"karma_flower": 0,
 		"wind_turbine": 0,
 		"particle_accelerator": 0,
-		"blood_hammer": 0
+		"blood_hammer": 0,
+		"sticky_stone": 0,
+		"flammable_keg": 0,
+		"edge_sharpener": 0,
+		"uranium_gel": 0,
+		"booster_jets": 0
 	}
 	print("GameManager reset.")
