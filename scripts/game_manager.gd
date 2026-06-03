@@ -220,7 +220,7 @@ func apply_item_effect(item_id: String):
 			player_stats.poison_chance += 0.1
 			player_stats.burn_chance += 0.08
 		"booster_jets":
-			player_stats.jump_multiplier = 1.25 + ((item_stacks.booster_jets - 1) * 0.2)
+			player_stats.jump_multiplier = 1.15 + ((item_stacks.booster_jets - 1) * 0.1)
 
 func get_item_from_database(item_name: String) -> Dictionary:
 	if ITEM_DATABASE.has(item_name):

@@ -13,8 +13,8 @@ var is_boss = false
 var is_dying: bool = false
 
 const MAX_HEALTH = 75
-const SPEED = 65
-const CHASE_SPEED = 90
+const SPEED = 50
+const CHASE_SPEED = 100
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -65  
 const LUNGE_SPEED = 245
