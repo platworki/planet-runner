@@ -207,7 +207,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gdfbv"]
-size = Vector2(8.823515, 33.999985)
+size = Vector2(8.823515, 21.999992)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_deibd"]
 radius = 216.0
@@ -217,7 +217,7 @@ radius = 7.0
 height = 84.0
 
 [node name="Helicopter" type="CharacterBody2D"]
-z_index = 5
+z_index = 4
 collision_layer = 8
 script = ExtResource("1_vb6or")
 effect_scene = ExtResource("2_6jqoi")
@@ -243,7 +243,7 @@ autoplay = "move"
 offset = Vector2(0, 0.9)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, -101)
+position = Vector2(-1, -107)
 scale = Vector2(0.6800011, 1.0000002)
 shape = SubResource("RectangleShape2D_gdfbv")
 

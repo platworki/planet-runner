@@ -82,7 +82,7 @@ var current_state = State.WAKING
 
 @onready var world_background_music: AudioStreamPlayer = $"../Audio/World background music"
 
-var regen_amount: int = 2
+var regen_amount: int = 1
 
 # ======================
 # ===== MAIN LOOP ======

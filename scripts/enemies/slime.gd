@@ -12,16 +12,16 @@ var player_target = null
 var is_boss = false
 var is_dying: bool = false
 
-const MAX_HEALTH = 70
-const SPEED = 50
-const CHASE_SPEED = 80
+const MAX_HEALTH = 75
+const SPEED = 65
+const CHASE_SPEED = 90
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -65  
 const LUNGE_SPEED = 245
 const LUNGE_FRICTION = 600  
 
-var HEALTH = 70
-var DAMAGE = 10
+var HEALTH = 75
+var DAMAGE = 12
 var direction = 1
 var knockback_force = 85.0
 var is_knocked_back = false

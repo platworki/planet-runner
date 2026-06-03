@@ -194,14 +194,14 @@ func apply_item_effect(item_id: String):
 			player_stats.dash_boost += 40
 		"protective_plushie":
 			# 5% base + 3% per extra stack
-			player_stats.damage_reduction = 0.05 + ((item_stacks.protective_plushie - 1) * 0.03)
+			player_stats.damage_reduction = 0.10 + ((item_stacks.protective_plushie - 1) * 0.07)
 		"reality_eraser":
 			# 3% base + 1% per extra stack
-			player_stats.insta_kill_chance = 3.0 + ((item_stacks.reality_eraser - 1) * 1.0)
+			player_stats.insta_kill_chance = 3.0 + ((item_stacks.reality_eraser - 1) * 2.0)
 		"swift_scarf":
 			# 5% base + 5% per extra stack
 			# Stack 1: 1.05 | Stack 5: 1.25 (25% faster)
-			player_stats.attack_speed_multiplier = 1.0 + (item_stacks.swift_scarf * 0.1)
+			player_stats.attack_speed_multiplier = 1.00 + (item_stacks.swift_scarf * 0.15)
 		"crystal_buckler":
 			# 20s -> 18s -> 16.2s etc.
 			player_stats.shield_cooldown_max = 20.0 * pow(0.9, item_stacks.crystal_buckler - 1)
@@ -220,7 +220,7 @@ func apply_item_effect(item_id: String):
 			player_stats.poison_chance += 0.1
 			player_stats.burn_chance += 0.08
 		"booster_jets":
-			player_stats.jump_multiplier = 1.15 + ((item_stacks.booster_jets - 1) * 0.5)
+			player_stats.jump_multiplier = 1.25 + ((item_stacks.booster_jets - 1) * 0.2)
 
 func get_item_from_database(item_name: String) -> Dictionary:
 	if ITEM_DATABASE.has(item_name):
@@ -399,14 +399,14 @@ const ITEM_DATABASE = {
 		"rarity": "rare",
 		"sprite_default": "res://assets/sprites/Items/uranium_jelly/uranium_jelly.png",
 		"sprite_highlight": "res://assets/sprites/Items/uranium_jelly/uranium_jelly_highlight.png",
-		"description": "+8% chance to burn or poison enemies"
+		"description": "+8% chance to burn and poison enemies"
 	},
 	"booster_jets": {
 		"name": "Booster Jets",
 		"rarity": "rare",
 		"sprite_default": "res://assets/sprites/Items/jump_pack/jump_pack.png",
 		"sprite_highlight": "res://assets/sprites/Items/jump_pack/jump_pack_highlight.png",
-		"description": "Improves jump and double jump"
+		"description": "Improves double jump height"
 	}
 	# Add more...
 }

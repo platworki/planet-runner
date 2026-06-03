@@ -735,6 +735,7 @@ size = Vector2(49, 9)
 size = Vector2(8, 38)
 
 [node name="PortalBoss" type="CharacterBody2D"]
+z_index = 5
 collision_layer = 8
 script = ExtResource("1_262in")
 effect_scene = ExtResource("2_6cmwa")
@@ -743,7 +744,7 @@ cloud_scene = ExtResource("2_860m3")
 [node name="Position" type="Node2D" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Position"]
-z_index = 13
+z_index = 5
 position = Vector2(-32, -47)
 sprite_frames = SubResource("SpriteFrames_dm84w")
 animation = &"Idle"

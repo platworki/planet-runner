@@ -15,15 +15,15 @@ var player_in_ranged = false
 var player_in_melee = false
 var is_attacking = false
 
-const SPEED = 22 # Slow walk
+const SPEED = 32 # Slow walk
 const FRICTION = 400
 const GRAVITY = 500.0
 const JUMP_KNOCKBACK = -45  
-const MAX_HEALTH = 110
+const MAX_HEALTH = 125
 
-var HEALTH = 110
-var DAMAGE = 20
-var MELEE_DAMAGE = 25
+var HEALTH = 125
+var DAMAGE = 22
+var MELEE_DAMAGE = 27
 var direction = 1
 var knockback_force = 50.0
 var is_knocked_back = false

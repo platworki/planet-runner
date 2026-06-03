@@ -198,6 +198,7 @@ animations = [{
 }]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+z_index = 6
 sprite_frames = SubResource("SpriteFrames_q3ofy")
 animation = &"slow"
 frame_progress = 0.23006277

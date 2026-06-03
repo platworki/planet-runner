@@ -269,8 +269,9 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		"ParryStagger":
 			disappear()
 		"EnterPortal":
-			_on_attack_finished()
-			enter_hidden()
+			if not is_dying:  # Add this guard
+				_on_attack_finished()
+				enter_hidden()
 		"EnterParry":
 			current_state = State.STUNNED
 			shield_crack_sfx.pitch_scale = randf_range(0.6,0.9)
@@ -402,14 +403,36 @@ func die():
 	is_dying = true
 	state_timer.stop()
 	p3_timer.stop()
-	# Disable all hitboxes so he doesn't hit you while dying
+	
+	# If hidden or in the middle of disappearing, force the boss visible
+	# so the death animation can actually be seen
+	if current_state == State.HIDDEN or current_state == State.DISAPPEARING:
+		# Teleport to the player's location before appearing
+		await setup_position(80)
+		look_at_player()
+		visible = true
+		main_hitbox.set_deferred("disabled", true)
+		melee_hitbox.set_deferred("disabled", true)
+		parry_hitbox.set_deferred("disabled", true)
+		parry_check_hitbox.set_deferred("disabled", true)
+		
+		if animated_sprite.sprite_frames.has_animation("Death"):
+			animated_sprite.play("Death")
+		
+		boss_died.emit()
+		await animated_sprite.animation_finished
+		queue_free()
+		return
+	
+	# Already visible — just disable hitboxes and die normally
 	main_hitbox.set_deferred("disabled", true)
 	melee_hitbox.set_deferred("disabled", true)
+	parry_hitbox.set_deferred("disabled", true)
+	parry_check_hitbox.set_deferred("disabled", true)
 	
-	# Play a specific death animation, or just delete him
 	if animated_sprite.sprite_frames.has_animation("Death"):
 		animated_sprite.play("Death")
-		
+	
 	boss_died.emit()
 	await animated_sprite.animation_finished
 	queue_free()

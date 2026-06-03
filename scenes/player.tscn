@@ -1696,7 +1696,7 @@ animations = [{
 size = Vector2(9.75, 42.995)
 
 [node name="Player" type="CharacterBody2D"]
-z_index = 4
+z_index = 6
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_qhqgy")
@@ -1747,7 +1747,7 @@ shape = SubResource("RectangleShape2D_qlg0r")
 disabled = true
 
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
-z_index = 1
+z_index = 7
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"Waking"
@@ -1756,6 +1756,7 @@ animation = &"Waking"
 script = ExtResource("12_60mlk")
 
 [node name="Legs" type="AnimatedSprite2D" parent="Position"]
+z_index = 6
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
 animation = &"Waking"

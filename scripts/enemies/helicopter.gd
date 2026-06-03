@@ -37,7 +37,7 @@ var is_knocked_back = false
 @onready var status_effect_point: Marker2D = $StatusEffectPoint
 
 var active_effects: Dictionary = {}  
-var speed_multiplier: float = 1.0
+var speed_multiplier: float = 0.85
 var is_dying = false
 
 func _physics_process(delta: float) -> void:
