@@ -53,6 +53,7 @@ var current_state = State.WAKING
 @onready var flip: Node2D = $Position
 @onready var torso_animation: AnimatedSprite2D = $Position/Torso
 @onready var legs_animation: AnimatedSprite2D = $Position/Legs
+@onready var shield_animation: AnimatedSprite2D = $Position/CrystalShield
 @onready var attack_cooldown: Timer = $Position/PlayerAttack/AttackCooldown
 @onready var attack_hit_animation: AnimationPlayer = $Position/PlayerAttack/AttackHit
 @onready var attack1_hitbox: CollisionShape2D = $Position/PlayerAttack/Attack1Hitbox
@@ -88,6 +89,8 @@ var regen_amount: int = 1
 # ===== MAIN LOOP ======
 # ======================
 #
+
+
 func _ready():
 	# Register this node as the "Player" in the GameManager
 	GameManager.player_node = self
@@ -97,6 +100,8 @@ func _ready():
 		start_intro_sequence()
 
 func start_intro_sequence():
+	shield_animation.visible = false
+	shield_animation.play("active_shield")
 	current_state = State.WAKING
 	
 	# 1. Wait a moment for the scene transition/fade to finish

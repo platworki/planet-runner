@@ -1,4 +1,4 @@
-[gd_scene load_steps=233 format=3 uid="uid://oohkimdeqmb5"]
+[gd_scene load_steps=239 format=3 uid="uid://oohkimdeqmb5"]
 
 [ext_resource type="Script" uid="uid://dpwwpk734k4ux" path="res://scripts/player.gd" id="1_qhqgy"]
 [ext_resource type="Script" uid="uid://csoy286hyp5i3" path="res://scripts/deal_damage.gd" id="2_dqkch"]
@@ -20,6 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://cpxg8mvfxkqgd" path="res://assets/sounds/BeepBox-Song.wav" id="15_a8ls1"]
 [ext_resource type="AudioStream" uid="uid://bdf0mt3r7aspc" path="res://assets/sounds/Boss/dragon-studio-lightning-spell-386163.mp3" id="16_fulsm"]
 [ext_resource type="AudioStream" uid="uid://d172pypwa26by" path="res://assets/sounds/shield_crack.wav" id="16_qfm1y"]
+[ext_resource type="Texture2D" uid="uid://wyuxyaxcs3x5" path="res://assets/sprites/Overlays/player_shield-Sheet.png" id="18_i4ail"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
 size = Vector2(20.3788, 9.735249)
@@ -1692,6 +1693,42 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_abqxg"]
+atlas = ExtResource("18_i4ail")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6pxcr"]
+atlas = ExtResource("18_i4ail")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uifsl"]
+atlas = ExtResource("18_i4ail")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xbcgd"]
+atlas = ExtResource("18_i4ail")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wmsk0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_abqxg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6pxcr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uifsl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xbcgd")
+}],
+"loop": true,
+"name": &"active_shield",
+"speed": 8.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
 size = Vector2(9.75, 42.995)
 
@@ -1798,6 +1835,13 @@ one_shot = true
 [node name="DashInvincibleCooldown" type="Timer" parent="Position"]
 wait_time = 3.75
 one_shot = true
+
+[node name="CrystalShield" type="AnimatedSprite2D" parent="Position"]
+z_index = 7
+position = Vector2(9, -20)
+sprite_frames = SubResource("SpriteFrames_wmsk0")
+animation = &"active_shield"
+frame_progress = 0.61903924
 
 [node name="PlayerBody" type="CollisionShape2D" parent="."]
 z_index = 2

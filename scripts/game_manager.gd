@@ -106,9 +106,9 @@ var buckler_timer = 0.0
 func _process(delta: float) -> void:
 	if player_node:
 		if player_stats.shield_active:
-			player_node.torso_animation.get_node("ModulateStack").set_layer("shield", Color(1.18, 0.785, 1.18, 1.0))
+			player_node.shield_animation.visible = true
 		else:
-			player_node.torso_animation.get_node("ModulateStack").remove_layer("shield")
+			player_node.shield_animation.visible = false
 	
 	if combo_board_timer > 0:
 		combo_board_timer -= delta
