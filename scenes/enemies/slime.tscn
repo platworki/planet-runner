@@ -247,6 +247,7 @@ height = 120.6
 
 [node name="Slime" type="CharacterBody2D"]
 z_index = 4
+z_as_relative = false
 scale = Vector2(1.5, 1.5)
 collision_layer = 8
 script = ExtResource("1_n6pvg")
@@ -266,6 +267,8 @@ shape = SubResource("RectangleShape2D_0l8pv")
 wait_time = 0.3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 4
+z_as_relative = false
 position = Vector2(0, -15.882352)
 sprite_frames = SubResource("SpriteFrames_v5wyi")
 animation = &"attack"

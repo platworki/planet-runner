@@ -13,7 +13,7 @@ extends Node
 @onready var camera: Camera2D = $Player/Camera2D
 @onready var spawn_timer: Timer = $Spawners/SpawnTimer
 
-const MAX_ENEMIES = 30
+const MAX_ENEMIES = 35
 const OFFSCREEN_MIN = 50 # Must be AT LEAST 50px outside the camera
 
 func _ready():
@@ -27,7 +27,7 @@ func _on_spawn_timer_timeout() -> void:
 	if enemy_container.get_child_count() >= MAX_ENEMIES:
 		return
 	# INFO: 50% chance to spawn every time the timer ticks
-	if randf() > 0.5:
+	if randf() > 0.6:
 		return
 	attempt_respawn()
 
@@ -131,7 +131,7 @@ func spawn_enemies():
 			break 
 		
 		# Only 40% of markers should actually spawn something at start
-		if randf() > 0.4:
+		if randf() > 0.5:
 			continue
 
 		var type = "fireE"

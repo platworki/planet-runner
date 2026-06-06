@@ -25,7 +25,8 @@ var player_stats = {
 	"poison_chance": 0.0,
 	"slow_chance": 0.0,
 	"burn_chance": 0.0,
-	"jump_multiplier": 1.0
+	"jump_multiplier": 1.0,
+	"explosion_chance": 0.0
 }
 
 const MAX_STACKS = {
@@ -213,7 +214,7 @@ func apply_item_effect(item_id: String):
 		"sticky_stone":
 			player_stats.slow_chance += 0.15
 		"flammable_keg":
-			player_stats.burn_chance += 0.08
+			player_stats.explosion_chance += 0.20
 		"edge_sharpener":
 			player_stats.bleed_chance += 0.1
 		"uranium_gel":
@@ -385,7 +386,7 @@ const ITEM_DATABASE = {
 		"rarity": "common",
 		"sprite_default": "res://assets/sprites/Items/flammable_keg/oil_sprite.png",
 		"sprite_highlight": "res://assets/sprites/Items/flammable_keg/oil_highlight.png",
-		"description": "+8% chance to burn enemies [to be changed]"
+		"description": "+15% chance to explode on taking dmg"
 	},
 	"edge_sharpener": {
 		"name": "Edge Sharpener",
@@ -465,7 +466,8 @@ func reset_game():
 		"poison_chance": 0.0,
 		"slow_chance": 0.0,
 		"burn_chance": 0.0,
-		"jump_multiplier": 1.0
+		"jump_multiplier": 1.0,
+		"explosion_chance": 0.0
 	}
 	item_stacks = {
 		"speed_boots": 0,

@@ -191,23 +191,50 @@ func setup_position(x_offset: float):
 	var dir = 1 if randf() > 0.5 else -1
 	var target_x = player.global_position.x + (x_offset * dir)
 	
-	# Raycast logic: Start at player feet level, look down a bit
 	await get_tree().physics_frame
 	var space_state = get_world_2d().direct_space_state
+	var player_y = player.global_position.y
 	
-	var query = PhysicsRayQueryParameters2D.create(
-		Vector2(target_x, player.global_position.y - 50),
-		Vector2(target_x, player.global_position.y + 200)
+	# Ray starts just above the player's feet and only goes DOWNWARD.
+	# This means the first surface it can ever find is the one the player
+	# is standing on, or something below it — never a platform above.
+	var q = PhysicsRayQueryParameters2D.create(
+		Vector2(target_x, player_y - 20),
+		Vector2(target_x, player_y + 1200)
 	)
-	query.exclude = [self.get_rid(), player.get_rid()]
-	
-	var result = space_state.intersect_ray(query)
+	q.exclude = [self.get_rid(), player.get_rid()]
+	var result = space_state.intersect_ray(q)
 	
 	if result:
 		global_position = result.position
 	else:
-		# If no floor immediately below, spawn at player height
-		global_position = Vector2(target_x, player.global_position.y)
+		_fallback_to_nearest_spawn(player_y)
+
+
+# Finds the BossPSpawn point with the closest X to target_x and teleports there.
+func _fallback_to_nearest_spawn(player_y: float) -> void:
+	var spawn_points = get_tree().get_nodes_in_group("BossPSpawn")
+	if spawn_points.is_empty():
+		push_warning("Boss: No BossPSpawn nodes found and raycast missed!")
+		return
+	
+	# Filter to only spawn points at or below the player's elevation.
+	# In Godot 2D, larger Y = lower on screen.
+	var valid_points = spawn_points.filter(
+		func(p): return p.global_position.y >= player_y - 50
+	)
+	
+	# If somehow every spawn is above the player, use all as a last resort.
+	if valid_points.is_empty():
+		valid_points = spawn_points
+	
+	# Among valid points, pick the one closest in Y to the player.
+	var nearest: Node2D = valid_points[0]
+	for point in valid_points.slice(1):
+		if abs(point.global_position.y - player_y) < abs(nearest.global_position.y - player_y):
+			nearest = point
+	
+	global_position = nearest.global_position
 	
 func look_at_player():
 	# Calculate the absolute direction. 

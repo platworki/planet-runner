@@ -80,6 +80,7 @@ var current_state = State.WAKING
 @onready var shield_break_sfx: AudioStreamPlayer = $ShieldBreak
 @onready var death_sfx: AudioStreamPlayer = $Death
 @onready var electricity_sfx: AudioStreamPlayer = $"../Audio/Electricity"
+@export var explosion_scene: PackedScene
 
 @onready var world_background_music: AudioStreamPlayer = $"../Audio/World background music"
 
@@ -525,7 +526,6 @@ func update_stats():
 
 # INFO Call when the PlayerAttack Area hits an enemy; 'enemy' is the Node I passed
 func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
-	# INFO Only add a different behaviour if we are pogoing
 	if attack_hit_animation.current_animation == "Pogo":
 		velocity.y = JUMP_VELOCITY * 0.65
 		has_double_jump = true
@@ -628,23 +628,22 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 	var final_damage = float(enemy_damage)
 	if current_state == State.DASHING && GameManager.item_stacks.particle_accelerator > 0 && has_dash_inv == true:
 		return
-	# NEW: Crystal Buckler Logic
 	if GameManager.player_stats.shield_active:
-		final_damage *= 0.2 # Block 80%
+		final_damage *= 0.2
 		GameManager.player_stats.shield_active = false
 		GameManager.buckler_timer = GameManager.player_stats.shield_cooldown_max
 		print("Shield Popped! Reduced damage to: ", int(final_damage))
 		shield_break_sfx.play()
-		# Optional: Play a "Clink" sound or spawn a crystal particle here
 	else:
-		# Normal Damage Reduction (Plushie)
 		final_damage *= (1.0 - GameManager.player_stats.damage_reduction)
 
 	HEALTH -= int(final_damage)
+	try_trigger_explosion()  # still here, fires on actual damage
+	
+	
 	if GameManager.player_stats.karma_stacks > 0:
 		if HEALTH <= 0.2 * MAX_HEALTH:
 			var karma_heal_value = GameManager.player_stats.karma_healing * MAX_HEALTH
-			print("Found", karma_heal_value, " karma healing balance")
 			Effects.play_hit_flash(torso_animation, Color(2.583, 2.442, 0.656, 1.0), 3)
 			Effects.play_hit_flash(legs_animation, Color(2.583, 2.442, 0.656, 1.0), 3)
 			heal(karma_heal_value)
@@ -654,22 +653,15 @@ func take_damage(enemy_damage: int, enemy_position: Vector2):
 		die()
 		return
 	
-	# Cosmetics:
 	print("You have ", HEALTH, " left!")
-	
 	torso_animation.play("Damage")
 	legs_animation.play("Damage")
-	
 	Effects.play_hit_flash(torso_animation, Color(4.617, 4.617, 4.617, 1.0), 0.25)
 	Effects.play_hit_flash(legs_animation, Color(5.133, 5.133, 5.133, 1.0), 0.25)
-	
-	# INFO Calculate the hit direction, then add the non-smoothed value for knockback distance
 	var knock_dir = sign(global_position.x - enemy_position.x)
 	velocity.x = knock_dir * knockback_force
 	velocity.y = up_knockback_velocity
-	# INFO Pass the knockback smoothing to the State methods
 	current_state = State.KNOCKED_BACK
-	
 	torso_animation.offset = Vector2(0,0)
 	invincibility.start()
 	has_air_dash = true
@@ -691,3 +683,17 @@ func die():
 	Engine.time_scale = 1
 	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")
 	GameManager.reset_game()
+#EKSPLOZJA ATAK
+func try_trigger_explosion() -> void:
+	if explosion_scene == null:
+		print("ERROR: explosion_scene is not assigned!")
+		return
+	var chance = GameManager.player_stats.explosion_chance
+	if chance <= 0.0:
+		print("ERROR: explosion_chance is 0 or less: ", chance)
+		return
+	if randf() < chance:
+		print("Explosion triggered!")
+		var explosion = explosion_scene.instantiate()
+		get_tree().current_scene.add_child(explosion)
+		explosion.trigger(global_position)
