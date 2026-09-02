@@ -48,7 +48,8 @@ const MAX_STACKS = {
 	"flammable_keg": 5,
 	"edge_sharpener": 5,
 	"uranium_gel": 5,
-	"booster_jets": 5
+	"booster_jets": 5,
+	"squeaky_mallet": 5
 }
 
 # 2. Track current stacks
@@ -71,7 +72,8 @@ var item_stacks = {
 	"flammable_keg": 0,
 	"edge_sharpener": 0,
 	"uranium_gel": 0,
-	"booster_jets": 0
+	"booster_jets": 0,
+	"squeaky_mallet": 0
 }
 
 var status_effects_info = {
@@ -210,18 +212,20 @@ func apply_item_effect(item_id: String):
 			if not player_stats.shield_active and buckler_timer <= 0:
 				buckler_timer = player_stats.shield_cooldown_max
 		"blood_hammer":
-			pass  # Passive — no stat to update, checked at hit time
+			player_stats.bleed_chance = 0.1 * item_stacks.edge_sharpener + 0.2 * item_stacks.blood_hammer
 		"sticky_stone":
 			player_stats.slow_chance += 0.15
 		"flammable_keg":
 			player_stats.explosion_chance += 0.20
 		"edge_sharpener":
-			player_stats.bleed_chance += 0.1
+			player_stats.bleed_chance = 0.1 * item_stacks.edge_sharpener + 0.2 * item_stacks.blood_hammer
 		"uranium_gel":
 			player_stats.poison_chance += 0.1
 			player_stats.burn_chance += 0.08
 		"booster_jets":
 			player_stats.jump_multiplier = 1.15 + ((item_stacks.booster_jets - 1) * 0.1)
+		"squeaky_mallet":
+			pass
 
 func get_item_from_database(item_name: String) -> Dictionary:
 	if ITEM_DATABASE.has(item_name):
@@ -236,8 +240,8 @@ func get_random_item_from_database() -> Dictionary:
 	var roll = randf() * 100
 	var target_rarity = ""
 	
-	if roll < 60:  target_rarity = "common"
-	elif roll < 90:  target_rarity = "rare"
+	if roll < 56:  target_rarity = "common"
+	elif roll < 92:  target_rarity = "rare"
 	else:  target_rarity = "super_rare"
 	
 	var items_of_rarity = []
@@ -372,7 +376,7 @@ const ITEM_DATABASE = {
 	"rarity": "super_rare",
 	"sprite_default": "res://assets/sprites/Items/blood_hammer/bld_hammer_sprite.png",
 	"sprite_highlight": "res://assets/sprites/Items/blood_hammer/bld_hammer_highlight.png",
-	"description": "Deal bonus damage to bleeding enemies"
+	"description": "Deal bonus damage to bleeding enemies, increases bleed chance"
 	},
 	"sticky_stone": {
 	"name": "Sticky Stone",
@@ -408,19 +412,35 @@ const ITEM_DATABASE = {
 		"sprite_default": "res://assets/sprites/Items/jump_pack/jump_pack.png",
 		"sprite_highlight": "res://assets/sprites/Items/jump_pack/jump_pack_highlight.png",
 		"description": "Improves double jump height"
+	},
+	"squeaky_mallet": {
+		"name": "Squeaky Mallet",
+		"rarity": "super_rare",
+		"sprite_default": "res://assets/sprites/Items/squeaky_mallet/squeaky_mallet.png",
+		"sprite_highlight": "res://assets/sprites/Items/squeaky_mallet/squeaky_mallet_highlight.png",
+		"description": "first attack slows enemies, increases knockback of 2nd attack"
 	}
 	# Add more...
 }
 
-func on_player_hit_enemy(is_second_attack: bool):
-	if not is_second_attack: 
+func on_player_hit_enemy(is_second_attack: bool, enemy):
+	# Squeaky Mallet - pierwszy hit nakłada slow
+	if not is_second_attack:
+		if item_stacks.squeaky_mallet > 0:
+			if enemy.has_method("apply_status_effect"):
+				enemy.apply_status_effect("slow")
+				print("Squeaky Mallet: pierwszy hit - SLOW!")
 		return
 
-	# 3. Combo Board Logic
+	# Combo Board
 	if item_stacks.combo_board > 0:
 		var max_buff_stacks = 3 + (item_stacks.combo_board - 1)
-		combo_board_buff_stacks = clampi(combo_board_buff_stacks + 1, 0, max_buff_stacks)
-		combo_board_timer = 4.0 # Reset/Start 4s timer
+		combo_board_buff_stacks = clampi(
+			combo_board_buff_stacks + 1,
+			0,
+			max_buff_stacks
+		)
+		combo_board_timer = 4.0
 		print("Combo Board Stacks: ", combo_board_buff_stacks)
 
 func get_combo_damage_modifier(is_second_attack: bool) -> float:
@@ -434,9 +454,20 @@ func get_combo_damage_modifier(is_second_attack: bool) -> float:
 	return multiplier
 	
 func get_combo_knockback_modifier(is_second_attack: bool) -> float:
-	if is_second_attack and item_stacks.green_buge > 0:
-		return 2.0 + ((item_stacks.green_buge - 1) * 0.05) # 100% + 5% per stack
-	return 1.0
+	if not is_second_attack:
+		return 1.0
+	
+	var multiplier = 1.0
+	
+	# Green Buge
+	if item_stacks.green_buge > 0:
+		multiplier *= 2.0 + ((item_stacks.green_buge - 1) * 0.05)
+	
+	# Squeaky Mallet
+	if item_stacks.squeaky_mallet > 0:
+		multiplier *= 1.5 + ((item_stacks.squeaky_mallet - 1) * 0.25)
+	
+	return multiplier
 	
 func on_enemy_died():
 	if item_stacks.thick_root > 0:
@@ -488,6 +519,7 @@ func reset_game():
 		"flammable_keg": 0,
 		"edge_sharpener": 0,
 		"uranium_gel": 0,
-		"booster_jets": 0
+		"booster_jets": 0,
+		"squeaky_mallet": 0
 	}
 	print("GameManager reset.")

@@ -215,9 +215,6 @@ func take_damage(damage: int, attacker_position: Vector2, kb_multiplier: float =
 	slime_hit_sfx.pitch_scale = randf_range(0.8,1.1)
 	slime_hit_sfx.play()
 	
-	
-	
-	
 	if not from_effect:
 		var P_roll = randf()
 		var S_roll = randf()

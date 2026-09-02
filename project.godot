@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="PlanetRunner"
+config/name="Planet Runner Main"
 run/main_scene="uid://bd6qne43qq7wc"
 config/features=PackedStringArray("4.5", "Forward Plus")
 run/max_fps=240

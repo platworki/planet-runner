@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const ITEM_SLOT_SIZE = 32  # Pixel size of each item slot
+const ITEM_FONT = preload("res://assets/sprites/Fonts/windows-bold[1].ttf")
 
 @onready var currency_label: Label = $UIcontainer/HPcontainer/CurrencyLabel
 @onready var health_bar: TextureProgressBar = $UIcontainer/HPcontainer/HealthBar
@@ -98,6 +99,7 @@ func update_item_display() -> void:
 		if count > 1:
 			var count_label = Label.new()
 			count_label.text = "x" + str(count)
+			count_label.add_theme_font_override("font", ITEM_FONT)
 			count_label.add_theme_font_size_override("font_size", 14)
 			count_label.position = Vector2(ITEM_SLOT_SIZE - 12, ITEM_SLOT_SIZE - 12)
 			slot.add_child(count_label)
