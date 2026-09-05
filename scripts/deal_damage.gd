@@ -34,8 +34,9 @@ func _on_area_entered(area: Area2D) -> void:
 		var is_second_attack = player.attack_hit_animation.current_animation == "Attack 2"
 
 		# Get player's damage
-		var damage = player.get_current_attack_damage()
-
+		var attack_result = player.get_current_attack_damage()
+		var damage = attack_result["damage"]
+		var crit = attack_result["is_crit"]
 		# Blood Hammer
 		var bleed_modifier = GameManager.get_bleed_damage_modifier(enemy)
 		damage = int(damage * bleed_modifier)
@@ -48,6 +49,8 @@ func _on_area_entered(area: Area2D) -> void:
 
 		# Tell Player about the hit
 		emit_signal("hit_enemy", enemy)
+		if crit:
+			Effects.play_screen_flash(1, 0.65, 0.65, 0.3, 0.2)
 
 		# Deal damage
 		enemy.take_damage(

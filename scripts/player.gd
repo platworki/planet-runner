@@ -583,25 +583,26 @@ func cancel_attack() -> void:
 	attack1_hitbox.disabled = true
 	attack2_hitbox.disabled = true
 
-func get_current_attack_damage() -> int:
+func get_current_attack_damage() -> Dictionary:
 	var base_damage = BASE_DAMAGE + GameManager.player_stats.damage_bonus
 	var is_second_attack = attack_hit_animation.current_animation == "Attack 2"
 	var combo_multiplier = GameManager.get_combo_damage_modifier(is_second_attack)
 	# Apply base multiplier (Attack 2 does 1.5x naturally)
 	if is_second_attack:
-		base_damage*=1.5
+		base_damage *= 1.5
 	
 	# Apply Item Multiplier (Green Buge / Combo Board)
 	base_damage *= combo_multiplier
 	
-	
 	# Check for crit
+	var is_crit = false
 	var crit_chance = GameManager.player_stats.crit_chance
 	if randf() * 100 < crit_chance:  # Random 0-100 vs crit chance
 		base_damage *= 2  # Crit = double damage
+		is_crit = true
 		print("CRITICAL HIT!")
 	
-	return int(base_damage)
+	return {"damage": int(base_damage), "is_crit": is_crit}
 
 # ======================
 # ===== KNOCKBACK ======
