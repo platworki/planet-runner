@@ -28,7 +28,7 @@ func _on_damage_timer_timeout() -> void:
 	# INFO Keep dealing damage every 0.3 seconds if player_inside is still
 	# the body and it has a take_damage method
 	if player_inside and player_inside.has_method("take_damage"):
-		var enemy = get_parent().get_parent().get_parent()
+		var enemy = get_parent().get_parent()
 		player_inside.take_damage(enemy.DAMAGE, enemy.global_position)
 	else:
 		damage_timer.stop()
