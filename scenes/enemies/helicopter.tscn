@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://dpcthuo7kn7pi" path="res://scripts/take_dmg_from_enemy.gd" id="1_jxapq"]
 [ext_resource type="Script" uid="uid://bsgwjs1wa7i0s" path="res://scripts/enemies/helicopter.gd" id="1_vb6or"]
 [ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="2_6jqoi"]
-[ext_resource type="Texture2D" uid="uid://d3wfus8fb5k66" path="res://assets/sprites/Enemies/Helipopter/heli-laser-Sheet.png" id="2_jxapq"]
-[ext_resource type="Texture2D" uid="uid://pbyhhyx0i3ir" path="res://assets/sprites/Enemies/Helipopter/heli-death-Sheet.png" id="4_vb6or"]
-[ext_resource type="Texture2D" uid="uid://cuk4tguyvcv8s" path="res://assets/sprites/Enemies/Helipopter/heli-coper-Sheet.png" id="5_j4acn"]
+[ext_resource type="Texture2D" uid="uid://tsmvd8rksbxi" path="res://assets/sprites/Enemies/Helipopter/heli-laser-Sheet.png" id="2_jxapq"]
+[ext_resource type="Texture2D" uid="uid://c7464d6t7njf4" path="res://assets/sprites/Enemies/Helipopter/heli-death-Sheet.png" id="4_vb6or"]
+[ext_resource type="Texture2D" uid="uid://sjeosgdk0105" path="res://assets/sprites/Enemies/Helipopter/heli-coper-Sheet.png" id="5_j4acn"]
 [ext_resource type="Script" uid="uid://4yq5xc20it6f" path="res://scripts/enemies/laser_damage.gd" id="6_j4acn"]
-[ext_resource type="AudioStream" uid="uid://v8hon5wfcsbm" path="res://assets/sounds/metal_hit1.mp3" id="7_j4acn"]
-[ext_resource type="AudioStream" uid="uid://bdf0mt3r7aspc" path="res://assets/sounds/Boss/dragon-studio-lightning-spell-386163.mp3" id="9_6jqoi"]
+[ext_resource type="AudioStream" uid="uid://0wp4ig4nvbyr" path="res://assets/sounds/metal_hit1.mp3" id="7_j4acn"]
+[ext_resource type="AudioStream" uid="uid://cyne3yq5vf7so" path="res://assets/sounds/Boss/dragon-studio-lightning-spell-386163.mp3" id="9_6jqoi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tufls"]
 size = Vector2(8.8019285, 33.405926)

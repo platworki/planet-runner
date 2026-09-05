@@ -10,7 +10,7 @@ var current_state = State.IDLE
 var player_target = null
 var is_boss = false
 
-const SPEED = 80
+const SPEED = 120
 const ACCELERATION = 230
 const FRICTION = 400
 # How close horizontally it needs to be to shoot

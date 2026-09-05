@@ -12,7 +12,7 @@ enum State {
 	DISAPPEARING
 }
 
-const MAX_HEALTH = 400
+const MAX_HEALTH = 500
 var HEALTH = MAX_HEALTH
 var DAMAGE = 15
 var MELEE_DAMAGE = 30
@@ -23,6 +23,7 @@ var is_boss = true # For reality eraser immunity
 var is_invincible = false
 var is_player_dead = false
 var is_dying = false
+var ripple_spawner = get_tree().get_first_node_in_group("RippleSpawner")
 
 @onready var position_node: Node2D = $Position
 @onready var main_hitbox: CollisionShape2D = $Position/BodyHitboxArea/BodyHitbox
@@ -354,7 +355,7 @@ func _on_attack_finished():
 	var hp_ratio = float(HEALTH) / MAX_HEALTH
 	var cooldown_time = 1.0 # Base cooldown
 	
-	if hp_ratio > 0.5:
+	if hp_ratio > 0.7:
 		match current_state:
 			State.RANGED:
 				cooldown_time = 1 # Faster reset after ranged?
@@ -362,8 +363,18 @@ func _on_attack_finished():
 				cooldown_time = 1 # Give player more air after melee
 			State.PARRY:
 				cooldown_time = 2 # Longest break after parry sequences
+	elif hp_ratio > 0.5:
+		match current_state:
+			State.RANGED:
+				cooldown_time = 0.8 # Faster reset after ranged?
+			State.MELEE:
+				cooldown_time = 0.9 # Give player more air after melee
+			State.PARRY:
+				cooldown_time = 1.2 # Longest break after parry sequences
+		ripple_spawner.spawn_frequency_multiplier = 0.7
 	else:
-		cooldown_time = 0.8 # Almost no break between teleports in P3!	
+		cooldown_time = 0.65 # Almost no break between teleports in P3!	
+		ripple_spawner.spawn_frequency_multiplier = 1.3
 	
 	state_timer.start(cooldown_time)
 
@@ -375,7 +386,6 @@ func trigger_parry_hit():
 func trigger_counter_attack():
 	Effects.hit_stop(0.3, 0.3)
 	Effects.play_screen_flash()
-	
 	look_at_player()
 	animated_sprite.play("ParryAttack")
 	await animated_sprite.frame_changed
@@ -430,6 +440,7 @@ func die():
 	is_dying = true
 	state_timer.stop()
 	p3_timer.stop()
+	ripple_spawner.spawn_frequency_multiplier = 0
 	
 	# If hidden or in the middle of disappearing, force the boss visible
 	# so the death animation can actually be seen

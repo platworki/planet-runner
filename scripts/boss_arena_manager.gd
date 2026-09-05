@@ -7,6 +7,8 @@ extends Area2D
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var interact_ui: Node2D = $InteractUI
 @onready var laser_sfx: AudioStreamPlayer = $Laser
+@onready var boss_music: AudioStreamPlayer = $"../../Audio/Boss music"
+@onready var bg_music: AudioStreamPlayer = $"../../Audio/World background music"
 
 var player: CharacterBody2D
 var is_active = false
@@ -47,11 +49,32 @@ func start_boss_sequence() -> void:
 	if camera:
 		camera.limit_left = int(left_arena_boundary.global_position.x)
 	
+	fade_out_music(bg_music, 2)
+	boss_music.volume_db = -80
+	boss_music.play()
+	fade_in_music(boss_music, 0.5)
+	
 	invisible_wall.set_deferred("disabled", false)
 	spawn_boss()
 
+func fade_out_music(audio_player: AudioStreamPlayer, duration: float) -> void:
+	var tween = create_tween()
+	tween.tween_property(audio_player, "volume_db", -80, duration)
+	tween.tween_callback(audio_player.stop)
+
+func fade_in_music(audio_player: AudioStreamPlayer, duration: float) -> void:
+	audio_player.volume_db = -80
+	audio_player.play()
+	var tween = create_tween()
+	tween.tween_property(audio_player, "volume_db", 0.0, duration)
+
 # Inside boss_arena_manager.gd
 func spawn_boss() -> void:
+	var ripple_spawner = get_tree().get_first_node_in_group("RippleSpawner")
+	if ripple_spawner:
+		ripple_spawner.spawn_frequency_multiplier = 0.3
+		ripple_spawner.set_enabled(true)
+	
 	var boss = boss_scene.instantiate()
 	boss.global_position = left_arena_boundary.global_position + Vector2(300, 0)
 	boss.boss_died.connect(_on_boss_defeated)
@@ -67,6 +90,12 @@ func spawn_boss() -> void:
 
 func _on_boss_defeated() -> void:
 	boss_defeated = true
+	var ripple_spawner = get_tree().get_first_node_in_group("RippleSpawner")
+	if ripple_spawner:
+		ripple_spawner.set_enabled(false)
+	
+	fade_out_music(boss_music, 2)
+	fade_in_music(bg_music, 2)
 	interact_ui.unlock()
 	
 	await get_tree().create_timer(3.0).timeout

@@ -240,8 +240,8 @@ func get_random_item_from_database() -> Dictionary:
 	var roll = randf() * 100
 	var target_rarity = ""
 	
-	if roll < 56:  target_rarity = "common"
-	elif roll < 92:  target_rarity = "rare"
+	if roll < 60:  target_rarity = "common"
+	elif roll < 90:  target_rarity = "rare"
 	else:  target_rarity = "super_rare"
 	
 	var items_of_rarity = []
