@@ -23,7 +23,6 @@ var is_boss = true # For reality eraser immunity
 var is_invincible = false
 var is_player_dead = false
 var is_dying = false
-var ripple_spawner = get_tree().get_first_node_in_group("RippleSpawner")
 
 @onready var position_node: Node2D = $Position
 @onready var main_hitbox: CollisionShape2D = $Position/BodyHitboxArea/BodyHitbox
@@ -55,6 +54,8 @@ var speed_multiplier: float = 1.0
 
 var player = null
 
+@onready var ripple_spawner = get_tree().get_first_node_in_group("RippleSpawner")
+
 func _ready() -> void:
 	player = get_tree().get_first_node_in_group("Player")
 	if player:
@@ -64,7 +65,6 @@ func _ready() -> void:
 	# Metadata for parry check
 	parry_check_area.set_meta("entity", self)
 	parry_check_area.set_meta("is_parry", true)
-	
 	enter_hidden()
 
 func enter_hidden():
