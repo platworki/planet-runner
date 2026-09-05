@@ -34,15 +34,15 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_37qwj"]
 shader = ExtResource("8_navra")
-shader_parameter/ripple_width = 95.0
+shader_parameter/ripple_width = 130.0
 shader_parameter/fill_feather = 5.0
-shader_parameter/edge_softness = 10.0
+shader_parameter/edge_softness = 20.0
 shader_parameter/ripple_color = Color(0.0549, 0.00392, 0.12941, 1)
 shader_parameter/edge_color = Color(0.9, 0.3, 0.8, 1)
 shader_parameter/star_color = Color(0.729, 0.98, 0.6, 1)
 shader_parameter/edge_intensity = 1.5
-shader_parameter/star_scale = 0.55
-shader_parameter/star_density = 0.97
+shader_parameter/star_scale = 0.75
+shader_parameter/star_density = 0.998
 shader_parameter/debug_show_stars_everywhere = false
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7r4gi"]
@@ -1338,7 +1338,7 @@ position = Vector2(4000, -864)
 [node name="Player" parent="." groups=["Player"] instance=ExtResource("1_nnsk1")]
 unique_name_in_owner = true
 physics_interpolation_mode = 1
-position = Vector2(192, 0)
+position = Vector2(5760, -62)
 platform_on_leave = 1
 safe_margin = 0.01
 

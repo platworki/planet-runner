@@ -9,9 +9,9 @@ var ripples_enabled := false
 @export var min_interval := 2.0
 @export var max_interval := 5.0
 @export var spawn_frequency_multiplier := 1.0 # >1 = more frequent, <1 = less frequent
-@export var ripple_max_radius := 800.0
-@export var ripple_duration := 4
-@export var spawn_radius := 500.0
+@export var ripple_max_radius := 1000.0
+@export var ripple_duration := 2
+@export var spawn_radius := 550.0
 
 func _random_point_near_player() -> Vector2:
 	var player = get_tree().get_first_node_in_group("Player")
@@ -19,7 +19,7 @@ func _random_point_near_player() -> Vector2:
 		return _random_point_on_tilemap()
 	
 	var angle = randf_range(0, TAU)
-	var dist = randf_range(0.0, spawn_radius)
+	var dist = randf_range(250, spawn_radius)
 	var offset = Vector2(cos(angle), sin(angle)) * dist
 	return player.global_position + offset
 
