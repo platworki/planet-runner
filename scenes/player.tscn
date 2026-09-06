@@ -23,66 +23,53 @@
 [ext_resource type="AudioStream" uid="uid://pdlymwekpdqs" path="res://assets/sounds/shield_crack.wav" id="16_qfm1y"]
 [ext_resource type="Texture2D" uid="uid://bibg5w8qiyx0b" path="res://assets/sprites/Overlays/player_shield-Sheet.png" id="18_i4ail"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
-size = Vector2(20.3788, 9.735249)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4r1p"]
-size = Vector2(43.02191, 10.554952)
-
 [sub_resource type="Animation" id="Animation_3vyb7"]
 resource_name = "Attack 1"
 length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:disabled")
+tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.019357223, 0.16272165, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [false, true]
+"values": [false, true, true, false]
 }
 
 [sub_resource type="Animation" id="Animation_y4r1p"]
 resource_name = "Attack 2"
 length = 0.25
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"new_marker",
+"time": 0.0
+}]
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
+tracks/0/path = NodePath("Position/PlayerAttack/Attack2Hitbox:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.020863073, 0.19946362, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [false, true]
+"values": [false, true, true, false]
 }
 
 [sub_resource type="Animation" id="Animation_dqkch"]
 resource_name = "Pogo"
 length = 0.25
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
+tracks/0/path = NodePath("Position/PlayerAttack/AttackCooldown")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.05, 0.25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Position/PlayerAttack/AttackCooldown")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "times": PackedFloat32Array(0.25),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -90,13 +77,25 @@ tracks/1/keys = {
 "method": &"start"
 }]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Position/PlayerAttack/PogoHitbox:monitoring")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.04014561, 0.23265487, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
 
 [sub_resource type="Animation" id="Animation_g2els"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:disabled")
+tracks/0/path = NodePath("Position/PlayerAttack/Attack1Hitbox:monitoring")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -108,7 +107,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Position/PlayerAttack/PogoHitbox:disabled")
+tracks/1/path = NodePath("Position/PlayerAttack/Attack2Hitbox:monitoring")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -120,7 +119,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Position/PlayerAttack/Attack2Hitbox:disabled")
+tracks/2/path = NodePath("Position/PlayerAttack/PogoHitbox:monitoring")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -137,6 +136,12 @@ _data = {
 &"Pogo": SubResource("Animation_dqkch"),
 &"RESET": SubResource("Animation_g2els")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tuyoq"]
+size = Vector2(20.3788, 9.735249)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4r1p"]
+size = Vector2(43.02191, 10.554952)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qlg0r"]
 size = Vector2(33, 17)
@@ -1746,21 +1751,6 @@ position = Vector2(0, -1)
 [node name="PlayerAttack" type="Area2D" parent="Position"]
 collision_layer = 2
 collision_mask = 4
-script = ExtResource("2_dqkch")
-
-[node name="Attack1Hitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
-position = Vector2(19.70374, -17.999998)
-rotation = 1.5707964
-scale = Vector2(0.88327086, 2.9370105)
-shape = SubResource("RectangleShape2D_tuyoq")
-disabled = true
-
-[node name="Attack2Hitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
-position = Vector2(21.5, -23)
-rotation = 1.5707964
-scale = Vector2(0.88327086, 2.9370105)
-shape = SubResource("RectangleShape2D_y4r1p")
-disabled = true
 
 [node name="AttackCooldown" type="Timer" parent="Position/PlayerAttack"]
 one_shot = true
@@ -1780,10 +1770,36 @@ libraries = {
 }
 autoplay = "RESET"
 
-[node name="PogoHitbox" type="CollisionShape2D" parent="Position/PlayerAttack"]
+[node name="Attack1Hitbox" type="Area2D" parent="Position/PlayerAttack"]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("2_dqkch")
+
+[node name="Attack1Shape" type="CollisionShape2D" parent="Position/PlayerAttack/Attack1Hitbox"]
+position = Vector2(19.70374, -17.999998)
+rotation = 1.5707964
+scale = Vector2(0.88327086, 2.9370105)
+shape = SubResource("RectangleShape2D_tuyoq")
+
+[node name="Attack2Hitbox" type="Area2D" parent="Position/PlayerAttack"]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("2_dqkch")
+
+[node name="Attack2Shape" type="CollisionShape2D" parent="Position/PlayerAttack/Attack2Hitbox"]
+position = Vector2(21.5, -23)
+rotation = 1.5707964
+scale = Vector2(0.88327086, 2.9370105)
+shape = SubResource("RectangleShape2D_y4r1p")
+
+[node name="PogoHitbox" type="Area2D" parent="Position/PlayerAttack"]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("2_dqkch")
+
+[node name="PogoShape" type="CollisionShape2D" parent="Position/PlayerAttack/PogoHitbox"]
 position = Vector2(5.5, 5.5)
 shape = SubResource("RectangleShape2D_qlg0r")
-disabled = true
 
 [node name="Torso" type="AnimatedSprite2D" parent="Position"]
 z_index = 7
@@ -1870,9 +1886,14 @@ max_polyphony = 2
 bus = &"SFX"
 
 [connection signal="area_entered" from="Position/PlayerAttack" to="Position/PlayerAttack" method="_on_area_entered"]
-[connection signal="hit_enemy" from="Position/PlayerAttack" to="." method="_on_player_attack_hit_enemy"]
 [connection signal="timeout" from="Position/PlayerAttack/AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
 [connection signal="timeout" from="Position/PlayerAttack/Attack2Window" to="." method="_on_attack_2_window_timeout"]
+[connection signal="area_entered" from="Position/PlayerAttack/Attack1Hitbox" to="Position/PlayerAttack/Attack1Hitbox" method="_on_area_entered"]
+[connection signal="hit_enemy" from="Position/PlayerAttack/Attack1Hitbox" to="." method="_on_player_attack_hit_enemy"]
+[connection signal="area_entered" from="Position/PlayerAttack/Attack2Hitbox" to="Position/PlayerAttack/Attack2Hitbox" method="_on_area_entered"]
+[connection signal="hit_enemy" from="Position/PlayerAttack/Attack2Hitbox" to="." method="_on_player_attack_hit_enemy"]
+[connection signal="area_entered" from="Position/PlayerAttack/PogoHitbox" to="Position/PlayerAttack/PogoHitbox" method="_on_area_entered"]
+[connection signal="hit_enemy" from="Position/PlayerAttack/PogoHitbox" to="." method="_on_player_attack_hit_enemy"]
 [connection signal="animation_finished" from="Position/Torso" to="." method="_on_torso_animation_finished"]
 [connection signal="animation_finished" from="Position/Legs" to="." method="_on_legs_animation_finished"]
 [connection signal="frame_changed" from="Position/Legs" to="." method="_on_legs_frame_changed"]

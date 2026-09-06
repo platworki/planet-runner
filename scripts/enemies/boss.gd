@@ -371,10 +371,10 @@ func _on_attack_finished():
 				cooldown_time = 0.9 # Give player more air after melee
 			State.PARRY:
 				cooldown_time = 1.2 # Longest break after parry sequences
-		ripple_spawner.spawn_frequency_multiplier = 0.7
+		ripple_spawner.spawn_frequency_multiplier = 1
 	else:
-		cooldown_time = 0.65 # Almost no break between teleports in P3!	
-		ripple_spawner.spawn_frequency_multiplier = 1.3
+		cooldown_time = 0.6 # Almost no break between teleports in P3!	
+		ripple_spawner.spawn_frequency_multiplier = 2
 	
 	state_timer.start(cooldown_time)
 

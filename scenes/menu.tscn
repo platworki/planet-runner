@@ -1,12 +1,12 @@
 [gd_scene load_steps=23 format=3 uid="uid://bd6qne43qq7wc"]
 
 [ext_resource type="Script" uid="uid://ht8o1k7qprid" path="res://scripts/menu/menu.gd" id="1_13sgg"]
-[ext_resource type="Texture2D" uid="uid://ikpbtnrmg1ti" path="res://assets/sprites/Menu/main_menu.png" id="1_yqeox"]
-[ext_resource type="Texture2D" uid="uid://d1lpqlhaevehc" path="res://assets/sprites/Menu/start_button.png" id="2_con2f"]
-[ext_resource type="Texture2D" uid="uid://ch8y1xpebdhj0" path="res://assets/sprites/Menu/start_button_select.png" id="3_mhnvy"]
-[ext_resource type="Texture2D" uid="uid://cqtw4b6wjf37a" path="res://assets/sprites/Menu/exit_neutral.png" id="6_i6lef"]
-[ext_resource type="Texture2D" uid="uid://iiqkj0cu8d3s" path="res://assets/sprites/Menu/exit_selected.png" id="7_70i5f"]
-[ext_resource type="AudioStream" uid="uid://d3mjwm40h0gmi" path="res://assets/music/BeepBox-Song (6).mp3" id="9_i6lef"]
+[ext_resource type="Texture2D" uid="uid://d4lbwi2i58nwb" path="res://assets/sprites/Menu/main_menu.png" id="1_yqeox"]
+[ext_resource type="Texture2D" uid="uid://dptk73d6v80nh" path="res://assets/sprites/Menu/start_button.png" id="2_con2f"]
+[ext_resource type="Texture2D" uid="uid://u87wj8qutvo5" path="res://assets/sprites/Menu/start_button_select.png" id="3_mhnvy"]
+[ext_resource type="Texture2D" uid="uid://dqvci710pamlu" path="res://assets/sprites/Menu/exit_neutral.png" id="6_i6lef"]
+[ext_resource type="Texture2D" uid="uid://cdu3be138g21t" path="res://assets/sprites/Menu/exit_selected.png" id="7_70i5f"]
+[ext_resource type="AudioStream" uid="uid://dxu1dyexps1ih" path="res://assets/music/BeepBox-Song (6).mp3" id="9_i6lef"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vjb58"]
 atlas = ExtResource("1_yqeox")

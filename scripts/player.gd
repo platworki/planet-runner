@@ -56,8 +56,9 @@ var current_state = State.WAKING
 @onready var shield_animation: AnimatedSprite2D = $Position/CrystalShield
 @onready var attack_cooldown: Timer = $Position/PlayerAttack/AttackCooldown
 @onready var attack_hit_animation: AnimationPlayer = $Position/PlayerAttack/AttackHit
-@onready var attack1_hitbox: CollisionShape2D = $Position/PlayerAttack/Attack1Hitbox
-@onready var attack2_hitbox: CollisionShape2D = $Position/PlayerAttack/Attack2Hitbox
+@onready var attack1_hitbox: Area2D = $Position/PlayerAttack/Attack1Hitbox
+@onready var attack2_hitbox: Area2D = $Position/PlayerAttack/Attack2Hitbox
+@onready var pogo_hitbox: Area2D = $Position/PlayerAttack/PogoHitbox
 @onready var coyote_time: Timer = $Position/CoyoteTime
 @onready var jump_buffer: Timer = $Position/JumpBuffer
 @onready var dash_timer: Timer = $Position/DashTimer
@@ -67,10 +68,10 @@ var current_state = State.WAKING
 @onready var invincibility: Timer = $Position/Invincibility
 @onready var player_body: CollisionShape2D = $PlayerBody
 @onready var dash_jump_buffer: Timer = $Position/DashJumpBuffer
-@onready var pogo_hitbox: CollisionShape2D = $Position/PlayerAttack/PogoHitbox
 @onready var attack_2_window: Timer = $Position/PlayerAttack/Attack2Window
 @onready var pogo_cooldown: Timer = $Position/PlayerAttack/PogoCooldown
 @onready var regen_timer: Timer = $Position/RegenTimer
+
 
 @onready var swing_sfx: AudioStreamPlayer = $"../Audio/Swing"
 @onready var dash_sfx: AudioStreamPlayer = $"../Audio/Dash"
@@ -535,6 +536,7 @@ func _on_player_attack_hit_enemy(_enemy: Variant) -> void:
 # ======================
 # ====== ATTACKS =======
 # ======================
+var attack_id := 0
 
 func attack() -> void:
 	if not invincibility.is_stopped():
@@ -546,6 +548,7 @@ func attack() -> void:
 	var spd = GameManager.player_stats.attack_speed_multiplier
 	
 	if Input.is_action_pressed("down") and not is_on_floor():
+		attack_id += 1  # NEW — this pogo is a fresh swing
 		attack_combo_count = 0  # INFO Reset combo
 		attack_hit_animation.play("Pogo")
 		torso_animation.play("Pogo")
@@ -558,6 +561,7 @@ func attack() -> void:
 	# INFO Main attacks - combo system
 	if attack_combo_count == 0:
 		# INFO First attack
+		attack_id += 1  # NEW — fresh swing
 		attack_combo_count = 1
 		attack_hit_animation.play("Attack 1")
 		torso_animation.play("Attack 1")
@@ -566,6 +570,7 @@ func attack() -> void:
 		attack_cooldown.start(0.2/spd)
 		
 	elif attack_combo_count == 1 and not attack_2_window.is_stopped():
+		attack_id += 1  # NEW — fresh swing (2nd combo hit)
 		attack_combo_count = 2
 		attack_2_window.stop()
 		attack_hit_animation.play("Attack 2")
@@ -579,9 +584,9 @@ func cancel_attack() -> void:
 	attack_combo_count = 0
 	attack_hit_animation.stop()
 	torso_animation.offset = Vector2(0,0)
-	pogo_hitbox.disabled = true
-	attack1_hitbox.disabled = true
-	attack2_hitbox.disabled = true
+	pogo_hitbox.monitoring = false
+	attack1_hitbox.monitoring = false
+	attack2_hitbox.monitoring = false
 
 func get_current_attack_damage() -> Dictionary:
 	var base_damage = BASE_DAMAGE + GameManager.player_stats.damage_bonus
