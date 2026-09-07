@@ -204,7 +204,7 @@ func apply_item_effect(item_id: String):
 		"swift_scarf":
 			# 5% base + 5% per extra stack
 			# Stack 1: 1.05 | Stack 5: 1.25 (25% faster)
-			player_stats.attack_speed_multiplier = 1.00 + (item_stacks.swift_scarf * 0.15)
+			player_stats.attack_speed_multiplier = 1.00 + (item_stacks.swift_scarf * 0.25)
 		"crystal_buckler":
 			# 20s -> 18s -> 16.2s etc.
 			player_stats.shield_cooldown_max = 20.0 * pow(0.9, item_stacks.crystal_buckler - 1)

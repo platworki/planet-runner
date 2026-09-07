@@ -1,23 +1,23 @@
 [gd_scene load_steps=116 format=3 uid="uid://duhwo8fpqfcq2"]
 
 [ext_resource type="Script" uid="uid://6xaxen2y65ot" path="res://scripts/enemies/boss.gd" id="1_262in"]
-[ext_resource type="Texture2D" uid="uid://dnsmsnpok62xi" path="res://assets/sprites/Enemies/Boss/enter_portal_snek-Sheet.png" id="1_hp8g2"]
-[ext_resource type="Texture2D" uid="uid://oaus5as8ihyc" path="res://assets/sprites/Enemies/Boss/void_snek_idle-Sheet.png" id="1_qr8g4"]
+[ext_resource type="Texture2D" uid="uid://ifgxcs8tah5k" path="res://assets/sprites/Enemies/Boss/enter_portal_snek-Sheet.png" id="1_hp8g2"]
+[ext_resource type="Texture2D" uid="uid://dwxrgmmley0tb" path="res://assets/sprites/Enemies/Boss/void_snek_idle-Sheet.png" id="1_qr8g4"]
 [ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="2_6cmwa"]
 [ext_resource type="PackedScene" uid="uid://mavn8s3vlntc" path="res://scenes/enemies/spawner_cloud.tscn" id="2_860m3"]
-[ext_resource type="Texture2D" uid="uid://eqia4uri4svk" path="res://assets/sprites/Enemies/Boss/parry_base-Sheet.png" id="2_it6ib"]
-[ext_resource type="Texture2D" uid="uid://cf8e4wdp6wfye" path="res://assets/sprites/Enemies/Boss/snek_die-Sheet.png" id="3_37bjw"]
-[ext_resource type="Texture2D" uid="uid://csjo7ma2r2yvj" path="res://assets/sprites/Enemies/Boss/exit_portal_snek-Sheet.png" id="4_860m3"]
-[ext_resource type="Texture2D" uid="uid://dm0cm7bg4e0u2" path="res://assets/sprites/Enemies/Boss/snek_attac1-Sheet.png" id="6_d127w"]
-[ext_resource type="Texture2D" uid="uid://dtkkn6aumqb00" path="res://assets/sprites/Enemies/Boss/parry_attacking-Sheet.png" id="7_a6rat"]
-[ext_resource type="Texture2D" uid="uid://cdb5fk7acil3n" path="res://assets/sprites/Enemies/Boss/parry-stagger-Sheet.png" id="8_uiupq"]
+[ext_resource type="Texture2D" uid="uid://c4ck6lc6yadjp" path="res://assets/sprites/Enemies/Boss/parry_base-Sheet.png" id="2_it6ib"]
+[ext_resource type="Texture2D" uid="uid://canrgj6baht3x" path="res://assets/sprites/Enemies/Boss/snek_die-Sheet.png" id="3_37bjw"]
+[ext_resource type="Texture2D" uid="uid://cav8chie0vhqc" path="res://assets/sprites/Enemies/Boss/exit_portal_snek-Sheet.png" id="4_860m3"]
+[ext_resource type="Texture2D" uid="uid://tnvuwq8gc1hs" path="res://assets/sprites/Enemies/Boss/snek_attac1-Sheet.png" id="6_d127w"]
+[ext_resource type="Texture2D" uid="uid://bptu4efsqy5hv" path="res://assets/sprites/Enemies/Boss/parry_attacking-Sheet.png" id="7_a6rat"]
+[ext_resource type="Texture2D" uid="uid://bm7e6t11dxxvt" path="res://assets/sprites/Enemies/Boss/parry-stagger-Sheet.png" id="8_uiupq"]
 [ext_resource type="Script" uid="uid://butw8fmubkqon" path="res://scripts/take_dmg_from_enemy_boss.gd" id="10_d127w"]
 [ext_resource type="Script" uid="uid://de2vaes4vterk" path="res://scripts/enemies/melee_damage_boss.gd" id="11_a6rat"]
 [ext_resource type="Script" uid="uid://dvvabkf61bxoj" path="res://scripts/enemies/parry_damage_boss.gd" id="12_uiupq"]
-[ext_resource type="AudioStream" uid="uid://bovgnooopwcgk" path="res://assets/sounds/Boss/parry.mp3" id="14_jq4mg"]
-[ext_resource type="AudioStream" uid="uid://d0mpx2nee6cfq" path="res://assets/sounds/Boss/portal.mp3" id="15_8iwby"]
-[ext_resource type="AudioStream" uid="uid://c165fwpuj01np" path="res://assets/sounds/Boss/fire1.wav" id="16_6cmwa"]
-[ext_resource type="AudioStream" uid="uid://d172pypwa26by" path="res://assets/sounds/shield_crack.wav" id="18_hudss"]
+[ext_resource type="AudioStream" uid="uid://odp7jthpfjgr" path="res://assets/sounds/Boss/parry.mp3" id="14_jq4mg"]
+[ext_resource type="AudioStream" uid="uid://77khg5lvbpyp" path="res://assets/sounds/Boss/portal.mp3" id="15_8iwby"]
+[ext_resource type="AudioStream" uid="uid://bgldvb5bb3uwo" path="res://assets/sounds/Boss/fire1.wav" id="16_6cmwa"]
+[ext_resource type="AudioStream" uid="uid://pdlymwekpdqs" path="res://assets/sounds/shield_crack.wav" id="18_hudss"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b2odv"]
 atlas = ExtResource("3_37bjw")
@@ -810,7 +810,7 @@ one_shot = true
 wait_time = 4.5
 
 [node name="Invincibility" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.05
 one_shot = true
 
 [node name="Audio" type="Node" parent="."]

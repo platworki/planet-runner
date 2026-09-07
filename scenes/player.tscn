@@ -1010,7 +1010,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"Walk",
-"speed": 10.0
+"speed": 12.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gvmy4"]
@@ -1696,7 +1696,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"Walk",
-"speed": 10.0
+"speed": 12.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_abqxg"]
@@ -1805,7 +1805,7 @@ shape = SubResource("RectangleShape2D_qlg0r")
 z_index = 7
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Waking"
+animation = &"Walk"
 
 [node name="ModulateStack" type="Node" parent="Position/Torso"]
 script = ExtResource("12_60mlk")
@@ -1814,7 +1814,7 @@ script = ExtResource("12_60mlk")
 z_index = 6
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
-animation = &"Waking"
+animation = &"Walk"
 
 [node name="ModulateStack" type="Node" parent="Position/Legs"]
 script = ExtResource("12_60mlk")

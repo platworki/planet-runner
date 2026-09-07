@@ -4,17 +4,17 @@
 [ext_resource type="Script" uid="uid://dpcthuo7kn7pi" path="res://scripts/take_dmg_from_enemy.gd" id="2_dm21t"]
 [ext_resource type="PackedScene" uid="uid://guec2ebes6xr" path="res://scenes/enemies/fireprojectile.tscn" id="2_fdp3n"]
 [ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="3_58w6j"]
-[ext_resource type="Texture2D" uid="uid://b48tp4jg53usg" path="res://assets/sprites/Enemies/Fire Elemental/get-hit-fireE-Sheet - Copy.png" id="4_fdp3n"]
-[ext_resource type="Texture2D" uid="uid://cn1pfl6fku223" path="res://assets/sprites/Enemies/Fire Elemental/death_fireE-Sheet.png" id="4_gsw22"]
-[ext_resource type="Texture2D" uid="uid://cc04sq7uhtbi8" path="res://assets/sprites/Enemies/Fire Elemental/melee-fireE-Sheet.png" id="5_a737n"]
-[ext_resource type="Texture2D" uid="uid://ctljqkbjv2vgk" path="res://assets/sprites/Enemies/Fire Elemental/shoot-fireE-Sheet.png" id="5_dm21t"]
-[ext_resource type="Texture2D" uid="uid://c768bdupnrmj2" path="res://assets/sprites/Enemies/Fire Elemental/walk-fireE-Sheet.png" id="5_m0xfg"]
+[ext_resource type="Texture2D" uid="uid://cihgk0xxxhu11" path="res://assets/sprites/Enemies/Fire Elemental/get-hit-fireE-Sheet - Copy.png" id="4_fdp3n"]
+[ext_resource type="Texture2D" uid="uid://dgemiyr10rbkf" path="res://assets/sprites/Enemies/Fire Elemental/death_fireE-Sheet.png" id="4_gsw22"]
+[ext_resource type="Texture2D" uid="uid://b066advddsss" path="res://assets/sprites/Enemies/Fire Elemental/melee-fireE-Sheet.png" id="5_a737n"]
+[ext_resource type="Texture2D" uid="uid://gxipwss8mo5l" path="res://assets/sprites/Enemies/Fire Elemental/shoot-fireE-Sheet.png" id="5_dm21t"]
+[ext_resource type="Texture2D" uid="uid://cnhbyo8u5duvk" path="res://assets/sprites/Enemies/Fire Elemental/walk-fireE-Sheet.png" id="5_m0xfg"]
 [ext_resource type="Script" uid="uid://c6r7i0hmui4je" path="res://scripts/enemies/melee_damage_fireE.gd" id="9_fdp3n"]
-[ext_resource type="AudioStream" uid="uid://baf5giboashir" path="res://assets/sounds/Fire Elemental/take_dmg.wav" id="10_ca6t8"]
-[ext_resource type="AudioStream" uid="uid://dupo61ieucd3f" path="res://assets/sounds/Fire Elemental/charge.mp3" id="11_58w6j"]
-[ext_resource type="AudioStream" uid="uid://ctkl5xxmbgagl" path="res://assets/sounds/Fire Elemental/fireball.mp3" id="12_so46g"]
-[ext_resource type="AudioStream" uid="uid://g03mhc7ywvn6" path="res://assets/sounds/Fire Elemental/melee.mp3" id="13_y7mj7"]
-[ext_resource type="AudioStream" uid="uid://bmwj2jk2opbsu" path="res://assets/sounds/Fire Elemental/death.wav" id="14_3kucm"]
+[ext_resource type="AudioStream" uid="uid://lpsrup1vyqlf" path="res://assets/sounds/Fire Elemental/take_dmg.wav" id="10_ca6t8"]
+[ext_resource type="AudioStream" uid="uid://qsy7plcgjcay" path="res://assets/sounds/Fire Elemental/charge.mp3" id="11_58w6j"]
+[ext_resource type="AudioStream" uid="uid://c643np71qru0a" path="res://assets/sounds/Fire Elemental/fireball.mp3" id="12_so46g"]
+[ext_resource type="AudioStream" uid="uid://bpvy868er0ly4" path="res://assets/sounds/Fire Elemental/melee.mp3" id="13_y7mj7"]
+[ext_resource type="AudioStream" uid="uid://dgshm8572abu2" path="res://assets/sounds/Fire Elemental/death.wav" id="14_3kucm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0l8pv"]
 size = Vector2(15.999994, 42.666656)
@@ -527,7 +527,7 @@ scale = Vector2(0.732002, 0.99159676)
 shape = SubResource("RectangleShape2D_0l8pv")
 
 [node name="Invincibility" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.05
 one_shot = true
 
 [node name="RangedRadius" type="Area2D" parent="."]

@@ -249,7 +249,7 @@ scale = Vector2(0.6800011, 1.0000002)
 shape = SubResource("RectangleShape2D_gdfbv")
 
 [node name="Invincibility" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.05
 one_shot = true
 
 [node name="FollowRadius" type="Area2D" parent="."]

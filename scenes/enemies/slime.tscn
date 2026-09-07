@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://dbl4p58thke7" path="res://scripts/enemies/slime.gd" id="1_n6pvg"]
 [ext_resource type="PackedScene" uid="uid://ccfttasejat6a" path="res://scenes/enemies/status_effect.tscn" id="2_uhx0m"]
-[ext_resource type="Texture2D" uid="uid://d0grn4hj74l6f" path="res://assets/sprites/Enemies/Slime/slime_attack-Sheet.png" id="3_ankfk"]
-[ext_resource type="Texture2D" uid="uid://c6wa7holmlwtb" path="res://assets/sprites/Enemies/Slime/slime_hurt-Sheet.png" id="4_e12yk"]
+[ext_resource type="Texture2D" uid="uid://dke51itp12b1u" path="res://assets/sprites/Enemies/Slime/slime_attack-Sheet.png" id="3_ankfk"]
+[ext_resource type="Texture2D" uid="uid://dnwvuvnt85b78" path="res://assets/sprites/Enemies/Slime/slime_hurt-Sheet.png" id="4_e12yk"]
 [ext_resource type="Script" uid="uid://dpcthuo7kn7pi" path="res://scripts/take_dmg_from_enemy.gd" id="4_pjw23"]
-[ext_resource type="Texture2D" uid="uid://blsir1m3gwor6" path="res://assets/sprites/Enemies/Slime/slime_die-Sheet.png" id="5_bhme6"]
-[ext_resource type="Texture2D" uid="uid://b2ayydhnja8bo" path="res://assets/sprites/Enemies/Slime/slime_walk-Sheet.png" id="5_e12yk"]
-[ext_resource type="AudioStream" uid="uid://bl7oxvahyk6r0" path="res://assets/sounds/slime_hit.mp3" id="7_bhme6"]
+[ext_resource type="Texture2D" uid="uid://bsq0t3haugc7w" path="res://assets/sprites/Enemies/Slime/slime_die-Sheet.png" id="5_bhme6"]
+[ext_resource type="Texture2D" uid="uid://dxtx34lgiypta" path="res://assets/sprites/Enemies/Slime/slime_walk-Sheet.png" id="5_e12yk"]
+[ext_resource type="AudioStream" uid="uid://ypemunjudmbt" path="res://assets/sounds/slime_hit.mp3" id="7_bhme6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0l8pv"]
 size = Vector2(7.333331, 12.666662)
@@ -299,7 +299,7 @@ scale = Vector2(1.0000002, 1.0000002)
 shape = SubResource("RectangleShape2D_pjw23")
 
 [node name="Invincibility" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.05
 one_shot = true
 
 [node name="DetectionRange" type="Area2D" parent="."]
