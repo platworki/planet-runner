@@ -3,6 +3,10 @@ extends Control
 @onready var start: TextureButton = $Start
 @onready var exit: TextureButton = $Exit
 
+
+func _ready():
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
 func _on_play_pressed() -> void:
 	if SceneTransitions.is_transitioning:
 		return

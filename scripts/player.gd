@@ -97,9 +97,28 @@ func _ready():
 	# Register this node as the "Player" in the GameManager
 	GameManager.player_node = self
 	GameManager.stats_changed.connect(update_stats)
+
+	# Restore HP carried over from the previous scene, if any.
+	if GameManager.saved_health >= 0:
+		HEALTH = int(GameManager.saved_health)
+		MAX_HEALTH = int(GameManager.saved_max_health)
+
 	update_stats()
 	if current_state == State.WAKING:
-		start_intro_sequence()
+		if GameManager.player_stats.current_stage == 1:
+			start_intro_sequence()
+		else:
+			current_state = State.NORMAL
+			print("Player is awake!")
+			shield_animation.play("active_shield")
+			regen_timer.start()
+			world_background_music.play()
+
+func _exit_tree():
+	# Save HP so it carries over to the player node that gets built
+	# for the next scene.
+	GameManager.saved_health = HEALTH
+	GameManager.saved_max_health = MAX_HEALTH
 
 func start_intro_sequence():
 	shield_animation.visible = false

@@ -16,6 +16,7 @@ var current_boss = null
 
 func _ready() -> void:
 	await get_tree().process_frame
+	update_item_display()
 
 func _process(_delta: float) -> void:
 	if player_node == null:

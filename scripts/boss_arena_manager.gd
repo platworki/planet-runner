@@ -108,9 +108,9 @@ func _on_boss_defeated() -> void:
 
 func exit_level():
 	# Prevent double-clicks during fade
+	GameManager.player_stats.current_stage = GameManager.player_stats.current_stage + 1
 	set_process_input(false)
 	set_physics_process(false)
 	
 	player.input_enabled = false
-	SceneTransitions.fade_to_scene_black("res://scenes/menu.tscn")
-	GameManager.reset_game()
+	SceneTransitions.fade_to_scene_black("res://scenes/waiting_room.tscn")

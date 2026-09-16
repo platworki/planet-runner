@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdi1dsqn5q30m"]
+
+[ext_resource type="Texture2D" uid="uid://d3vvqao4kpv44" path="res://assets/sprites/background_cave_back.png" id="1_v43ex"]
+[ext_resource type="Texture2D" uid="uid://bfruyyoqascws" path="res://assets/sprites/background_cave_front.png" id="2_37cfb"]
+[ext_resource type="Texture2D" uid="uid://crd2x5atrg0f" path="res://assets/sprites/background_cave_middle.png" id="3_37cfb"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="back" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.05, 0)
+repeat_size = Vector2(720, 0)
+repeat_times = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="back"]
+position = Vector2(-54.47, 107.545)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_v43ex")
+
+[node name="front" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.1, 0.02)
+scroll_offset = Vector2(0, 85.26)
+repeat_size = Vector2(768, 0)
+repeat_times = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="front"]
+z_index = 1
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("2_37cfb")
+
+[node name="middle" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.075, 0.01)
+repeat_size = Vector2(720, 0)
+repeat_times = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="middle"]
+position = Vector2(0, 112.28)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("3_37cfb")

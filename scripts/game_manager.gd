@@ -7,6 +7,9 @@ var currency = 0
 var player_node = null
 var combo_board_buff_stacks = 0
 
+var saved_health: int = -1
+var saved_max_health: int = -1
+
 # Player stat bonuses (applied from items)
 var player_stats = {
 	"speed_bonus": 0, # %
@@ -26,7 +29,8 @@ var player_stats = {
 	"slow_chance": 0.0,
 	"burn_chance": 0.0,
 	"jump_multiplier": 1.0,
-	"explosion_chance": 0.0
+	"explosion_chance": 0.0,
+	"current_stage": 1
 }
 
 const MAX_STACKS = {
@@ -480,6 +484,8 @@ func on_enemy_died():
 func reset_game():
 	inventory.clear()
 	currency = 0
+	saved_health = -1
+	saved_max_health = -1
 	player_stats = {
 		"speed_bonus": 0, # %
 		"damage_bonus": 0, # %
@@ -498,7 +504,8 @@ func reset_game():
 		"slow_chance": 0.0,
 		"burn_chance": 0.0,
 		"jump_multiplier": 1.0,
-		"explosion_chance": 0.0
+		"explosion_chance": 0.0,
+		"current_stage": 1
 	}
 	item_stacks = {
 		"speed_boots": 0,

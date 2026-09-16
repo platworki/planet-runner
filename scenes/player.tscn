@@ -1805,7 +1805,7 @@ shape = SubResource("RectangleShape2D_qlg0r")
 z_index = 7
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"Walk"
+animation = &"Waking"
 
 [node name="ModulateStack" type="Node" parent="Position/Torso"]
 script = ExtResource("12_60mlk")
@@ -1814,7 +1814,7 @@ script = ExtResource("12_60mlk")
 z_index = 6
 position = Vector2(12, -22)
 sprite_frames = SubResource("SpriteFrames_dt7fs")
-animation = &"Walk"
+animation = &"Waking"
 
 [node name="ModulateStack" type="Node" parent="Position/Legs"]
 script = ExtResource("12_60mlk")

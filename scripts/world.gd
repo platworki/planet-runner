@@ -18,6 +18,7 @@ const OFFSCREEN_MIN = 50 # Must be AT LEAST 50px outside the camera
 
 func _ready():
 	#Engine.time_scale = 0.2
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	spawn_item_givers()
 	spawn_enemies()
 
