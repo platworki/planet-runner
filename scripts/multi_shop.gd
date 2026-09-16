@@ -9,7 +9,7 @@ var ITEM_COST = 10
 
 @onready var curtains: AnimatedSprite2D = $Curtains
 @onready var item_spawn_point: Marker2D = $ItemSpawnPoint
-@onready var items_container: Node = $/root/World/Items
+@onready var items_container: Node = get_tree().current_scene.get_node("Items")
 @onready var item_spots = $ItemSpots.get_children()
 @onready var interact_ui: Node2D = $InteractUI
 

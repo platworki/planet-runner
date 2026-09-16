@@ -6,7 +6,7 @@ const CHEST_COST = 5
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var item_spawn_point: Marker2D = $ItemSpawnPoint
-@onready var items_container: Node = $/root/World/Items
+@onready var items_container: Node = get_tree().current_scene.get_node("Items")
 @onready var opening_sfx: AudioStreamPlayer = $Opening
 @onready var interact_ui: Node2D = $InteractUI
 
